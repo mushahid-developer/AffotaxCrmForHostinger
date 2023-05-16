@@ -3,6 +3,7 @@ const express = require("express");
 const dotenv = require('dotenv');
 const morgan = require('morgan');
 const bodyParser = require('body-parser');
+const path = require("path");
 var cors = require('cors')
 
 // Import MongoDb Connection file
@@ -12,7 +13,8 @@ const connectDB = require('./server/database/connection');
 const app = express();
 
 // Setting Port Number
-dotenv.config({path:'../config.env'});
+const envPath = path.resolve(__dirname, '../config.env');
+dotenv.config({ path: envPath });
 const PORT = process.env.PORT || 5000;
 
 // Mongo DB Connection
@@ -31,7 +33,7 @@ app.use(morgan('tiny'));
 app.use('/api', require('./server/routes/routes'));
 
 if ( process.env.NODE_ENV == "production"){
-    const path = require("path");
+    
     app.use(express.static(path.join(__dirname, "/frontend/build")));
     app.get("*", (req, res) => {
         res.sendFile(path.join(__dirname, "/frontend/build/index.html"))
