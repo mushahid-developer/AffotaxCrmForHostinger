@@ -1,0 +1,398 @@
+/* overall */
+*{
+  margin: 0px;
+  padding: 0px;
+}
+
+/* Hide scrollbar for IE, Edge and Firefox */
+*{
+  -ms-overflow-style: none;  /* IE and Edge */
+  scrollbar-width: none;  /* Firefox */
+}
+
+/* Hide scrollbar for Chrome, Safari and Opera */
+*::-webkit-scrollbar {
+  display: none;
+  
+}
+
+p{
+  margin: 0px;
+}
+h1{
+  margin: 0px;
+}
+h2{
+  margin: 0px;
+}
+h3{
+  margin: 0px;
+}
+h4{
+  margin: 0px;
+}
+h5{
+  margin: 0px;
+}
+h6{
+  margin: 0px;
+}
+
+/* Login */
+
+.login_main_screen{
+  height: 100vh;
+  width: 100vw;
+  background-color: #c1c1c1;
+  display: flex;
+  flex-direction: column;
+  padding-top: 11vh;
+  align-items: center;
+}
+
+.login_center_signin_card{
+    border-radius: 5px 5px 0 0;
+    background-color: #fff;
+    color: inherit;
+    font-weight: bold;
+    border-color: #eef6f9;
+    padding: 12px 16px;
+    width: 450px;
+}
+
+.login_center_form_card{
+    padding: 30px !important;
+    padding-top: 10px !important;
+    border-radius: 0px;
+    border-bottom-right-radius: var(--bs-border-radius)!important;
+    border-bottom-left-radius: var(--bs-border-radius)!important;
+    background-color: #fff;
+    border-color: #eef6f9;
+    width: 450px;
+}
+
+.login_txt{
+  align-self: center;
+}
+
+
+.login_txt p{
+    text-align: center;
+    font-size: 1.5rem;
+    font-weight: normal;
+    margin: 5px 0;
+    margin-bottom: 0px
+}
+
+.login_img{
+  width: 300px;
+}
+
+
+/* Login Ends */
+
+
+/* Admin Panel Layout Setup */
+
+.layout_topbar{
+  height: 65px;
+  box-shadow: 0 .125rem .25rem rgba(0,0,0,.075)!important;
+  display: flex;
+}
+
+.Layout_bottom_screen{
+  display: flex;
+  width: 100%;
+  min-height: calc(100vh - 65px);
+}
+
+.layout_sidebar{
+  min-height: calc(100vh - 65px);
+  max-height: calc(100vh - 65px);
+  width: 244px;
+  overflow-y: scroll;
+  box-shadow: 0 0 10px rgb(0 0 0 / 5%) !important;
+    -webkit-box-shadow: 0 0 10px rgb(0 0 0 / 5%) !important;
+}
+
+/* Hide scrollbar for Chrome, Safari and Opera */
+.layout_sidebar::-webkit-scrollbar {
+  display: none;
+}
+
+/* Hide scrollbar for IE, Edge and Firefox */
+.layout_sidebar{
+  -ms-overflow-style: none;  /* IE and Edge */
+  scrollbar-width: none;  /* Firefox */
+}
+
+.layout_main_screen{
+  width: calc(100% - 244px);
+  background-color: #EEF1F9;
+}
+
+.layout_main_screen_content{
+  padding: 25px;
+  min-height: 100%;
+}
+
+
+/* Admin Panel Layout Setup Ends*/
+
+
+/* SideBar */
+
+.sidebar_main{
+  height: 100%;
+  background-color: white;
+  padding: 10px 0px;
+}
+
+.sidebar_link{
+  all: unset;
+  cursor: pointer;
+  text-decoration: none;
+    position: relative;
+    display: block;
+    padding: 0.7rem 1.1rem;
+    margin: 0 10px;
+    border-radius: 3px;
+    color: #7b8190;
+    z-index: 2;
+    align-items: center;
+    -moz-transition: color 250ms ease-in-out, background-color 250ms ease-in-out;
+    -o-transition: color 250ms ease-in-out, background-color 250ms ease-in-out;
+    -webkit-transition: color 250ms ease-in-out, background-color 250ms ease-in-out;
+    transition: color 250ms ease-in-out, background-color 250ms ease-in-out;
+}
+.sidebar_link_active{
+  all: unset;
+  cursor: pointer;
+  text-decoration: none;
+    position: relative;
+    display: block;
+    padding: 0.7rem 1.1rem;
+    margin: 0 10px;
+    border-radius: 3px;
+    color: #7b8190;
+    z-index: 2;
+    align-items: center;
+    -moz-transition: color 250ms ease-in-out, background-color 250ms ease-in-out;
+    -o-transition: color 250ms ease-in-out, background-color 250ms ease-in-out;
+    -webkit-transition: color 250ms ease-in-out, background-color 250ms ease-in-out;
+    transition: color 250ms ease-in-out, background-color 250ms ease-in-out;
+    color: #fff !important;
+    background-color: #6690F4;
+}
+
+
+.sidebar_link:hover{
+  all: unset;
+  cursor: pointer;
+  text-decoration: none;
+    position: relative;
+    display: block;
+    padding: 0.7rem 1.1rem;
+    margin: 0 10px;
+    border-radius: 3px;
+    color: #7b8190;
+    z-index: 2;
+    align-items: center;
+    -moz-transition: color 250ms ease-in-out, background-color 250ms ease-in-out;
+    -o-transition: color 250ms ease-in-out, background-color 250ms ease-in-out;
+    -webkit-transition: color 250ms ease-in-out, background-color 250ms ease-in-out;
+    transition: color 250ms ease-in-out, background-color 250ms ease-in-out;
+    color: #383c40;
+    background-color: #F4F6F8;
+}
+
+.sidebar_subtasks {
+  height: 0;
+  overflow: hidden;
+  transition: height .3s ease-in-out;
+}
+
+.sidebar_subtasks.open {
+  height: 50px;
+}
+
+
+
+
+
+/* SideBar Ends*/
+
+
+/* Topbar */
+.topbar_logo{
+  min-width: 244px;
+  max-width: 244px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  height: 100%;
+  box-shadow: 0 0 10px rgb(0 0 0 / 15%) !important;
+    -webkit-box-shadow: 0 0 10px rgb(0 0 0 / 15%) !important;
+}
+
+.topbar_body{
+  min-width: calc(100% - 244px);
+  max-width: calc(100% - 244px);
+  height: 100%;
+  width: 100%;
+  display: flex;
+  align-items: center;
+  /* justify-content: center; */
+  padding: 8px;
+}
+/* Topbar Ends */
+
+
+/* Ag Table Style */
+
+.ag-root-wrapper.ag-layout-normal {
+  border: none;
+  font-size: 12px;
+}
+
+.ag-ltr .ag-body, .ag-ltr .ag-floating-top, .ag-ltr .ag-floating-bottom, .ag-ltr .ag-header, .ag-ltr .ag-body-viewport, .ag-ltr .ag-body-horizontal-scroll {
+  background-color: white;
+}
+
+.ag-body-vertical-scroll {
+  all: unset !important;
+  display: none !important;
+}
+
+.ag-body-horizontal-scroll {
+  all: unset !important;
+  display: none !important;
+}
+
+.ag-header-row-column, .ag-header-row, .ag-header-row-column-filter, .ag-header-container{
+  width: 100% !important;
+}
+
+/* [class^=ag-]{
+  box-sizing:unset !important;
+} */
+
+.ag-header-row .ag-header-row-column-filter{
+  width: 100%;
+}
+
+.ag-row{
+  /* padding: 10px 0px !important; */
+  height: 45px !important;
+  display: flex !important;
+  /* align-items: center !important; */
+  font-size: 12px !important;
+}
+
+.ag-cell{
+  height: unset !important;
+}
+.ag-cell-edit-wrapper .ag-text-field-input{
+  height: 30px !important;
+}
+
+.ag-ltr .ag-floating-filter-button {
+  margin-left: calc(var(--ag-grid-size) * 3);
+  margin-right: calc(var(--ag-grid-size) * 3);
+  display: none;
+}
+.ag-cell-label-container .ag-header-cell-menu-button{
+  display: none;
+}
+
+.ag-header-row .ag-header-cell, .ag-header-group-cell{
+  padding-left: 5px;
+  padding-right: 1px;
+  /* text-align: center; */
+}
+[class^=ag-], [class^=ag-]:focus, [class^=ag-]:after, [class^=ag-]:before {
+  /* justify-content: center; */
+}
+
+.ag-row .ag-cell{
+  padding-left: 5px;
+  padding-right: 1px;
+}
+
+.ag-ltr .ag-cell {
+  border-right: 1px solid #dde2eb !important;
+  border-left: 1px solid #dde2eb !important;
+  /* text-align: center; */
+  height: 100%!important;
+}
+
+.ag-ltr .ag-header-select-all {
+  margin-right: 0px;
+}
+.ag-ltr .ag-row-drag, .ag-ltr .ag-selection-checkbox, .ag-ltr .ag-group-expanded, .ag-ltr .ag-group-contracted {
+  margin-right: 6px !important;
+}
+
+.ag-ltr .ag-header-select-all {
+  margin-right: 6px !important;
+}
+
+.dropdown-item.active, .dropdown-item:active {
+  border-radius: 4px;
+}
+
+div.ag-root .ag-cell-focus {
+  -webkit-user-select: text;
+  -moz-user-select: text;
+  -ms-user-select: text;
+  user-select: text;
+}
+
+/* Ag Table Style Ends */
+
+
+/* Table */
+
+
+.table-col-numbers select{
+  /* width: 42px; */
+  height: 38px;
+  background-color: rgb(255, 255, 255);
+  border: 1px solid rgb(242, 244, 246);
+  color: rgb(89, 89, 89);
+}
+
+.table-col-numbers select:hover{
+  border-color: #f2f4f6 !important;
+  background-color: #E6E6E6;
+  color: var(--bs-btn-hover-color);
+  cursor: pointer;
+}
+
+
+.table-show-hide .btn{
+  background-color: rgb(255, 255, 255);
+  border: 1px solid rgb(242, 244, 246);
+  color: rgb(89, 89, 89);
+}
+
+
+.table-show-hide .btn:hover{
+  border-color: #f2f4f6 !important;
+  background-color: #E6E6E6;
+  color: var(--bs-btn-hover-color);
+}
+
+/* Leads Page */
+
+.leadsSummary {
+  height: 0;
+  overflow: hidden;
+  transition: height .3s ease-in-out;
+}
+
+.leadsSummary.open {
+  height: 110px;
+}
+
+/* Leads Page End */
