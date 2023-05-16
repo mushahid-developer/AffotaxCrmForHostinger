@@ -12,7 +12,7 @@ const connectDB = require('./server/database/connection');
 const app = express();
 
 // Setting Port Number
-dotenv.config({path:'config.env'});
+dotenv.config({path:'../config.env'});
 const PORT = process.env.PORT || 5000;
 
 // Mongo DB Connection
