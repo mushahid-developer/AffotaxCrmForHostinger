@@ -8,6 +8,9 @@ const connectDB = async ()=>{
             // useFindAndModify: false,
             // useCreateIndex: true
         });
+        mongoose.set('strictQuery', false);
+
+        
 
         console.log(`MongoDB connceted: ${con.connection.host}`);
     }
