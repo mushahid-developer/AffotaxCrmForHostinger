@@ -33,9 +33,9 @@ app.use(morgan('tiny'));
 app.use('/api', require('./server/routes/routes'));
 
 const dirnamee = path.resolve();
-app.use(express.static(path.join(dirnamee, "/frontend/build")));
+app.use(express.static(path.join(dirnamee, "../frontend/build")));
 app.get("*", (req, res) =>
-  res.sendFile(path.join(dirnamee, "/frontend/build/index.html"))
+  res.sendFile(path.join(dirnamee, "../frontend/build/index.html"))
 );
 
 
