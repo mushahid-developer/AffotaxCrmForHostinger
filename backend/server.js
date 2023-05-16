@@ -4,7 +4,7 @@ const dotenv = require('dotenv');
 const morgan = require('morgan');
 const bodyParser = require('body-parser');
 const path = require("path");
-var cors = require('cors')
+var cors = require('cors');
 
 // Import MongoDb Connection file
 const connectDB = require('./server/database/connection');
