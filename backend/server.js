@@ -30,26 +30,13 @@ app.use(morgan('tiny'));
 // Load Routes
 app.use('/api', require('./server/routes/routes'));
 
-// if ( process.env.NODE_ENV == "production"){
-//     app.use(express.static("client/build"));
-//     const path = require("path");
-//     app.get("*", (req, res) => {
-//         res.sendFile(path.resolve(__dirname, 'client', 'build', 'index.html'));
-//     })
-// }
-
-// const __dirname = path.resolve();
-const path = require("path");
-app.use(express.static(path.join(__dirname, "/frontend/build")));
-app.get("*", (req, res) =>
-  res.sendFile(path.join(__dirname, "/frontend/build/index.html"))
-);
-
-app.get('*', function (req, res) {
-    res.send("404 Not Found");
-});
-
-
+if ( process.env.NODE_ENV == "production"){
+    const path = require("path");
+    app.use(express.static(path.join(__dirname, "/frontend/build")));
+    app.get("*", (req, res) => {
+        res.sendFile(path.join(__dirname, "/frontend/build/index.html"))
+    })
+}
 
 
 
