@@ -32,13 +32,11 @@ app.use(morgan('tiny'));
 // Load Routes
 app.use('/api', require('./server/routes/routes'));
 
-    app.use(express.static(path.join(__dirname, "../frontend/build")));
-    console.log(express.static(path.join(__dirname, "../frontend/build")));
-    app.get("*", (req, res) => {
-      res.sendFile(path.join(__dirname, "../frontend/build/index.html"));
-    });
-  
-
+const dirnamee = path.resolve();
+app.use(express.static(path.join(dirnamee, "/frontend/build")));
+app.get("*", (req, res) =>
+  res.sendFile(path.join(dirnamee, "/frontend/build/index.html"))
+);
 
 
 
