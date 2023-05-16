@@ -1,6 +1,6 @@
 //BaseUrl
 // export const BaseUrl = 'https://affotax-crm.herokuapp.com/api/'; // Live
-export const BaseUrl = 'http://localhost:5000/api/'; // Loca
+export const BaseUrl = 'http://141.136.47.50:5000/api/'; // Loca
 // 192.168.18.59
 
 //Auth / Users
