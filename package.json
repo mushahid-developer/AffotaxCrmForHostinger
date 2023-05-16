@@ -1,7 +1,7 @@
 {
-    "name": "amazona",
+    "name": "affotax_crm",
     "version": "1.0.0",
-    "description": "# Lessons",
+    "description": "Fully Custom Crm for Affotax",
     "main": "index.js",
     "scripts": {
       "build": "cd backend && npm install  && cd ../frontend && npm install && npm run build",
