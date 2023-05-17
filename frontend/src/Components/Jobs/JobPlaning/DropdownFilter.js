@@ -10,15 +10,15 @@ const DropdownFilter = (props) => {
   useEffect(()=>{
     setSelectedValue(null);
     setSelectedValue(props.value);
-  },[])
+  },[props.value])
+
+  useEffect(()=>{setSelectedValue(null);}, [props.value])
 
   const handleChange = (event) => {
     setSelectedValue(event.target.value);
   };
 
-  const clearFilter = () => {
-    setSelectedValue(null);
-  };
+  
 
   const options = props.options;
 

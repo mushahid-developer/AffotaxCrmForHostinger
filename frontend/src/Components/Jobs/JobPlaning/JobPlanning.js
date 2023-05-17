@@ -13,8 +13,6 @@ import * as axiosURL from '../../../Api/AxiosUrls';
 import MyFloatingFilter from './MyFloatingFilter';
 import DropdownFilter from './DropdownFilter';
 import DropdownFilterWithDate from './DropDownFilterWithDate';
-import ClearFilterButton from './ClearFilterButton';
-import { GridApi } from 'ag-grid-community';
 import { Form } from 'react-bootstrap';
 
 var preDataUrl = axiosURL.addJobPreData;
@@ -38,6 +36,7 @@ export default function JobPlanning() {
   const [loader, setLoader] = useState(false)
   const [gridApi, setGridApi] = useState(null);
   const [rerender, setRerender] = useState(false);
+  const [headerReRender, setHeaderReRender] = useState(false);
 
   const [multipleRowFormData, setMultipleRowFormData] = useState({
     job_date: null,
@@ -843,23 +842,22 @@ export default function JobPlanning() {
   }
  }, [gridApi])
 
- const handleFunClear = (value)=>{
-  if(gridApi){
-    console.log(value)
-    setJHolderFvalue(null)
-    setDepartmentFvalue(null)
-    setStatusFvalue(null)
-    setCManagerFvalue(null)
-    setJStatusFvalue(null)
-    setYearEndFvalue(null)
-    setYearEndFvalueDate(null)
-    setDeadlineFvalue(null)
-    setDeadlineFvalueDate(null)
-    setJobDateFvalue(null)
-    setJobDateFvalueDate(null)
-    gridApi.api.setFilterModel({});
-    gridApi.api.refreshHeader();
-  }
+ const handleFunClear = ()=>{
+   if(gridApi){
+     gridApi.api.setFilterModel({});
+     gridApi.api.refreshHeader();
+   }
+    setJHolderFvalue((...prev) => null)
+    setDepartmentFvalue((...prev) => null)
+    setStatusFvalue((...prev) => null)
+    setCManagerFvalue((...prev) => null)
+    setJStatusFvalue((...prev) => null)
+    setYearEndFvalue((...prev) => null)
+    setYearEndFvalueDate((...prev) => null)
+    setDeadlineFvalue((...prev) => null)
+    setDeadlineFvalueDate((...prev) => null)
+    setJobDateFvalue((...prev) => null)
+    setJobDateFvalueDate((...prev) => null)
  }
 
 
@@ -1385,7 +1383,6 @@ const onCellValueChanged = useCallback((event) => {
 
 const onRowValueChanged = useCallback(async (event) => {
   var data = event.data;
-  console.log('changed')
   
   
   const resp = await axios.post(JobPlaning_Update_One_Url, 
@@ -1460,7 +1457,6 @@ const frameworkComponents = {
   myFloatingFilter: MyFloatingFilter,
   selectFloatingFilter: DropdownFilter,
   selectFloatingFilterWthDate: DropdownFilterWithDate,
-  clearFloatingFilter: ClearFilterButton
 };
 
 const handleMultipleEditSubmit = async (e)=>{
@@ -1596,7 +1592,18 @@ else{
             </div>
 
             <div  className='table-show-hide mx-2'>
-            <ClearFilterButton handleClickk={handleFunClear}/>
+              <button type="button" onClick={handleFunClear} 
+              className=' btn' 
+              style={{
+                  padding: '3px',
+                  backgroundColor: 'rgb(255, 255, 255)',
+                  border: '1px solid rgb(242, 244, 246)',
+                  color: 'rgb(89, 89, 89)',
+              }}>
+                  <svg xmlns="http://www.w3.org/2000/svg" width="30px" height="30px" viewBox="0 0 24 24" stroke='rgb(89, 89, 89)' fill="rgb(89, 89, 89)">
+                      <path d="M16 8L8 16M8.00001 8L16 16" stroke="#000000" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/>
+                  </svg>
+              </button>
             </div>
 
 
