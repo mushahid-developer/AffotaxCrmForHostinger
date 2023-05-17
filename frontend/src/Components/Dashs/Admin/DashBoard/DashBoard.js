@@ -262,16 +262,14 @@ if(dashboardData)
     </div>
   
   
-    <div style={{
-        overflow: 'hidden',
-    }} >
+    <div style={{overflow: 'hidden',}} >
         <div className='row mt-4'>
   
             <div className='col-4'>
-                <div style={{padding: '10px', backgroundColor: 'white'}}>
+                <div style={{overflow: 'hidden', padding: '10px', backgroundColor: 'white'}}>
                     <Chart
-                    chartType="BarChart"
-                    width="100%"
+                    chartType="Bar"
+                    width="109%"
                     height="400px"
                     data={chartsData.data1}
                     options={chartsData.options1}
@@ -280,10 +278,10 @@ if(dashboardData)
             </div>
             
             <div className='col-4'>
-                <div style={{padding: '10px', backgroundColor: 'white'}}>
+                <div style={{overflow: 'hidden', padding: '10px', backgroundColor: 'white'}}>
                     <Chart
                     chartType="Bar"
-                    width="100%"
+                    width="112%"
                     height="400px"
                     data={chartsData.data2}
                     options={chartsData.options2}
@@ -293,10 +291,10 @@ if(dashboardData)
             </div>
             
             <div className='col-4'>
-                <div style={{padding: '10px', backgroundColor: 'white'}}>
+                <div style={{overflow: 'hidden', padding: '10px', backgroundColor: 'white'}}>
                     <Chart
                     chartType="Bar"
-                    width="100%"
+                    width="111%"
                     height="400px"
                     data={chartsData.data3}
                     options={chartsData.options3}
@@ -306,10 +304,10 @@ if(dashboardData)
             </div>
             
             <div className='col-6 mt-4'>
-                <div style={{padding: '10px', backgroundColor: 'white'}}>
+                <div style={{overflow: 'hidden', padding: '10px', backgroundColor: 'white'}}>
                     <Chart
                     chartType="Bar"
-                    width="100%"
+                    width="109%"
                     height="400px"
                     data={chartsData.data4}
                     options={chartsData.options4}
@@ -319,10 +317,10 @@ if(dashboardData)
             </div>
             
             <div className='col-6 mt-4'>
-                <div style={{padding: '10px', backgroundColor: 'white'}}>
+                <div style={{overflow: 'hidden', padding: '10px', backgroundColor: 'white'}}>
                     <Chart
                     chartType="Bar"
-                    width="100%"
+                    width="109%"
                     height="400px"
                     data={chartsData.data5}
                     options={chartsData.options5}
