@@ -34,18 +34,18 @@ export default function Dashboard() {
       setChartsData({
          data1 : [
           ["Month",` ${dashboardData && dashboardData.clientsCount.selectedYear}` , `${dashboardData && dashboardData.clientsCount.PreviousYear}`],
-          ["January", dashboardData ? dashboardData.clientsCount.jan: 0 , dashboardData ? dashboardData.clientsCount.janP: 0],
-          ["Feburary", dashboardData ? dashboardData.clientsCount.feb: 0 , dashboardData ? dashboardData.clientsCount.febP: 0],
+          ["Jan", dashboardData ? dashboardData.clientsCount.jan: 0 , dashboardData ? dashboardData.clientsCount.janP: 0],
+          ["Feb", dashboardData ? dashboardData.clientsCount.feb: 0 , dashboardData ? dashboardData.clientsCount.febP: 0],
           ["March", dashboardData ? dashboardData.clientsCount.march: 0 , dashboardData ? dashboardData.clientsCount.marchP: 0],
           ["April", dashboardData ? dashboardData.clientsCount.apr: 0 , dashboardData ? dashboardData.clientsCount.aprP: 0],
           ["May", dashboardData ? dashboardData.clientsCount.may: 0 , dashboardData ? dashboardData.clientsCount.mayP: 0],
           ["June", dashboardData ? dashboardData.clientsCount.june: 0 , dashboardData ? dashboardData.clientsCount.juneP: 0],
           ["July", dashboardData ? dashboardData.clientsCount.july: 0 , dashboardData ? dashboardData.clientsCount.julyP: 0],
-          ["August", dashboardData ? dashboardData.clientsCount.aug: 0 , dashboardData ? dashboardData.clientsCount.augP: 0],
-          ["September", dashboardData ? dashboardData.clientsCount.sept: 0 , dashboardData ? dashboardData.clientsCount.septP: 0],
-          ["October", dashboardData ? dashboardData.clientsCount.oct: 0 , dashboardData ? dashboardData.clientsCount.octP: 0],
-          ["November", dashboardData ? dashboardData.clientsCount.nov: 0 , dashboardData ? dashboardData.clientsCount.novP: 0],
-          ["December", dashboardData ? dashboardData.clientsCount.dec: 0 , dashboardData ? dashboardData.clientsCount.decP: 0],
+          ["Aug", dashboardData ? dashboardData.clientsCount.aug: 0 , dashboardData ? dashboardData.clientsCount.augP: 0],
+          ["Sept", dashboardData ? dashboardData.clientsCount.sept: 0 , dashboardData ? dashboardData.clientsCount.septP: 0],
+          ["Oct", dashboardData ? dashboardData.clientsCount.oct: 0 , dashboardData ? dashboardData.clientsCount.octP: 0],
+          ["Nov", dashboardData ? dashboardData.clientsCount.nov: 0 , dashboardData ? dashboardData.clientsCount.novP: 0],
+          ["Dec", dashboardData ? dashboardData.clientsCount.dec: 0 , dashboardData ? dashboardData.clientsCount.decP: 0],
         ],
         
         options1: {
@@ -87,18 +87,18 @@ export default function Dashboard() {
       
       data3: [
           ["Month", `${dashboardData && dashboardData.clientsCount.selectedYear}` , `${dashboardData && dashboardData.clientsCount.PreviousYear}`],
-          ["January", dashboardData ? dashboardData.ClientFee.jan: 0, dashboardData ? dashboardData.ClientFee.janP: 0],
-          ["Feburary", dashboardData ? dashboardData.ClientFee.feb: 0, dashboardData ? dashboardData.ClientFee.febP: 0],
+          ["Jan", dashboardData ? dashboardData.ClientFee.jan: 0, dashboardData ? dashboardData.ClientFee.janP: 0],
+          ["Feb", dashboardData ? dashboardData.ClientFee.feb: 0, dashboardData ? dashboardData.ClientFee.febP: 0],
           ["March", dashboardData ? dashboardData.ClientFee.march: 0, dashboardData ? dashboardData.ClientFee.marchP: 0],
           ["April", dashboardData ? dashboardData.ClientFee.apr: 0, dashboardData ? dashboardData.ClientFee.aprP: 0],
           ["May", dashboardData ? dashboardData.ClientFee.may: 0, dashboardData ? dashboardData.ClientFee.mayP: 0],
           ["June", dashboardData ? dashboardData.ClientFee.june: 0, dashboardData ? dashboardData.ClientFee.juneP: 0],
           ["July", dashboardData ? dashboardData.ClientFee.july: 0, dashboardData ? dashboardData.ClientFee.julyP: 0],
-          ["August", dashboardData ? dashboardData.ClientFee.aug: 0, dashboardData ? dashboardData.ClientFee.augP: 0],
-          ["September", dashboardData ? dashboardData.ClientFee.sept: 0, dashboardData ? dashboardData.ClientFee.septP: 0],
-          ["October", dashboardData ? dashboardData.ClientFee.oct: 0, dashboardData ? dashboardData.ClientFee.octP: 0],
-          ["November", dashboardData ? dashboardData.ClientFee.nov: 0, dashboardData ? dashboardData.ClientFee.novP: 0],
-          ["December", dashboardData ? dashboardData.ClientFee.dec: 0, dashboardData ? dashboardData.ClientFee.decP: 0],
+          ["Aug", dashboardData ? dashboardData.ClientFee.aug: 0, dashboardData ? dashboardData.ClientFee.augP: 0],
+          ["Sept", dashboardData ? dashboardData.ClientFee.sept: 0, dashboardData ? dashboardData.ClientFee.septP: 0],
+          ["Oct", dashboardData ? dashboardData.ClientFee.oct: 0, dashboardData ? dashboardData.ClientFee.octP: 0],
+          ["Nov", dashboardData ? dashboardData.ClientFee.nov: 0, dashboardData ? dashboardData.ClientFee.novP: 0],
+          ["Dec", dashboardData ? dashboardData.ClientFee.dec: 0, dashboardData ? dashboardData.ClientFee.decP: 0],
         ],
         
         options3: {
@@ -244,14 +244,14 @@ if(dashboardData)
         <div style={{
         border: 'none'
         }}
-        className="mt-3 card" >
+        className="card" >
         
         <div style={{alignItems: 'center', justifyContent: 'space-between',}} className='d-flex'>
   
           <div style={{alignItems: 'center',}} className='d-flex'>
   
             <div >
-              <h4 style={{padding: '20px 16px',}}>
+              <h4 style={{padding: '2px 16px',}}>
                   Dashboard
               </h4>
             </div>
