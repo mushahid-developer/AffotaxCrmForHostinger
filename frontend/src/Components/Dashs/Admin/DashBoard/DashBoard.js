@@ -1,5 +1,15 @@
 import React, { useEffect, useState } from 'react';
 import { Chart } from 'react-google-charts';
+import {
+  Chart as ChartJS,
+  CategoryScale,
+  LinearScale,
+  BarElement,
+  Title,
+  Tooltip,
+  Legend,
+} from 'chart.js';
+import { Bar } from 'react-chartjs-2';
 
 
 import axios from '../../../../Api/Axios';
@@ -9,6 +19,15 @@ import { Store } from 'react-notifications-component';
 var getDashboardDataUrl = axiosURL.getDashboardDataUrl;
 
 export default function Dashboard() {
+
+  ChartJS.register(
+    CategoryScale,
+    LinearScale,
+    BarElement,
+    Title,
+    Tooltip,
+    Legend
+  );
 
   const [dashboardData, setDashboardData] = useState();
   const [chartsData, setChartsData] = useState({
@@ -28,140 +47,178 @@ export default function Dashboard() {
     pieOtions2: {}
   });
 
+  
+const options = {
+  responsive: true,
+  plugins: {
+    legend: {
+      position: 'top',
+    },
+    title: {
+      display: true,
+      text: 'Clients Counter Graph',
+    },
+  },
+  barThickness: 10
+};
+
+
+const data = {
+  labels: ['Jan', 'Feb', 'March', 'April', 'May', 'June', 'July', 'Aug', 'Sept', 'Oct', 'Nov', 'Dec'],
+  datasets: [
+    {
+      label: ` ${dashboardData && dashboardData.clientsCount.selectedYear}`,
+      data: [
+        dashboardData ? dashboardData.clientsCount.jan: 0, dashboardData ? dashboardData.clientsCount.feb: 0, dashboardData ? dashboardData.clientsCount.march: 0, dashboardData ? dashboardData.clientsCount.apr: 0, dashboardData ? dashboardData.clientsCount.may: 0, dashboardData ? dashboardData.clientsCount.june: 0, dashboardData ? dashboardData.clientsCount.july: 0, dashboardData ? dashboardData.clientsCount.aug: 0, dashboardData ? dashboardData.clientsCount.sept: 0, dashboardData ? dashboardData.clientsCount.oct: 0, dashboardData ? dashboardData.clientsCount.nov: 0, dashboardData ? dashboardData.clientsCount.dec: 0
+      ],
+      backgroundColor: '#b5b5b9',
+    },
+    {
+      label: ` ${dashboardData && dashboardData.clientsCount.PreviousYear}`,
+      data: [
+        dashboardData ? dashboardData.clientsCount.janP: 0, dashboardData ? dashboardData.clientsCount.febP: 0, dashboardData ? dashboardData.clientsCount.marchP: 0, dashboardData ? dashboardData.clientsCount.aprP: 0, dashboardData ? dashboardData.clientsCount.mayP: 0, dashboardData ? dashboardData.clientsCount.juneP: 0, dashboardData ? dashboardData.clientsCount.julyP: 0, dashboardData ? dashboardData.clientsCount.augP: 0, dashboardData ? dashboardData.clientsCount.septP: 0, dashboardData ? dashboardData.clientsCount.octP: 0, dashboardData ? dashboardData.clientsCount.novP: 0, dashboardData ? dashboardData.clientsCount.decP: 0
+      ],
+      backgroundColor: '#67c160',
+    },
+    
+  ],
+};
+
+
+  
+const options2 = {
+  responsive: true,
+  plugins: {
+    legend: {
+      position: 'top',
+    },
+    title: {
+      display: true,
+      text: 'Departments Counter Graph',
+    },
+  },
+  barThickness: 10
+};
+
+
+const data2 = {
+  labels: ['Accounts', 'Address', 'Billing', 'Bookkeeping', 'Company Sec', 'Payroll', 'Personal Tax', 'Vat Return'],
+  datasets: [
+    {
+      label: `Count`,
+      data: [
+        dashboardData ? dashboardData.DepartmentFee.accounts: 0, dashboardData ? dashboardData.DepartmentFee.address: 0, dashboardData ? dashboardData.DepartmentFee.billing: 0, dashboardData ? dashboardData.DepartmentFee.bookKeeping: 0, dashboardData ? dashboardData.DepartmentFee.companySec: 0, dashboardData ? dashboardData.DepartmentFee.payRoll: 0, dashboardData ? dashboardData.DepartmentFee.personalTax: 0, dashboardData ? dashboardData.DepartmentFee.vatReturn: 0
+      ],
+      backgroundColor: '#1ab394',
+    },
+    
+  ],
+};
+
+
+  
+const options3 = {
+  responsive: true,
+  plugins: {
+    legend: {
+      position: 'top',
+    },
+    title: {
+      display: true,
+      text: 'Clients Counter Graph',
+    },
+  },
+  barThickness: 10
+};
+
+
+const data3 = {
+  labels: ['Jan', 'Feb', 'March', 'April', 'May', 'June', 'July', 'Aug', 'Sept', 'Oct', 'Nov', 'Dec'],
+  datasets: [
+    {
+      label: ` Count`,
+      data: [
+        dashboardData ? dashboardData.ClientFee.jan: 0, dashboardData ? dashboardData.ClientFee.feb: 0, dashboardData ? dashboardData.ClientFee.march: 0, dashboardData ? dashboardData.ClientFee.apr: 0, dashboardData ? dashboardData.ClientFee.may: 0, dashboardData ? dashboardData.ClientFee.june: 0, dashboardData ? dashboardData.ClientFee.july: 0, dashboardData ? dashboardData.ClientFee.aug: 0, dashboardData ? dashboardData.ClientFee.sept: 0, dashboardData ? dashboardData.ClientFee.oct: 0, dashboardData ? dashboardData.ClientFee.nov: 0, dashboardData ? dashboardData.ClientFee.dec: 0
+      ],
+      backgroundColor: '#b5b5b9',
+    },
+    {
+      label: ` ${dashboardData && dashboardData.clientsCount.PreviousYear}`,
+      data: [
+        dashboardData ? dashboardData.ClientFee.janP: 0, dashboardData ? dashboardData.ClientFee.febP: 0, dashboardData ? dashboardData.ClientFee.marchP: 0, dashboardData ? dashboardData.ClientFee.aprP: 0, dashboardData ? dashboardData.ClientFee.mayP: 0, dashboardData ? dashboardData.ClientFee.juneP: 0, dashboardData ? dashboardData.ClientFee.julyP: 0, dashboardData ? dashboardData.ClientFee.augP: 0, dashboardData ? dashboardData.ClientFee.septP: 0, dashboardData ? dashboardData.ClientFee.octP: 0, dashboardData ? dashboardData.ClientFee.novP: 0, dashboardData ? dashboardData.ClientFee.decP: 0
+      ],
+      backgroundColor: '#5873d8',
+    },
+    
+  ],
+};
+
+const options4 = {
+  responsive: true,
+  plugins: {
+    legend: {
+      position: 'top',
+    },
+    title: {
+      display: true,
+      text: 'Departments OverDue Jobs',
+    },
+  },
+  barThickness: 20, // Adjust the width of the bars
+  categorySpacing: 100, // Adjust the space between bars (default is 1)
+};
+
+
+const data4 = {
+  labels: ['Accounts', 'Address', 'Billing', 'Bookkeeping', 'Company Sec', 'Payroll', 'Personal Tax', 'Vat Return'],
+  datasets: [
+    {
+      label: `Count`,
+      data: [
+        dashboardData ? dashboardData.JobsOverdue.accounts.length: 0, dashboardData ? dashboardData.JobsOverdue.address.length: 0, dashboardData ? dashboardData.JobsOverdue.billing.length: 0, dashboardData ? dashboardData.JobsOverdue.bookKeeping.length: 0, dashboardData ? dashboardData.JobsOverdue.companySec.length: 0, dashboardData ? dashboardData.JobsOverdue.payRoll.length: 0, dashboardData ? dashboardData.JobsOverdue.personalTax.length: 0, dashboardData ? dashboardData.JobsOverdue.vatReturn.length: 0
+      ],
+      backgroundColor: '#be7462',
+    },
+    
+  ],
+};
+
+const options5 = {
+  responsive: true,
+  barThickness: 15, 
+  plugins: {
+    legend: {
+      position: 'top',
+    },
+    title: {
+      display: true,
+      text: 'Departments OverDue Jobs',
+    },
+  },
+  barThickness: 20, // Adjust the width of the bars
+  categorySpacing: 100, // Adjust the space between bars (default is 1)
+};
+
+
+const data5 = {
+  labels: ['Accounts', 'Address', 'Billing', 'Bookkeeping', 'Company Sec', 'Payroll', 'Personal Tax', 'Vat Return'],
+  datasets: [
+    {
+      label: `Count`,
+      data: [
+        dashboardData ? dashboardData.Jobsdue.accounts.length: 0, dashboardData ? dashboardData.Jobsdue.address.length: 0, dashboardData ? dashboardData.Jobsdue.billing.length: 0, dashboardData ? dashboardData.Jobsdue.bookKeeping.length: 0, dashboardData ? dashboardData.Jobsdue.companySec.length: 0, dashboardData ? dashboardData.Jobsdue.payRoll.length: 0, dashboardData ? dashboardData.Jobsdue.personalTax.length: 0, dashboardData ? dashboardData.Jobsdue.vatReturn.length: 0
+      ],
+      backgroundColor: '#516aeb',
+    },
+    
+  ],
+};
+
 
   useEffect(()=>{
     if(dashboardData) {
       setChartsData({
-         data1 : [
-          ["Month",` ${dashboardData && dashboardData.clientsCount.selectedYear}` , `${dashboardData && dashboardData.clientsCount.PreviousYear}`],
-          ["Jan", dashboardData ? dashboardData.clientsCount.jan: 0 , dashboardData ? dashboardData.clientsCount.janP: 0],
-          ["Feb", dashboardData ? dashboardData.clientsCount.feb: 0 , dashboardData ? dashboardData.clientsCount.febP: 0],
-          ["March", dashboardData ? dashboardData.clientsCount.march: 0 , dashboardData ? dashboardData.clientsCount.marchP: 0],
-          ["April", dashboardData ? dashboardData.clientsCount.apr: 0 , dashboardData ? dashboardData.clientsCount.aprP: 0],
-          ["May", dashboardData ? dashboardData.clientsCount.may: 0 , dashboardData ? dashboardData.clientsCount.mayP: 0],
-          ["June", dashboardData ? dashboardData.clientsCount.june: 0 , dashboardData ? dashboardData.clientsCount.juneP: 0],
-          ["July", dashboardData ? dashboardData.clientsCount.july: 0 , dashboardData ? dashboardData.clientsCount.julyP: 0],
-          ["Aug", dashboardData ? dashboardData.clientsCount.aug: 0 , dashboardData ? dashboardData.clientsCount.augP: 0],
-          ["Sept", dashboardData ? dashboardData.clientsCount.sept: 0 , dashboardData ? dashboardData.clientsCount.septP: 0],
-          ["Oct", dashboardData ? dashboardData.clientsCount.oct: 0 , dashboardData ? dashboardData.clientsCount.octP: 0],
-          ["Nov", dashboardData ? dashboardData.clientsCount.nov: 0 , dashboardData ? dashboardData.clientsCount.novP: 0],
-          ["Dec", dashboardData ? dashboardData.clientsCount.dec: 0 , dashboardData ? dashboardData.clientsCount.decP: 0],
-        ],
-        
-        options1: {
-          chart: {
-            legend: 'none',
-            title: "Clients Counter Graph",
-            subtitle: `${dashboardData.clientsCount.selectedYear} - ${dashboardData.clientsCount.PreviousYear}`,
-            bars: 'vertical',
-          },
-          series: {
-            0: { color: '#b5b5b9' }, // Custom color for the first series (bars)
-            1: { color: '#67c160' }, // Custom color for the first series (bars)
-          },
-        },
-      
-      data2: [
-          ["Departments Name", "Department"],
-          ["Accounts", dashboardData ? dashboardData.DepartmentFee.accounts: 0],
-          ["Address", dashboardData ? dashboardData.DepartmentFee.address: 0],
-          ["Billing", dashboardData ? dashboardData.DepartmentFee.billing: 0],
-          ["Bookkeeping", dashboardData ? dashboardData.DepartmentFee.bookKeeping: 0],
-          ["Company Sec", dashboardData ? dashboardData.DepartmentFee.companySec: 0],
-          ["Payroll", dashboardData ? dashboardData.DepartmentFee.payRoll: 0],
-          ["Personal Tax", dashboardData ? dashboardData.DepartmentFee.personalTax: 0],
-          ["Vat Return", dashboardData ? dashboardData.DepartmentFee.vatReturn: 0],
-        ],
-        
-        options2: {
-          chart: {
-            legend: 'none',
-            title: "Clients Counter Graph",
-            subtitle: `${dashboardData.DepartmentFee.selectedYear} - ${dashboardData.DepartmentFee.PreviousYear}`,
-            bars: 'vertical',
-          },
-          series: {
-            0: { color: '#1ab394' }, // Custom color for the first series (bars)
-          },
-        },
-      
-      data3: [
-          ["Month", `${dashboardData && dashboardData.clientsCount.selectedYear}` , `${dashboardData && dashboardData.clientsCount.PreviousYear}`],
-          ["Jan", dashboardData ? dashboardData.ClientFee.jan: 0, dashboardData ? dashboardData.ClientFee.janP: 0],
-          ["Feb", dashboardData ? dashboardData.ClientFee.feb: 0, dashboardData ? dashboardData.ClientFee.febP: 0],
-          ["March", dashboardData ? dashboardData.ClientFee.march: 0, dashboardData ? dashboardData.ClientFee.marchP: 0],
-          ["April", dashboardData ? dashboardData.ClientFee.apr: 0, dashboardData ? dashboardData.ClientFee.aprP: 0],
-          ["May", dashboardData ? dashboardData.ClientFee.may: 0, dashboardData ? dashboardData.ClientFee.mayP: 0],
-          ["June", dashboardData ? dashboardData.ClientFee.june: 0, dashboardData ? dashboardData.ClientFee.juneP: 0],
-          ["July", dashboardData ? dashboardData.ClientFee.july: 0, dashboardData ? dashboardData.ClientFee.julyP: 0],
-          ["Aug", dashboardData ? dashboardData.ClientFee.aug: 0, dashboardData ? dashboardData.ClientFee.augP: 0],
-          ["Sept", dashboardData ? dashboardData.ClientFee.sept: 0, dashboardData ? dashboardData.ClientFee.septP: 0],
-          ["Oct", dashboardData ? dashboardData.ClientFee.oct: 0, dashboardData ? dashboardData.ClientFee.octP: 0],
-          ["Nov", dashboardData ? dashboardData.ClientFee.nov: 0, dashboardData ? dashboardData.ClientFee.novP: 0],
-          ["Dec", dashboardData ? dashboardData.ClientFee.dec: 0, dashboardData ? dashboardData.ClientFee.decP: 0],
-        ],
-        
-        options3: {
-          chart: {
-            title: "Client Fee",
-            subtitle: "2023",
-            legend: 'none',
-          },
-          series: {
-            0: { color: '#b5b5b9' }, // Custom color for the first series (bars)
-            1: { color: '#5873d8' }, // Custom color for the first series (bars)
-          },
-        },
-      
-      data4: [
-          ["Departments Name", "Department"],
-          ["Accounts", dashboardData ? dashboardData.JobsOverdue.accounts.length: 0],
-          ["Address", dashboardData ? dashboardData.JobsOverdue.address.length: 0],
-          ["Billing", dashboardData ? dashboardData.JobsOverdue.billing.length: 0],
-          ["Bookkeeping", dashboardData ? dashboardData.JobsOverdue.bookKeeping.length: 0],
-          ["Company Sec", dashboardData ? dashboardData.JobsOverdue.companySec.length: 0],
-          ["Payroll", dashboardData ? dashboardData.JobsOverdue.payRoll.length: 0],
-          ["Personal Tax", dashboardData ? dashboardData.JobsOverdue.personalTax.length: 0],
-          ["Vat Return", dashboardData ? dashboardData.JobsOverdue.vatReturn.length: 0],
-        ],
-        
-        options4: {
-          chart: {
-            title: "Department Overdue Jobs",
-            subtitle: "Total Overdue: 000",
-           legend: 'none',
-          },
-          series: {
-            0: { color: '#be7462' }, // Custom color for the first series (bars)
-          },
-        },
-      
-        data5: [
-          ["Departments Name", "Department"],
-          ["Accounts", dashboardData ? dashboardData.Jobsdue.accounts.length: 0],
-          ["Address", dashboardData ? dashboardData.Jobsdue.address.length: 0],
-          ["Billing", dashboardData ? dashboardData.Jobsdue.billing.length: 0],
-          ["Bookkeeping", dashboardData ? dashboardData.Jobsdue.bookKeeping.length: 0],
-          ["Company Sec", dashboardData ? dashboardData.Jobsdue.companySec.length: 0],
-          ["Payroll", dashboardData ? dashboardData.Jobsdue.payRoll.length: 0],
-          ["Personal Tax", dashboardData ? dashboardData.Jobsdue.personalTax.length: 0],
-          ["Vat Return", dashboardData ? dashboardData.Jobsdue.vatReturn.length: 0],
-        ],
-        
-        options5: {
-          chart: {
-            title: "Department Due Jobs",
-            subtitle: "Total Due: 000",
-            legend: {
-              display: false
-            }
-          },
-          series: {
-            0: { color: '#516aeb' }, // Custom color for the first series (bars)
-          },
-        },
-      
-      
+     
         pieData1: [
           ["Partner", "Contributed"],
           ["Affotax", dashboardData && dashboardData.PartnersGraph.Affotax],
@@ -286,65 +343,31 @@ if(dashboardData)
   
             <div className='col-4'>
                 <div style={{overflow: 'hidden', padding: '10px', backgroundColor: 'white'}}>
-                    <Chart
-                    chartType="Bar"
-                    width="100%"
-                    height="400px"
-                    data={chartsData.data1}
-                    options={chartsData.options1}
-                    />
+                  <Bar options={options} data={data} />
                 </div>
             </div>
             
             <div className='col-4'>
                 <div style={{overflow: 'hidden', padding: '10px', backgroundColor: 'white'}}>
-                    <Chart
-                    chartType="Bar"
-                    width="100%"
-                    height="400px"
-                    data={chartsData.data2}
-                    options={chartsData.options2}
-                   
-                    />
+                  <Bar options={options2} data={data2} />
                 </div>
             </div>
             
             <div className='col-4'>
                 <div style={{overflow: 'hidden', padding: '10px', backgroundColor: 'white'}}>
-                    <Chart
-                    chartType="Bar"
-                    width="100%"
-                    height="400px"
-                    data={chartsData.data3}
-                    options={chartsData.options3}
-                    
-                    />
+                  <Bar options={options3} data={data3} />
                 </div>
             </div>
             
             <div className='col-6 mt-4'>
                 <div style={{overflow: 'hidden', padding: '10px', backgroundColor: 'white'}}>
-                    <Chart
-                    chartType="Bar"
-                    width="100%"
-                    height="400px"
-                    data={chartsData.data4}
-                    options={chartsData.options4}
-                    
-                    />
+                  <Bar options={options4} data={data4} />
                 </div>
             </div>
             
             <div className='col-6 mt-4'>
-                <div style={{overflow: 'hidden', padding: '10px', backgroundColor: 'white'}}>
-                    <Chart
-                    chartType="Bar"
-                    width="100%"
-                    height="400px"
-                    data={chartsData.data5}
-                    options={chartsData.options5}
-                   
-                    />
+                <div style={{overflow: 'hidden', padding: '10px', backgroundColor: 'white' }}>
+                  <Bar options={options5} data={data5} />
                 </div>
             </div>
             
