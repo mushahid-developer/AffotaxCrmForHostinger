@@ -4,6 +4,8 @@ const Jobsdb = require("../model/Jobs/jobs");
 exports.getDashboardData = async (req, res) => {
     try {
         const currentYear = new Date().getFullYear();
+        const previousYear = currentYear - 1;
+        console.log(currentYear)
 
 
         // Clients Count Start
@@ -80,8 +82,86 @@ exports.getDashboardData = async (req, res) => {
                 $lte: `${currentYear}-12-31`
             }
         });
+        
+        
+        const clientsCountJanP = await Clientdb.countDocuments({
+            book_start_date: {
+                $gte: `${previousYear}-01-01`,
+                $lte: `${previousYear}-01-31`
+            }
+        });
+        const clientsCountFebP = await Clientdb.countDocuments({
+            book_start_date: {
+                $gte: `${previousYear}-02-01`,
+                $lte: `${previousYear}-02-28`
+            }
+        });
+        const clientsCountMarchP = await Clientdb.countDocuments({
+            book_start_date: {
+                $gte: `${previousYear}-03-01`,
+                $lte: `${previousYear}-03-31`
+            }
+        });
+        const clientsCountAprP = await Clientdb.countDocuments({
+            book_start_date: {
+                $gte: `${previousYear}-04-01`,
+                $lte: `${previousYear}-04-30`
+            }
+        });
+        const clientsCountMayP = await Clientdb.countDocuments({
+            book_start_date: {
+                $gte: `${previousYear}-05-01`,
+                $lte: `${previousYear}-05-31`
+            }
+        });
+        const clientsCountJuneP = await Clientdb.countDocuments({
+            book_start_date: {
+                $gte: `${previousYear}-06-01`,
+                $lte: `${previousYear}-06-30`
+            }
+        });
+        const clientsCountJulyP = await Clientdb.countDocuments({
+            book_start_date: {
+                $gte: `${previousYear}-07-01`,
+                $lte: `${previousYear}-07-31`
+            }
+        });
+        const clientsCountAugustP = await Clientdb.countDocuments({
+            book_start_date: {
+                $gte: `${previousYear}-08-01`,
+                $lte: `${previousYear}-08-31`
+            }
+        });
+        const clientsCountSeptP = await Clientdb.countDocuments({
+            book_start_date: {
+                $gte: `${previousYear}-09-01`,
+                $lte: `${previousYear}-09-30`
+            }
+        });
+        const clientsCountOctP = await Clientdb.countDocuments({
+            book_start_date: {
+                $gte: `${previousYear}-10-01`,
+                $lte: `${previousYear}-10-31`
+            }
+        });
+        const clientsCountNovP = await Clientdb.countDocuments({
+            book_start_date: {
+                $gte: `${previousYear}-11-01`,
+                $lte: `${previousYear}-11-30`
+            }
+        });
+        const clientsCountDecP = await Clientdb.countDocuments({
+            book_start_date: {
+                $gte: `${previousYear}-12-01`,
+                $lte: `${previousYear}-12-31`
+            }
+        });
 
         const clientsCount = {
+          
+            selectedYear: currentYear,
+            PreviousYear: previousYear,
+
             jan: clientsCountJan,
             feb: clientsCountFeb,
             march: clientsCountMarch,
@@ -94,6 +174,19 @@ exports.getDashboardData = async (req, res) => {
             oct: clientsCountOct,
             nov: clientsCountNov,
             dec: clientsCountDec,
+
+            janP: clientsCountJanP,
+            febP: clientsCountFebP,
+            marchP: clientsCountMarchP,
+            aprP: clientsCountAprP,
+            mayP: clientsCountMayP,
+            juneP: clientsCountJuneP,
+            julyP: clientsCountJulyP,
+            augP: clientsCountAugustP,
+            septP: clientsCountSeptP,
+            octP: clientsCountOctP,
+            novP: clientsCountNovP,
+            decP: clientsCountDecP,
         } 
 
         // Clients Count End
@@ -413,8 +506,193 @@ exports.getDashboardData = async (req, res) => {
               }
             }
           ]);
+        
+        
+          const ClientFeeCountJanP = await Clientdb.aggregate([
+            {
+              $match: { book_start_date: { $gte: `${previousYear}-01-01`, $lte: `${previousYear}-01-31` }}
+            },
+            {
+                $match: { hourly_rate: { $regex: /\S/ } } // filter out documents with empty or whitespace-only fees
+            },
+            {
+              $group: {
+                _id: null,
+                totalFee: { $sum:  { $toDouble: { $ifNull: ['$hourly_rate', '0'] } } }
+              }
+            }
+          ]);
+          
+        const ClientFeeCountFebP = await Clientdb.aggregate([
+            {
+              $match: { book_start_date: { $gte: `${previousYear}-02-28`, $lte: `${previousYear}-02-28` }}
+            },
+            {
+                $match: { hourly_rate: { $regex: /\S/ } } // filter out documents with empty or whitespace-only fees
+            },
+            {
+              $group: {
+                _id: null,
+                totalFee: { $sum:  { $toDouble: { $ifNull: ['$hourly_rate', '0'] } } }
+              }
+            }
+          ]);
+
+        const ClientFeeCountMarP = await Clientdb.aggregate([
+            {
+              $match: { book_start_date: { $gte: `${previousYear}-03-01`, $lte: `${previousYear}-03-31` }} 
+            },
+            {
+                $match: { hourly_rate: { $regex: /\S/ } } // filter out documents with empty or whitespace-only fees
+            },
+            {
+              $group: {
+                _id: null,
+                totalFee: { $sum:  { $toDouble: { $ifNull: ['$hourly_rate', '0'] } } }
+              }
+            }
+          ]);
+
+        const ClientFeeCountAprP = await Clientdb.aggregate([
+            {
+              $match: { book_start_date: { $gte: `${previousYear}-04-01`, $lte: `${previousYear}-04-30` }}
+            },
+            {
+                $match: { hourly_rate: { $regex: /\S/ } } // filter out documents with empty or whitespace-only fees
+            },
+            {
+              $group: {
+                _id: null,
+                totalFee: { $sum:  { $toDouble: { $ifNull: ['$hourly_rate', '0'] } } }
+              }
+            }
+          ]);
+
+        const ClientFeeCountMayP = await Clientdb.aggregate([
+            {
+              $match: { book_start_date: { $gte: `${previousYear}-05-01`, $lte: `${previousYear}-05-31` }} 
+            },
+            {
+                $match: { hourly_rate: { $regex: /\S/ } } // filter out documents with empty or whitespace-only fees
+            },
+            {
+              $group: {
+                _id: null,
+                totalFee: { $sum:  { $toDouble: { $ifNull: ['$hourly_rate', '0'] } } }
+              }
+            }
+          ]);
+
+        const ClientFeeCountJuneP = await Clientdb.aggregate([
+            {
+              $match: { book_start_date: { $gte: `${previousYear}-06-01`, $lte: `${previousYear}-06-30` }} 
+            },
+            {
+                $match: { hourly_rate: { $regex: /\S/ } } // filter out documents with empty or whitespace-only fees
+            },
+            {
+              $group: {
+                _id: null,
+                totalFee: { $sum:  { $toDouble: { $ifNull: ['$hourly_rate', '0'] } } }
+              }
+            }
+          ]);
+
+        const ClientFeeCountJulyP = await Clientdb.aggregate([
+            {
+              $match: { book_start_date: { $gte: `${previousYear}-07-01`, $lte: `${previousYear}-07-31` }}
+            },
+            {
+                $match: { hourly_rate: { $regex: /\S/ } } // filter out documents with empty or whitespace-only fees
+            },
+            {
+              $group: {
+                _id: null,
+                totalFee: { $sum:  { $toDouble: { $ifNull: ['$hourly_rate', '0'] } } }
+              }
+            }
+          ]);
+
+        const ClientFeeCountAugP= await Clientdb.aggregate([
+            {
+              $match: { book_start_date: { $gte: `${previousYear}-08-01`, $lte: `${previousYear}-08-31` }}
+            },
+            {
+                $match: { hourly_rate: { $regex: /\S/ } } // filter out documents with empty or whitespace-only fees
+            },
+            {
+              $group: {
+                _id: null,
+                totalFee: { $sum:  { $toDouble: { $ifNull: ['$hourly_rate', '0'] } } }
+              }
+            }
+          ]);
+
+        const ClientFeeCountSeptP= await Clientdb.aggregate([
+            {
+              $match: { book_start_date: { $gte: `${previousYear}-09-01`, $lte: `${previousYear}-09-30` }}
+            },
+            {
+                $match: { hourly_rate: { $regex: /\S/ } } // filter out documents with empty or whitespace-only fees
+            },
+            {
+              $group: {
+                _id: null,
+                totalFee: { $sum:  { $toDouble: { $ifNull: ['$hourly_rate', '0'] } } }
+              }
+            }
+          ]);
+
+        const ClientFeeCountOctP= await Clientdb.aggregate([
+            {
+              $match: { book_start_date: { $gte: `${previousYear}-10-01`, $lte: `${previousYear}-10-31` }}
+            },
+            {
+                $match: { hourly_rate: { $regex: /\S/ } } // filter out documents with empty or whitespace-only fees
+            },
+            {
+              $group: {
+                _id: null,
+                totalFee: { $sum:  { $toDouble: { $ifNull: ['$hourly_rate', '0'] } } }
+              }
+            }
+          ]);
+
+        const ClientFeeCountNovP= await Clientdb.aggregate([
+            {
+              $match: { book_start_date: { $gte: `${previousYear}-11-01`, $lte: `${previousYear}-11-30` }}
+            },
+            {
+                $match: { hourly_rate: { $regex: /\S/ } } // filter out documents with empty or whitespace-only fees
+            },
+            {
+              $group: {
+                _id: null,
+                totalFee: { $sum:  { $toDouble: { $ifNull: ['$hourly_rate', '0'] } } }
+              }
+            }
+          ]);
+
+        const ClientFeeCountDecP= await Clientdb.aggregate([
+            {
+              $match: { book_start_date: { $gte: `${previousYear}-12-01`, $lte: `${previousYear}-12-31` }}
+            },
+            {
+                $match: { hourly_rate: { $regex: /\S/ } } // filter out documents with empty or whitespace-only fees
+            },
+            {
+              $group: {
+                _id: null,
+                totalFee: { $sum:  { $toDouble: { $ifNull: ['$hourly_rate', '0'] } } }
+              }
+            }
+          ]);
 
         const ClientFee = {
+            selectedYear: currentYear,
+            PreviousYear: previousYear,
+
+
             jan: ClientFeeCountJan[0]?.totalFee || 0,
             feb: ClientFeeCountFeb[0]?.totalFee || 0,
             march: ClientFeeCountMar[0]?.totalFee || 0,
@@ -427,6 +705,20 @@ exports.getDashboardData = async (req, res) => {
             oct: ClientFeeCountOct[0]?.totalFee || 0,
             nov: ClientFeeCountNov[0]?.totalFee || 0,
             dec: ClientFeeCountDec[0]?.totalFee || 0,
+           
+           
+            janP: ClientFeeCountJanP[0]?.totalFee || 0,
+            febP: ClientFeeCountFebP[0]?.totalFee || 0,
+            marchP: ClientFeeCountMarP[0]?.totalFee || 0,
+            aprP: ClientFeeCountAprP[0]?.totalFee || 0,
+            mayP: ClientFeeCountMayP[0]?.totalFee || 0,
+            juneP: ClientFeeCountJuneP[0]?.totalFee || 0,
+            julyP: ClientFeeCountJulyP[0]?.totalFee || 0,
+            augP: ClientFeeCountAugP[0]?.totalFee || 0,
+            septP: ClientFeeCountSeptP[0]?.totalFee || 0,
+            octP: ClientFeeCountOctP[0]?.totalFee || 0,
+            novP: ClientFeeCountNovP[0]?.totalFee || 0,
+            decP: ClientFeeCountDecP[0]?.totalFee || 0,
         } 
         // Client Fee End
 

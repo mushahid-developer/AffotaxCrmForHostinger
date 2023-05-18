@@ -33,26 +33,26 @@ export default function Dashboard() {
     if(dashboardData) {
       setChartsData({
          data1 : [
-          ["Month", "Clients"],
-          ["January", dashboardData ? dashboardData.clientsCount.jan: 0],
-          ["Feburary", dashboardData ? dashboardData.clientsCount.feb: 0],
-          ["March", dashboardData ? dashboardData.clientsCount.march: 0],
-          ["April", dashboardData ? dashboardData.clientsCount.apr: 0],
-          ["May", dashboardData ? dashboardData.clientsCount.may: 0],
-          ["June", dashboardData ? dashboardData.clientsCount.june: 0],
-          ["July", dashboardData ? dashboardData.clientsCount.july: 0],
-          ["August", dashboardData ? dashboardData.clientsCount.aug: 0],
-          ["September", dashboardData ? dashboardData.clientsCount.sept: 0],
-          ["October", dashboardData ? dashboardData.clientsCount.oct: 0],
-          ["November", dashboardData ? dashboardData.clientsCount.nov: 0],
-          ["December", dashboardData ? dashboardData.clientsCount.dec: 0],
+          ["Month",` ${dashboardData && dashboardData.clientsCount.selectedYear}` , `${dashboardData && dashboardData.clientsCount.PreviousYear}`],
+          ["January", dashboardData ? dashboardData.clientsCount.jan: 0 , dashboardData ? dashboardData.clientsCount.janP: 0],
+          ["Feburary", dashboardData ? dashboardData.clientsCount.feb: 0 , dashboardData ? dashboardData.clientsCount.febP: 0],
+          ["March", dashboardData ? dashboardData.clientsCount.march: 0 , dashboardData ? dashboardData.clientsCount.marchP: 0],
+          ["April", dashboardData ? dashboardData.clientsCount.apr: 0 , dashboardData ? dashboardData.clientsCount.aprP: 0],
+          ["May", dashboardData ? dashboardData.clientsCount.may: 0 , dashboardData ? dashboardData.clientsCount.mayP: 0],
+          ["June", dashboardData ? dashboardData.clientsCount.june: 0 , dashboardData ? dashboardData.clientsCount.juneP: 0],
+          ["July", dashboardData ? dashboardData.clientsCount.july: 0 , dashboardData ? dashboardData.clientsCount.julyP: 0],
+          ["August", dashboardData ? dashboardData.clientsCount.aug: 0 , dashboardData ? dashboardData.clientsCount.augP: 0],
+          ["September", dashboardData ? dashboardData.clientsCount.sept: 0 , dashboardData ? dashboardData.clientsCount.septP: 0],
+          ["October", dashboardData ? dashboardData.clientsCount.oct: 0 , dashboardData ? dashboardData.clientsCount.octP: 0],
+          ["November", dashboardData ? dashboardData.clientsCount.nov: 0 , dashboardData ? dashboardData.clientsCount.novP: 0],
+          ["December", dashboardData ? dashboardData.clientsCount.dec: 0 , dashboardData ? dashboardData.clientsCount.decP: 0],
         ],
         
         options1: {
           chart: {
             legend: 'none',
             title: "Clients Counter Graph",
-            subtitle: "2023",
+            subtitle: `${dashboardData.clientsCount.selectedYear} - ${dashboardData.clientsCount.PreviousYear}`,
             bars: 'vertical',
           },
         },
@@ -71,26 +71,27 @@ export default function Dashboard() {
         
         options2: {
           chart: {
-            title: "Department Fee Graph",
-            subtitle: "Total Fee: 000",
             legend: 'none',
+            title: "Clients Counter Graph",
+            subtitle: `${dashboardData.DepartmentFee.selectedYear} - ${dashboardData.DepartmentFee.PreviousYear}`,
+            bars: 'vertical',
           },
         },
       
       data3: [
-          ["Month", "Clients Fee"],
-          ["January", dashboardData ? dashboardData.ClientFee.jan: 0],
-          ["Feburary", dashboardData ? dashboardData.ClientFee.feb: 0],
-          ["March", dashboardData ? dashboardData.ClientFee.march: 0],
-          ["April", dashboardData ? dashboardData.ClientFee.apr: 0],
-          ["May", dashboardData ? dashboardData.ClientFee.may: 0],
-          ["June", dashboardData ? dashboardData.ClientFee.june: 0],
-          ["July", dashboardData ? dashboardData.ClientFee.july: 0],
-          ["August", dashboardData ? dashboardData.ClientFee.aug: 0],
-          ["September", dashboardData ? dashboardData.ClientFee.sept: 0],
-          ["October", dashboardData ? dashboardData.ClientFee.oct: 0],
-          ["November", dashboardData ? dashboardData.ClientFee.nov: 0],
-          ["December", dashboardData ? dashboardData.ClientFee.dec: 0],
+          ["Month", `${dashboardData && dashboardData.clientsCount.selectedYear}` , `${dashboardData && dashboardData.clientsCount.PreviousYear}`],
+          ["January", dashboardData ? dashboardData.ClientFee.jan: 0, dashboardData ? dashboardData.ClientFee.janP: 0],
+          ["Feburary", dashboardData ? dashboardData.ClientFee.feb: 0, dashboardData ? dashboardData.ClientFee.febP: 0],
+          ["March", dashboardData ? dashboardData.ClientFee.march: 0, dashboardData ? dashboardData.ClientFee.marchP: 0],
+          ["April", dashboardData ? dashboardData.ClientFee.apr: 0, dashboardData ? dashboardData.ClientFee.aprP: 0],
+          ["May", dashboardData ? dashboardData.ClientFee.may: 0, dashboardData ? dashboardData.ClientFee.mayP: 0],
+          ["June", dashboardData ? dashboardData.ClientFee.june: 0, dashboardData ? dashboardData.ClientFee.juneP: 0],
+          ["July", dashboardData ? dashboardData.ClientFee.july: 0, dashboardData ? dashboardData.ClientFee.julyP: 0],
+          ["August", dashboardData ? dashboardData.ClientFee.aug: 0, dashboardData ? dashboardData.ClientFee.augP: 0],
+          ["September", dashboardData ? dashboardData.ClientFee.sept: 0, dashboardData ? dashboardData.ClientFee.septP: 0],
+          ["October", dashboardData ? dashboardData.ClientFee.oct: 0, dashboardData ? dashboardData.ClientFee.octP: 0],
+          ["November", dashboardData ? dashboardData.ClientFee.nov: 0, dashboardData ? dashboardData.ClientFee.novP: 0],
+          ["December", dashboardData ? dashboardData.ClientFee.dec: 0, dashboardData ? dashboardData.ClientFee.decP: 0],
         ],
         
         options3: {
@@ -190,6 +191,7 @@ export default function Dashboard() {
             }
         );
         if(response.status === 200){
+          console.log(response.data)
           setDashboardData(response.data)
         } 
         
@@ -269,7 +271,7 @@ if(dashboardData)
                 <div style={{overflow: 'hidden', padding: '10px', backgroundColor: 'white'}}>
                     <Chart
                     chartType="Bar"
-                    width="109%"
+                    width="100%"
                     height="400px"
                     data={chartsData.data1}
                     options={chartsData.options1}
@@ -281,7 +283,7 @@ if(dashboardData)
                 <div style={{overflow: 'hidden', padding: '10px', backgroundColor: 'white'}}>
                     <Chart
                     chartType="Bar"
-                    width="112%"
+                    width="100%"
                     height="400px"
                     data={chartsData.data2}
                     options={chartsData.options2}
@@ -294,7 +296,7 @@ if(dashboardData)
                 <div style={{overflow: 'hidden', padding: '10px', backgroundColor: 'white'}}>
                     <Chart
                     chartType="Bar"
-                    width="111%"
+                    width="100%"
                     height="400px"
                     data={chartsData.data3}
                     options={chartsData.options3}
@@ -307,7 +309,7 @@ if(dashboardData)
                 <div style={{overflow: 'hidden', padding: '10px', backgroundColor: 'white'}}>
                     <Chart
                     chartType="Bar"
-                    width="109%"
+                    width="100%"
                     height="400px"
                     data={chartsData.data4}
                     options={chartsData.options4}
@@ -320,7 +322,7 @@ if(dashboardData)
                 <div style={{overflow: 'hidden', padding: '10px', backgroundColor: 'white'}}>
                     <Chart
                     chartType="Bar"
-                    width="109%"
+                    width="100%"
                     height="400px"
                     data={chartsData.data5}
                     options={chartsData.options5}
