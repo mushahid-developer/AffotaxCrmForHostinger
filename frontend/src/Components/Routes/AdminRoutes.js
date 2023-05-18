@@ -32,6 +32,7 @@ const setMiniNoteIsOpen = props.setMiniNoteIsOpen
 const recurringNoteIsOpen = props.recurringNoteIsOpen
 const setRecurringNoteIsOpen = props.setRecurringNoteIsOpen
 const roleName = props.roleName
+const setToken = props.setToken
 return (
   <>
   <Router>
@@ -46,7 +47,7 @@ return (
           </div>
           <div className="Layout_bottom_screen">
             <div className="layout_sidebar">
-              <SideBar pagesAccess={pagesAccess} />
+              <SideBar setToken={setToken} pagesAccess={pagesAccess} />
             </div>
             <div className="layout_main_screen">
               <div className="layout_main_screen_content">

@@ -28,6 +28,7 @@ function App() {
     
   }
 
+
   const getUsersRoles = async ()=>{
     setLoader(true)
         try {
@@ -40,8 +41,15 @@ function App() {
                     
                 }
             );
+
+
+            if(response.status === 401){
+              secureLocalStorage.removeItem("token");
+              setToken(secureLocalStorage.getItem('token'))
+              setLoader(false)
+            }
+
             if(response.status === 200){
-                console.log(response.data)
                 // setMainRowData(response.data)
                 setPagesAccess(response.data.users.role_id.pages)
                 setRoleName(response.data.users.role_id.name)
@@ -50,9 +58,12 @@ function App() {
             
         
             } catch (err) {
+              secureLocalStorage.removeItem("token");
+              setToken(secureLocalStorage.getItem('token'))
+              setLoader(false)
             Store.addNotification({
                 title: 'Error',
-                message: "Please Try Again",
+                message: "Session Expired Plaease Login Again to continue",
                 type: "danger",
                 insert: "top",
                 container: "top-center",
@@ -95,6 +106,7 @@ function App() {
                 miniNoteIsOpen={miniNoteIsOpen} 
                 setRecurringNoteIsOpen={setRecurringNoteIsOpen} 
                 recurringNoteIsOpen={recurringNoteIsOpen}
+                setToken={setToken}
               />
             </div>
             <div className={`MiniNote ${miniNoteIsOpen && "miniNoteOpenMiniNote"}`}>
