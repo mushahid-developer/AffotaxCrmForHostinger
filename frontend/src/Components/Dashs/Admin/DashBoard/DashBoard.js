@@ -136,7 +136,7 @@ const data3 = {
   labels: ['Jan', 'Feb', 'March', 'April', 'May', 'June', 'July', 'Aug', 'Sept', 'Oct', 'Nov', 'Dec'],
   datasets: [
     {
-      label: ` Count`,
+      label: ` ${dashboardData && dashboardData.clientsCount.selectedYear}`,
       data: [
         dashboardData ? dashboardData.ClientFee.jan: 0, dashboardData ? dashboardData.ClientFee.feb: 0, dashboardData ? dashboardData.ClientFee.march: 0, dashboardData ? dashboardData.ClientFee.apr: 0, dashboardData ? dashboardData.ClientFee.may: 0, dashboardData ? dashboardData.ClientFee.june: 0, dashboardData ? dashboardData.ClientFee.july: 0, dashboardData ? dashboardData.ClientFee.aug: 0, dashboardData ? dashboardData.ClientFee.sept: 0, dashboardData ? dashboardData.ClientFee.oct: 0, dashboardData ? dashboardData.ClientFee.nov: 0, dashboardData ? dashboardData.ClientFee.dec: 0
       ],
