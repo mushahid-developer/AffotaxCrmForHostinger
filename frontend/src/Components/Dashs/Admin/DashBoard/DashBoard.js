@@ -55,6 +55,10 @@ export default function Dashboard() {
             subtitle: `${dashboardData.clientsCount.selectedYear} - ${dashboardData.clientsCount.PreviousYear}`,
             bars: 'vertical',
           },
+          series: {
+            0: { color: '#b5b5b9' }, // Custom color for the first series (bars)
+            1: { color: '#67c160' }, // Custom color for the first series (bars)
+          },
         },
       
       data2: [
@@ -75,6 +79,9 @@ export default function Dashboard() {
             title: "Clients Counter Graph",
             subtitle: `${dashboardData.DepartmentFee.selectedYear} - ${dashboardData.DepartmentFee.PreviousYear}`,
             bars: 'vertical',
+          },
+          series: {
+            0: { color: '#1ab394' }, // Custom color for the first series (bars)
           },
         },
       
@@ -100,6 +107,10 @@ export default function Dashboard() {
             subtitle: "2023",
             legend: 'none',
           },
+          series: {
+            0: { color: '#b5b5b9' }, // Custom color for the first series (bars)
+            1: { color: '#5873d8' }, // Custom color for the first series (bars)
+          },
         },
       
       data4: [
@@ -119,6 +130,9 @@ export default function Dashboard() {
             title: "Department Overdue Jobs",
             subtitle: "Total Overdue: 000",
            legend: 'none',
+          },
+          series: {
+            0: { color: '#be7462' }, // Custom color for the first series (bars)
           },
         },
       
@@ -141,6 +155,9 @@ export default function Dashboard() {
             legend: {
               display: false
             }
+          },
+          series: {
+            0: { color: '#516aeb' }, // Custom color for the first series (bars)
           },
         },
       
