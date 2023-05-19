@@ -989,13 +989,13 @@ var filterParams = {
       field: 'hours',
       flex: 1,
       floatingFilter:false,
-      // floatingFilterComponent: "myFloatingFilter",
-      // floatingFilterComponentParams: {
-      //   onValueChange:(value)=> {setSumOfMarks(value)},
-      //   value: sumOfMarks,
-      //   suppressFilterButton: true, 
-      //   suppressInput: true 
-      // },
+      floatingFilterComponent: "myFloatingFilter",
+      floatingFilterComponentParams: {
+        onValueChange:(value)=> {setSumOfMarks(value)},
+        value: sumOfMarks,
+        suppressFilterButton: true, 
+        suppressInput: true 
+      },
   },
     {
       headerName: "Year End",
