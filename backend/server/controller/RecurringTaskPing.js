@@ -1,19 +1,17 @@
 const cron = require('node-cron');
+const RecurringTasksDb = require('../model/RecurringTasks/RecurringTasks');
 
-// set up a scheduled task to run every day at midnight
+// Set up a scheduled task to run every day at midnight
 cron.schedule('0 0 * * *', async () => {
+  console.log("Cron Job Running");
   try {
-    // find all documents with isChecked set to true
-    const docs = await MyModel.find({ isChecked: true });
-
-    // set isChecked to false for all matching documents
-    await Promise.all(docs.map(doc => {
-      doc.isChecked = false;
-      return doc.save();
-    }));
-
-    console.log(`Updated ${docs.length} documents`);
+    const a = await RecurringTasksDb.updateMany(
+      {},
+      { isChecked: false },
+      { multi: true }
+    );
+    console.log(a);
   } catch (error) {
-    console.error(error);
+    console.error("Error executing cron job:", error);
   }
 });
