@@ -11,7 +11,7 @@ var cors = require('cors');
 const connectDB = require('./server/database/connection');
 
 //Import Cron Job file to run it
-require('./server/controller/RecurringTaskPing');
+// require('./server/controller/RecurringTaskPing');
 
 // initialization App
 const app = express();
