@@ -67,18 +67,18 @@ const data = {
   labels: ['Jan', 'Feb', 'March', 'April', 'May', 'June', 'July', 'Aug', 'Sept', 'Oct', 'Nov', 'Dec'],
   datasets: [
     {
-      label: ` ${dashboardData && dashboardData.clientsCount.selectedYear}`,
-      data: [
-        dashboardData ? dashboardData.clientsCount.jan: 0, dashboardData ? dashboardData.clientsCount.feb: 0, dashboardData ? dashboardData.clientsCount.march: 0, dashboardData ? dashboardData.clientsCount.apr: 0, dashboardData ? dashboardData.clientsCount.may: 0, dashboardData ? dashboardData.clientsCount.june: 0, dashboardData ? dashboardData.clientsCount.july: 0, dashboardData ? dashboardData.clientsCount.aug: 0, dashboardData ? dashboardData.clientsCount.sept: 0, dashboardData ? dashboardData.clientsCount.oct: 0, dashboardData ? dashboardData.clientsCount.nov: 0, dashboardData ? dashboardData.clientsCount.dec: 0
-      ],
-      backgroundColor: '#b5b5b9',
-    },
-    {
       label: ` ${dashboardData && dashboardData.clientsCount.PreviousYear}`,
       data: [
         dashboardData ? dashboardData.clientsCount.janP: 0, dashboardData ? dashboardData.clientsCount.febP: 0, dashboardData ? dashboardData.clientsCount.marchP: 0, dashboardData ? dashboardData.clientsCount.aprP: 0, dashboardData ? dashboardData.clientsCount.mayP: 0, dashboardData ? dashboardData.clientsCount.juneP: 0, dashboardData ? dashboardData.clientsCount.julyP: 0, dashboardData ? dashboardData.clientsCount.augP: 0, dashboardData ? dashboardData.clientsCount.septP: 0, dashboardData ? dashboardData.clientsCount.octP: 0, dashboardData ? dashboardData.clientsCount.novP: 0, dashboardData ? dashboardData.clientsCount.decP: 0
       ],
       backgroundColor: '#67c160',
+    },
+    {
+      label: ` ${dashboardData && dashboardData.clientsCount.selectedYear}`,
+      data: [
+        dashboardData ? dashboardData.clientsCount.jan: 0, dashboardData ? dashboardData.clientsCount.feb: 0, dashboardData ? dashboardData.clientsCount.march: 0, dashboardData ? dashboardData.clientsCount.apr: 0, dashboardData ? dashboardData.clientsCount.may: 0, dashboardData ? dashboardData.clientsCount.june: 0, dashboardData ? dashboardData.clientsCount.july: 0, dashboardData ? dashboardData.clientsCount.aug: 0, dashboardData ? dashboardData.clientsCount.sept: 0, dashboardData ? dashboardData.clientsCount.oct: 0, dashboardData ? dashboardData.clientsCount.nov: 0, dashboardData ? dashboardData.clientsCount.dec: 0
+      ],
+      backgroundColor: '#b5b5b9',
     },
     
   ],
@@ -97,7 +97,6 @@ const options2 = {
       text: 'Departments Counter Graph',
     },
   },
-  barThickness: 10
 };
 
 
@@ -127,8 +126,7 @@ const options3 = {
       display: true,
       text: 'Clients Counter Graph',
     },
-  },
-  barThickness: 10
+  }
 };
 
 
@@ -136,18 +134,18 @@ const data3 = {
   labels: ['Jan', 'Feb', 'March', 'April', 'May', 'June', 'July', 'Aug', 'Sept', 'Oct', 'Nov', 'Dec'],
   datasets: [
     {
-      label: ` ${dashboardData && dashboardData.clientsCount.selectedYear}`,
-      data: [
-        dashboardData ? dashboardData.ClientFee.jan: 0, dashboardData ? dashboardData.ClientFee.feb: 0, dashboardData ? dashboardData.ClientFee.march: 0, dashboardData ? dashboardData.ClientFee.apr: 0, dashboardData ? dashboardData.ClientFee.may: 0, dashboardData ? dashboardData.ClientFee.june: 0, dashboardData ? dashboardData.ClientFee.july: 0, dashboardData ? dashboardData.ClientFee.aug: 0, dashboardData ? dashboardData.ClientFee.sept: 0, dashboardData ? dashboardData.ClientFee.oct: 0, dashboardData ? dashboardData.ClientFee.nov: 0, dashboardData ? dashboardData.ClientFee.dec: 0
-      ],
-      backgroundColor: '#b5b5b9',
-    },
-    {
       label: ` ${dashboardData && dashboardData.clientsCount.PreviousYear}`,
       data: [
         dashboardData ? dashboardData.ClientFee.janP: 0, dashboardData ? dashboardData.ClientFee.febP: 0, dashboardData ? dashboardData.ClientFee.marchP: 0, dashboardData ? dashboardData.ClientFee.aprP: 0, dashboardData ? dashboardData.ClientFee.mayP: 0, dashboardData ? dashboardData.ClientFee.juneP: 0, dashboardData ? dashboardData.ClientFee.julyP: 0, dashboardData ? dashboardData.ClientFee.augP: 0, dashboardData ? dashboardData.ClientFee.septP: 0, dashboardData ? dashboardData.ClientFee.octP: 0, dashboardData ? dashboardData.ClientFee.novP: 0, dashboardData ? dashboardData.ClientFee.decP: 0
       ],
       backgroundColor: '#5873d8',
+    },
+    {
+      label: ` ${dashboardData && dashboardData.clientsCount.selectedYear}`,
+      data: [
+        dashboardData ? dashboardData.ClientFee.jan: 0, dashboardData ? dashboardData.ClientFee.feb: 0, dashboardData ? dashboardData.ClientFee.march: 0, dashboardData ? dashboardData.ClientFee.apr: 0, dashboardData ? dashboardData.ClientFee.may: 0, dashboardData ? dashboardData.ClientFee.june: 0, dashboardData ? dashboardData.ClientFee.july: 0, dashboardData ? dashboardData.ClientFee.aug: 0, dashboardData ? dashboardData.ClientFee.sept: 0, dashboardData ? dashboardData.ClientFee.oct: 0, dashboardData ? dashboardData.ClientFee.nov: 0, dashboardData ? dashboardData.ClientFee.dec: 0
+      ],
+      backgroundColor: '#b5b5b9',
     },
     
   ],

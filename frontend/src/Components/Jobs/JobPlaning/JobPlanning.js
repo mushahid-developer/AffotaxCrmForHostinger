@@ -176,6 +176,9 @@ export default function JobPlanning() {
   billingOverDue: 0
  });
 
+ const [sumOfMarks, setSumOfMarks] = useState(0);
+
+
  const filter = async ()=>{
 
   // const roo = mainrowData; 
@@ -781,23 +784,20 @@ export default function JobPlanning() {
 
   if(filteredArray){
     var summ = 0;
-    for(var arr of filteredArray){
-      summ = summ + +arr.hours 
-    }
+    filteredArray.forEach((item) => {summ = +summ + +item.hours})
     setSumOfMarks(summ);
   }
 
-
-
   setRowData(filteredArray)
-
-   
+  
  }
 
 
  useEffect(()=>{
   setRowData(mainrowData)
   filter()
+  
+  
  },[statusFvalue, subscriptionFvalue, jStatusFvalue, cManagerFvalue, departmentFvalue, jHolderFvalue, yearEndFvalue, yearEndFvalueDate, deadlineFvalue, deadlineFvalueDate, jobDateFvalue, jobDateFvalueDate, mainrowData])
 
  
@@ -882,27 +882,6 @@ export default function JobPlanning() {
  }
 
 
-
-
-
- const [sumOfMarks, setSumOfMarks] = useState(0);
- const [filterKey, setFilterKey] = useState(0);
-
- const calculateSumOfMarks = () => {
-  const filteredRows = [];
-  gridApi.api.forEachNodeAfterFilter((node) => {
-    if (node.data.hours != null) {
-      filteredRows.push(node);
-    }
-  });
-  const sum = filteredRows.reduce((total, row) => {
-    return total + +row.data.hours;
-  }, 0);
-  setSumOfMarks(sum);
-  
-  setFilterKey(filterKey + 1);
-};
-
 const handleMultipleRowFormDataChange = (e)=>{
  e.preventDefault()
  const { name, value } = e.target;
@@ -911,14 +890,6 @@ const handleMultipleRowFormDataChange = (e)=>{
   [name]: value
 }));
 }
-
-// useEffect(() => {
-//   if (gridApi) {
-//     calculateSumOfMarks();
-//     gridApi.api.addEventListener("filterChanged", calculateSumOfMarks);
-//     return () => gridApi.api.removeEventListener("filterChanged", calculateSumOfMarks);
-//   }
-// }, [gridApi]);
 
 
 var filterParams = {
@@ -958,7 +929,7 @@ var filterParams = {
     {
       headerName: "Company Name",
       field:"comName",
-      flex: 2.5,
+      flex: 2.7,
       editable: false,
       valueGetter: p => {
         return p.data.client_id.company_name //to get value from obj inside obj
@@ -1014,17 +985,17 @@ var filterParams = {
   
     },
     {
-      headerName: "Hours",
+      headerName: 'Hours',
       field: 'hours',
       flex: 1,
-      floatingFilter:true,
-      floatingFilterComponent: "myFloatingFilter",
-      floatingFilterComponentParams: {
-        onValueChange:(value)=> setSumOfMarks(value),
-        value: sumOfMarks,
-        suppressFilterButton: true, 
-        suppressInput: true 
-      },
+      floatingFilter:false,
+      // floatingFilterComponent: "myFloatingFilter",
+      // floatingFilterComponentParams: {
+      //   onValueChange:(value)=> {setSumOfMarks(value)},
+      //   value: sumOfMarks,
+      //   suppressFilterButton: true, 
+      //   suppressInput: true 
+      // },
   },
     {
       headerName: "Year End",
@@ -1321,6 +1292,7 @@ var filterParams = {
       valueGetter: p => {
         return p.data.client_id.email //to get value from obj inside obj
       },
+      editable: false,
     },
     {
       headerName: "Phone",
@@ -1369,13 +1341,13 @@ const onCellValueChanged = useCallback((event) => {
   if(event.colDef.field === "jHolder"){
     const selectedOption = preData.find(option => option.label === event.data.jHolder);
     event.data.jHolder = selectedOption ? selectedOption.value : '';
-    event.data.job_holder_id ? event.data.job_holder_id.name = selectedOption ? selectedOption.label : '' : event.data.job_holder_name = selectedOption ? selectedOption.label : '' ;
+    event.data.job_holder_id ? event.data.job_holder_id.name = selectedOption ? selectedOption.label : '' : event.data.job_holder_name = selectedOption && selectedOption.label !=="Select" ? selectedOption.label : '' ;
   }
   if(event.colDef.field === 'cManager')
   {
     const selectedOption = preData.find(option => option.label === event.data.cManager);
     event.data.cManager = selectedOption ? selectedOption.value : '';
-    event.data.manager_id ? event.data.manager_id.name = selectedOption ? selectedOption.label : '' : event.data.manager_id_name = selectedOption ? selectedOption.label : '' ;
+    event.data.manager_id ? event.data.manager_id.name = selectedOption ? selectedOption.label : '' : event.data.manager_id_name = selectedOption && selectedOption.label !=="Select" ? selectedOption.label : '' ;
   }
 }, [gridApi]);
 
@@ -1427,7 +1399,6 @@ const onPageSizeChanged = useCallback(() => {
 
   async function onGridReady(params) {
   setGridApi(params);
-  // calculateSumOfMarks();
 }
 
 const handleColHideOnStart= ()=>{
@@ -1927,7 +1898,7 @@ else{
           <div className="ag-theme-alpine" style={{ height: '81vh'}}>
 
             {/* <button onClick={deleteHandler}>delete</button> */}
-
+            
             <AgGridReact
                 getRowId={getRowId}
 
@@ -1958,7 +1929,12 @@ else{
                 suppressDragLeaveHidesColumns={true} // disable move above header to hide column
                 frameworkComponents={frameworkComponents}
                 />
-                {/* <MyFloatingFilter value={sumOfMarks} /> */}
+                  <div className="fixed-row">
+                    <div className="fixed-row-cell">Total Hours: {sumOfMarks.toFixed(1)}</div>
+                
+                    {/* Add more cells or custom content as needed */}
+                  </div>
+              
           </div>
         </div>
     </div>
