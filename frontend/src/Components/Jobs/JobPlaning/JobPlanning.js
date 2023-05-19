@@ -988,7 +988,6 @@ var filterParams = {
       headerName: 'Hours',
       field: 'hours',
       flex: 1,
-      floatingFilter:false,
       floatingFilterComponent: "myFloatingFilter",
       floatingFilterComponentParams: {
         onValueChange:(value)=> {setSumOfMarks(value)},
