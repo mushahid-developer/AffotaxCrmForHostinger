@@ -172,7 +172,7 @@ exports.addNewClient = async (req, res) => {
       ]).exec();
       const [clients, jobs] = await Promise.all([clientsPromise, jobsPromise]);
       const jobMap = new Map(jobs.map(({ _id, totalHours, totalFee }) => [_id.toString(), { totalHours, totalFee }]));
-      const finalArr = clients.map(({ _id, book_start_date, company_name, client_name, isActive }) => {
+      const finalArr = clients.map(({ _id, book_start_date, company_name, client_name, isActive, source, partner }) => {
         const { totalHours = 0, totalFee = 0 } = jobMap.get(_id.toString()) || {};
         return {
           _id,
@@ -181,7 +181,9 @@ exports.addNewClient = async (req, res) => {
           client_name,
           isActive,
           total_hours: totalHours,
-          total_fee: totalFee
+          total_fee: totalFee,
+          source,
+          partner
         };
       });
       res.json(finalArr);

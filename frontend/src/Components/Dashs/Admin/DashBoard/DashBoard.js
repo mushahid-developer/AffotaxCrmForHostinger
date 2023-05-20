@@ -10,11 +10,16 @@ import {
   Legend,
 } from 'chart.js';
 import { Bar } from 'react-chartjs-2';
+import { useNavigate } from 'react-router-dom';
+
+import DatePicker from "react-datepicker";
+import "react-datepicker/dist/react-datepicker.css";
 
 
 import axios from '../../../../Api/Axios';
 import * as axiosURL from '../../../../Api/AxiosUrls';
 import { Store } from 'react-notifications-component';
+import Loader from '../../../Common/Loader/Loader';
 
 var getDashboardDataUrl = axiosURL.getDashboardDataUrl;
 
@@ -29,24 +34,34 @@ export default function Dashboard() {
     Legend
   );
 
+  const navigate = useNavigate();
+
+  const [reRender, setReRender] = useState(false)
+  const [loader, setLoader] = useState(true)
+  const [selectedDate, setSelectedDate] = useState(null)
   const [dashboardData, setDashboardData] = useState();
   const [chartsData, setChartsData] = useState({
-    data1: [],
-    options1: {},
-    data2: [],
-    options2: {},
-    data3: [],
-    options3: {},
-    data4: [],
-    options4: {},
-    data5: [],
-    options5: {},
     pieData1: [],
     pieOptions1: {},
     pieData2: [],
     pieOtions2: {}
   });
 
+  const [showHideCharts, setShowHideCharts] = useState({
+    clientsCounterGraph: true,
+    departmentsCounterGraph: true,
+    clientsFeeGraph: true,
+    departmentsOverDueGraph: true,
+    departmentsDueGraph: true,
+    partnersGraph: true,
+    sourcesGraph: true,
+  })
+
+  useEffect(()=>{
+    if(dashboardData){
+      setSelectedDate(new Date(`01/01/${dashboardData.clientsCount.selectedYear}`))
+    }
+  }, [dashboardData])
   
 const options = {
   responsive: true,
@@ -60,6 +75,7 @@ const options = {
     },
   },
 };
+
 
 
 const data = {
@@ -123,7 +139,7 @@ const options3 = {
     },
     title: {
       display: true,
-      text: 'Clients Counter Graph',
+      text: 'Clients Fee Graph',
     },
   }
 };
@@ -152,6 +168,19 @@ const data3 = {
 
 const options4 = {
   responsive: true,
+  onClick: (event, elements) => {
+    if (elements.length > 0) {
+      const elementIndex = elements[0].index;
+      const clickedOn = elements[0].element.$context['dataset'].names[elementIndex]
+
+      console.log('Clicked on', clickedOn)
+      const dataToSend = {
+        departmentName : clickedOn,
+        filterType: "Overdue"
+      }
+      navigate('/clients/job-planning', { state: dataToSend });
+    }
+  },
   plugins: {
     legend: {
       position: 'top',
@@ -175,6 +204,7 @@ const data4 = {
         dashboardData ? dashboardData.JobsOverdue.accounts.length: 0, dashboardData ? dashboardData.JobsOverdue.address.length: 0, dashboardData ? dashboardData.JobsOverdue.billing.length: 0, dashboardData ? dashboardData.JobsOverdue.bookKeeping.length: 0, dashboardData ? dashboardData.JobsOverdue.companySec.length: 0, dashboardData ? dashboardData.JobsOverdue.payRoll.length: 0, dashboardData ? dashboardData.JobsOverdue.personalTax.length: 0, dashboardData ? dashboardData.JobsOverdue.vatReturn.length: 0
       ],
       backgroundColor: '#be7462',
+      names: ['Accounts', 'Address', 'Billing', 'BookKeeping', 'Company Sec', 'PayRoll', 'Personal Tax', 'Vat Return'], // Array of Names
     },
     
   ],
@@ -182,6 +212,19 @@ const data4 = {
 
 const options5 = {
   responsive: true,
+  onClick: (event, elements) => {
+    if (elements.length > 0) {
+      const elementIndex = elements[0].index;
+      const clickedOn = elements[0].element.$context['dataset'].names[elementIndex]
+
+      console.log('Clicked on', clickedOn)
+      const dataToSend = {
+        departmentName : clickedOn,
+        filterType: "Due"
+      }
+      navigate('/clients/job-planning', { state: dataToSend });
+    }
+  },
   barThickness: 15, 
   plugins: {
     legend: {
@@ -189,7 +232,7 @@ const options5 = {
     },
     title: {
       display: true,
-      text: 'Departments OverDue Jobs',
+      text: 'Departments Due Jobs',
     },
   },
   barThickness: 20, // Adjust the width of the bars
@@ -206,6 +249,7 @@ const data5 = {
         dashboardData ? dashboardData.Jobsdue.accounts.length: 0, dashboardData ? dashboardData.Jobsdue.address.length: 0, dashboardData ? dashboardData.Jobsdue.billing.length: 0, dashboardData ? dashboardData.Jobsdue.bookKeeping.length: 0, dashboardData ? dashboardData.Jobsdue.companySec.length: 0, dashboardData ? dashboardData.Jobsdue.payRoll.length: 0, dashboardData ? dashboardData.Jobsdue.personalTax.length: 0, dashboardData ? dashboardData.Jobsdue.vatReturn.length: 0
       ],
       backgroundColor: '#516aeb',
+      names: ['Accounts', 'Address', 'Billing', 'BookKeeping', 'Company Sec', 'PayRoll', 'Personal Tax', 'Vat Return'], // Array of Names
     },
     
   ],
@@ -256,14 +300,18 @@ const data5 = {
 
   const getData = async ()=>{
     try {
+      setLoader(true)
         const response = await axios.post(getDashboardDataUrl,
+            {
+              selectedDate: selectedDate
+            },
             {
                 headers:{ 'Content-Type': 'application/json' }
             }
         );
         if(response.status === 200){
-          console.log(response.data)
           setDashboardData(response.data)
+          setLoader(false)
         } 
         
     
@@ -287,10 +335,30 @@ const data5 = {
 useEffect(() => {
     getData();
     
-}, []);
+}, [reRender]);
+
+function handleMenuClick(e) {
+  // Prevent the default behavior of the click event
+  e.preventDefault();
+
+  // Stop the click event from propagating to the dropdown menu
+  e.stopPropagation();
+}
 
 
-if(dashboardData)
+const handleShowHideCharts = (e, graphName)=>{
+  handleMenuClick(e)
+  const value = !showHideCharts[graphName]
+
+  setShowHideCharts(prev => ({
+    ...prev,
+    [graphName]: value
+  }))
+
+}
+
+
+if(!loader)
 {
 
   return (
@@ -305,24 +373,55 @@ if(dashboardData)
           <div style={{alignItems: 'center',}} className='d-flex'>
   
             <div >
-              <h4 style={{padding: '2px 16px',}}>
+              <h4 style={{padding: '10px 16px',}}>
                   Dashboard
               </h4>
             </div>
   
-            {/* <div  className='table-col-numbers mx-2'>
-              <select className='form-control' onChange={onPageSizeChanged} id="page-size">
-                <option value="25">25</option>
-                <option value="50">50</option>
-                <option value="100">100</option>
-                <option value="200">200</option>
-              </select>
-            </div> */}
+            <div className='table-show-hide mx-2'>
+              <div className="dropdown">
+                <button className="btn" type="button" id="dropdownMenuButton" data-bs-toggle="dropdown" aria-expanded="false">
+                  <svg style={{height: '16px', width: '16px'}} xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" className="feather feather-eye-off icon-16"><path d="M17.94 17.94A10.07 10.07 0 0 1 12 20c-7 0-11-8-11-8a18.45 18.45 0 0 1 5.06-5.94M9.9 4.24A9.12 9.12 0 0 1 12 4c7 0 11 8 11 8a18.5 18.5 0 0 1-2.16 3.19m-6.72-1.07a3 3 0 1 1-4.24-4.24"></path><line x1="1" y1="1" x2="23" y2="23"></line></svg>
+                </button>
+                <div style={{width: 'max-content', padding: '10px'}} className="dropdown-menu">
+                  <div className="row">
+                    <div className="col-6">
+                      <ul style={{all: 'unset'}}>
+                        <li><button onClick={(e)=>{handleShowHideCharts(e, "clientsCounterGraph")}} className={`dropdown-item ${!showHideCharts.clientsCounterGraph? "active" : ""}`}  >Clients Counter Graph</button></li>
+                        <li><button onClick={(e)=>{handleShowHideCharts(e, "departmentsCounterGraph")}} className={`dropdown-item ${!showHideCharts.departmentsCounterGraph? "active" : ""}`} >Department Count Graph</button></li>
+                        <li><button onClick={(e)=>{handleShowHideCharts(e, "clientsFeeGraph")}} className={`dropdown-item ${!showHideCharts.clientsFeeGraph? "active" : ""}`} >Clients Fee</button></li>
+                        <li><button onClick={(e)=>{handleShowHideCharts(e, "departmentsOverDueGraph")}} className={`dropdown-item ${!showHideCharts.departmentsOverDueGraph? "active" : ""}`} >Departments Overdue Graph</button></li>
+                        </ul>
+                    </div>
+                    <div className="col-6">
+                      <ul style={{all: 'unset'}}>
+                        <li><button onClick={(e)=>{handleShowHideCharts(e, "departmentsDueGraph")}} className={`dropdown-item ${!showHideCharts.departmentsDueGraph? "active" : ""}`}  >Departments Due Graph</button></li>
+                        <li><button onClick={(e)=>{handleShowHideCharts(e, "partnersGraph")}} className={`dropdown-item ${!showHideCharts.partnersGraph? "active" : ""}`}>Partners Graph</button></li>
+                        <li><button onClick={(e)=>{handleShowHideCharts(e, "sourcesGraph")}} className={`dropdown-item ${!showHideCharts.sourcesGraph? "active" : ""}`} >Sources Graph</button></li>
+                        </ul>
+                    </div>
+                  </div>
+
+                </div>
+              </div>
+            </div>
   
           </div>
   
           <div className='mx-4'>
-            {/*  */}
+          <DatePicker
+          style={{textAlign: 'center'}}
+          className='form-control text-center'
+            selected={selectedDate}
+            onChange={(date) => {
+                setSelectedDate(date);
+                setReRender(prev => !prev)
+            }}
+            showYearPicker
+            dateFormat="yyyy"
+            todayButton="Current Year"
+            yearItemNumber={8}
+        />
           </div>
           
   
@@ -337,63 +436,75 @@ if(dashboardData)
   
     <div style={{overflow: 'hidden',}} >
         <div className='row mt-4'>
-  
+
+          {showHideCharts.clientsCounterGraph && 
             <div className='col-4'>
                 <div style={{overflow: 'hidden', padding: '10px', backgroundColor: 'white'}}>
                   <Bar options={options} data={data} />
                 </div>
             </div>
-            
+          }
+  
+            {showHideCharts.departmentsCounterGraph && 
             <div className='col-4'>
                 <div style={{overflow: 'hidden', padding: '10px', backgroundColor: 'white'}}>
                   <Bar options={options2} data={data2} />
                 </div>
             </div>
+            }
             
-            <div className='col-4'>
-                <div style={{overflow: 'hidden', padding: '10px', backgroundColor: 'white'}}>
-                  <Bar options={options3} data={data3} />
-                </div>
-            </div>
+            {showHideCharts.clientsFeeGraph && 
+              <div className='col-4'>
+                  <div style={{overflow: 'hidden', padding: '10px', backgroundColor: 'white'}}>
+                    <Bar options={options3} data={data3} />
+                  </div>
+              </div>
+            }
             
-            <div className='col-6 mt-4'>
-                <div style={{overflow: 'hidden', padding: '10px', backgroundColor: 'white'}}>
-                  <Bar options={options4} data={data4} />
-                </div>
-            </div>
+            {showHideCharts.departmentsOverDueGraph && 
+              <div className='col-6 mt-4'>
+                  <div style={{overflow: 'hidden', padding: '10px', backgroundColor: 'white'}}>
+                    <Bar options={options4} data={data4} />
+                  </div>
+              </div>
+            }
             
-            <div className='col-6 mt-4'>
-                <div style={{overflow: 'hidden', padding: '10px', backgroundColor: 'white' }}>
-                  <Bar options={options5} data={data5} />
-                </div>
-            </div>
+            {showHideCharts.departmentsDueGraph && 
+              <div className='col-6 mt-4'>
+                  <div style={{overflow: 'hidden', padding: '10px', backgroundColor: 'white' }}>
+                    <Bar options={options5} data={data5} />
+                  </div>
+              </div>
+            }
             
-            <div className='col-6 mt-4'>
-                <div style={{padding: '10px', backgroundColor: 'white'}}>
-                    <Chart
-                    chartType="PieChart"
-                    width="100%"
-                    height="400px"
-                    data={chartsData.pieData1}
-                    options={chartsData.pieOptions1}
-                    />
-                </div>
-            </div>
+            {showHideCharts.partnersGraph && 
+              <div className='col-6 mt-4'>
+                  <div style={{padding: '10px', backgroundColor: 'white'}}>
+                      <Chart
+                      chartType="PieChart"
+                      width="100%"
+                      height="400px"
+                      data={chartsData.pieData1}
+                      options={chartsData.pieOptions1}
+                      />
+                  </div>
+              </div>
+            }
             
-            <div className='col-6 mt-4'>
-                <div style={{padding: '10px', backgroundColor: 'white'}}>
-                    <Chart
-                    chartType="PieChart"
-                    width="100%"
-                    height="400px"
-                    data={chartsData.pieData2}
-                    options={chartsData.pieOptions2}
-                    />
-                </div>
-            </div> 
-  
-  
-  
+            {showHideCharts.sourcesGraph && 
+              <div className='col-6 mt-4'>
+                  <div style={{padding: '10px', backgroundColor: 'white'}}>
+                      <Chart
+                      chartType="PieChart"
+                      width="100%"
+                      height="400px"
+                      data={chartsData.pieData2}
+                      options={chartsData.pieOptions2}
+                      />
+                  </div>
+              </div> 
+            }
+
         </div>
     </div>
   
@@ -402,7 +513,7 @@ if(dashboardData)
 } else {
   return(
     <>
-    Loading
+    <Loader />
     </>
   )
 }

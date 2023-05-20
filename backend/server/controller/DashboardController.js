@@ -3,9 +3,18 @@ const Jobsdb = require("../model/Jobs/jobs");
 
 exports.getDashboardData = async (req, res) => {
     try {
-        const currentYear = new Date().getFullYear();
-        const previousYear = currentYear - 1;
-        console.log(currentYear)
+
+      var currentYear = null
+      var previousYear = null
+      var selectedDate = req.body.selectedDate
+      if(selectedDate){
+        currentYear = new Date(selectedDate).getFullYear();
+        previousYear = currentYear - 1;
+      } else{
+        currentYear = new Date().getFullYear();
+        previousYear = currentYear - 1;
+      }
+
 
 
         // Clients Count Start

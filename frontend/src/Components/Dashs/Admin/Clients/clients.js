@@ -9,6 +9,8 @@ import Switch from 'react-js-switch';
 import axios from '../../../../Api/Axios';
 import * as axiosURL from '../../../../Api/AxiosUrls';
 import Loader from '../../../Common/Loader/Loader';
+import DropdownFilter from '../../../Jobs/JobPlaning/DropdownFilter';
+import ReactDatePicker from 'react-datepicker';
 
 var getClientsUrl = axiosURL.getClientsUrl;
 var deleteClientUrl = axiosURL.deleteClientUrl;
@@ -29,15 +31,17 @@ const Clients = () => {
 
     const [activeFilter, setActiveFilter] = useState("Active")
 
+    const [partnerFValue, setPartnerFValue] = useState(null)
+    const [sourceFValue, setSourceFValue] = useState(null)
+
+    const [startDate, setStartDate] = useState(null);
+    const [endDate, setEndDate] = useState(null);
+
     const gridRef = useRef();
 
-    const handleFilters = ()=>{
+    const handleFilters = async ()=>{
       // const roo = mainrowData; 
       var filteredArray = mainRowData
-      console.log(mainRowData)
-
-      console.log(activeFilter)
-      console.log(mainRowData)
 
       // JobStatus Filter
       if(filteredArray != undefined && activeFilter != null && activeFilter !== "" && activeFilter === "Active"){
@@ -48,6 +52,31 @@ const Clients = () => {
         filteredArray = filteredArray.filter(obj => obj.isActive === false);
       }
 
+      // Source Filter
+      if(filteredArray != undefined && sourceFValue != null && sourceFValue !== ""){
+        filteredArray = await filteredArray.filter(obj => obj.source && obj.source === sourceFValue);
+      }
+
+
+      // Partners Filter
+      if(filteredArray != undefined && partnerFValue != null && partnerFValue !== ""){
+        filteredArray = await filteredArray.filter(obj => obj.partner && obj.partner === partnerFValue);
+      }
+      
+      //Date Range Filter
+      if(filteredArray != undefined && startDate != null && startDate !== "" && endDate != null && endDate !== ""){
+        filteredArray = filteredArray.filter(obj => {
+          if (obj.book_start_date) {
+            const bookStartDate = new Date(obj.book_start_date);
+            const startDateObj = new Date(startDate);
+            const endDateObj = new Date(endDate);
+            console.log(bookStartDate, startDateObj, endDateObj)
+            return bookStartDate >= startDateObj && bookStartDate <= endDateObj;
+          }
+          return false;
+        });
+      }
+
       setRowData(filteredArray)
 
     }
@@ -56,7 +85,7 @@ const Clients = () => {
     useEffect(()=>{
       setRowData(mainRowData)
       handleFilters()
-    },[mainRowData, activeFilter])
+    },[mainRowData, activeFilter, sourceFValue, partnerFValue, endDate])
 
 
     const getData = async ()=>{
@@ -108,11 +137,63 @@ const Clients = () => {
             editable: false,
             cellRenderer: (params) => params.node.rowIndex + 1,
         },
-        { headerName: 'Book Start Date', field: 'book_start_date', flex:1 },
+        { 
+          headerName: 'Book Start Date', 
+          field: 'book_start_date', 
+          flex:1,
+          valueGetter: p => {
+            if(p.data.book_start_date && p.data.book_start_date !== "Invalid Date")
+            {
+
+              // Input date: 2023-05-13
+              const inputDate = new Date(p.data.book_start_date);
+
+              // Extract the date components
+              const day = inputDate.getDate();
+              const month = inputDate.toLocaleString('default', { month: 'short' });
+              const year = inputDate.getFullYear(); // Adding 1 year to convert to 2024
+
+              // Format the date as "04-Feb-2024"
+              const formattedDate = `${day < 10 ? '0' : ''}${day}-${month}-${year}`;
+
+              return(formattedDate); // Output: 04-Feb-2024
+
+            }
+            else{
+              return ""
+            }
+          }
+        },
         { headerName: 'Company Name', field: 'company_name', flex:3 },
         { headerName: 'Client Name', field: 'client_name', flex:4 },
         { headerName: 'Hours', field: 'total_hours', flex:1 },
         { headerName: 'Fee', field: 'total_fee', flex:1 },
+        { 
+          headerName: 'Partner', 
+          field: 'partner', 
+          flex:1,
+          floatingFilterComponent: 'selectFloatingFilter', 
+          floatingFilterComponentParams: { 
+            options: ['Affotax', 'Outsource', 'OTL'],
+            onValueChange:(value) => setPartnerFValue(value),
+            value: partnerFValue,
+            suppressFilterButton: true, 
+            suppressInput: true 
+          } 
+        },
+        { 
+          headerName: 'Source', 
+          field: 'source', 
+          flex:1,
+          floatingFilterComponent: 'selectFloatingFilter', 
+          floatingFilterComponentParams: { 
+            options: ['FIV', 'UPW', 'PPH', 'Website', 'Referal', 'Partner'],
+            onValueChange:(value) => setSourceFValue(value),
+            value: sourceFValue,
+            suppressFilterButton: true, 
+            suppressInput: true 
+          } 
+        },
         // { headerName: 'Status', field: 'isActive', flex:1 },
         { headerName: 'Status', 
         field: 'isActive', 
@@ -187,6 +268,11 @@ const Clients = () => {
         setReRender(!reRender)
   
        }
+
+       
+const frameworkComponents = {
+  selectFloatingFilter: DropdownFilter,
+};
       
 
 
@@ -240,11 +326,23 @@ const Clients = () => {
 
           </div>
 
-          {/* <div className='mx-4'>
-            <Link to="/hr/employees/add" className='btn btn-primary'>
-              Add Employee
-            </Link>
-          </div> */}
+          <div style={{width: '260px'}} className='mx-4'>
+            <ReactDatePicker
+            className='form-control text-center'
+            placeholderText='Select Date Range'
+              selected={startDate}
+              onChange={(dates) => {
+                const [start, end] = dates;
+                setStartDate(start);
+                setEndDate(end);
+              }}
+              dateFormat="dd-MMMM-yyyy"
+              startDate={startDate}
+              endDate={endDate}
+              selectsRange
+              isClearable={true}
+            />
+          </div>
           
 
         </div>
@@ -269,6 +367,7 @@ const Clients = () => {
                 pagination = {true}
                 paginationPageSize = {25}
                 suppressDragLeaveHidesColumns={true}
+                frameworkComponents={frameworkComponents}
             />
             
           </div>
