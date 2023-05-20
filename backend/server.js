@@ -10,8 +10,8 @@ var cors = require('cors');
 // Import MongoDb Connection file
 const connectDB = require('./server/database/connection');
 
-// //Import Cron Job file to run it
-// require('./server/controller/RecurringTaskPing');
+//Import Cron Job file to run it
+require('./server/controller/RecurringTaskPing');
 
 // initialization App
 const app = express();

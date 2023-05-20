@@ -305,9 +305,7 @@ export default function Attendance() {
                     });
             }}
             dateFormat="MMMM-yyyy"
-            showMonthYearPicker
-            // showFullMonthYearPicker
-            // showFourColumnMonthYearPicker   
+            showMonthYearPicker  
         />
           </div>
 
