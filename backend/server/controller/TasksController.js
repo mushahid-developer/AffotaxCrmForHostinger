@@ -51,9 +51,6 @@ exports.getAllProjects = async (req, res) => {
       }
 
     // const projects = await ProjectDb.find().populate({path: 'task_id',populate: {path: 'subtasks_id'},});
-    
-    
-
 }
 
 

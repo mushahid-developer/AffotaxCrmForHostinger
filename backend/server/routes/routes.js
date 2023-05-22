@@ -10,6 +10,7 @@ const RolesController = require('../controller/RolesController')
 const TasksController = require('../controller/TasksController')
 const QuickNotesController = require('../controller/QuickNotesController')
 const SalesController = require('../controller/SalesController')
+const ConstructionController = require('../controller/ConstructionController')
 
 const authMiddleware = require('../middlewares/authMiddleware');
 const { addOneChartOfAccounts, getAllChartOfAccounts } = require('../controller/ChartOfAccountsController');
@@ -114,7 +115,14 @@ route.post('/chart_of_account/add/one', addOneChartOfAccounts)
 route.get('/hr/attendance/get/all', getAttendanceSheet)
 
 
-
+//Construction
+route.post('/construction/add/houseno', ConstructionController.addHouseNo)
+route.get('/construction/delete/houseno/:id', ConstructionController.deleteHouseNo)
+route.get('/construction/all/get', ConstructionController.getAllConstruction)
+route.post('/construction/add/one', ConstructionController.AddOneConstruction)
+route.get('/construction/task/delete/one/:id', ConstructionController.deleteOneConstruction)
+route.post('/construction/task/edit/one/:id', ConstructionController.EditOneConstruction)
+route.get('/construction/task/copy/one/:id', ConstructionController.CopyOneConstruction)
 
 
 

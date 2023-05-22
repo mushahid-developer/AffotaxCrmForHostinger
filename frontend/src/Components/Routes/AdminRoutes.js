@@ -23,6 +23,7 @@ import InvoiceViewer from "../Dashs/Admin/Sales/InvoiceViewer";
 import ChartsOfAccounts from "../Dashs/Admin/Finance/ChartsOfAccounts/ChartsOfAccounts";
 import Attendance from "../Dashs/Admin/Hr/Attendance/Attendance";
 import PublicDash from "../Dashs/Admin/DashBoard/PublicDash";
+import Construction from "../Dashs/Admin/Construction/Construction";
 
 export default function AdminRoutes(props) {
 
@@ -70,6 +71,7 @@ export default function AdminRoutes(props) {
                   <Route path="/view/invoice" element = {<InvoiceViewer />}></Route>
                   <Route path="/finance/charts_of_accounts" element = {<ChartsOfAccounts />}></Route>
                   <Route path="/hr/attendance" element = {<Attendance />}></Route>
+                  <Route path="/construction" element = {<Construction />}></Route>
                 </Routes>
                 </div>
               </div>

@@ -1,6 +1,6 @@
 //BaseUrl
-// export const BaseUrl = 'https://affotax-crm.herokuapp.com/api/'; // Live
-export const BaseUrl = 'http://192.168.18.59:7878/api/'; // Local
+export const BaseUrl = 'https://crm.affotax.com/api/'; // Live
+// export const BaseUrl = 'http://192.168.18.59:7878/api/'; // Local
 // 192.168.18.59
 
 //Auth / Users
@@ -97,3 +97,14 @@ export const ChartsOfAccountsAddOneUrl = 'chart_of_account/add/one';
 
 // Hr Attendance
 export const GetAllAttendance = 'hr/attendance/get/all';
+
+
+
+//Construction
+export const ConstructionAddProjectHouseNo = 'construction/add/houseno'
+export const ConstructionDeleteHouseNo = 'construction/delete/houseno'
+export const ConstructionGetAllTasksUrl = 'construction/all/get';
+export const ConstructionAddOneTasksUrl = 'construction/add/one';
+export const ConstructionTaslDeleteUrl = '/construction/task/delete/one';
+export const ConstructionTasks_Update_One_Url = 'construction/task/edit/one';
+export const ConstructionTaskCopyUrl = 'construction/task/copy/one';

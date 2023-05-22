@@ -147,6 +147,13 @@ export default function SideBar(props) {
                   <span style={{marginLeft: '10px'}}>Templates</span>
                   </Link>
                   : "" }
+                  
+                  {pagesAccess[8] && pagesAccess[8].name === "Template Page" && pagesAccess[8] && pagesAccess[8].isChecked ?
+                  <Link to='/construction' className="sidebar_link">
+                  <svg style={{heigh: '20px', width: '20px'}} xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" className="feather feather-monitor icon"><rect x="2" y="3" width="20" height="14" rx="2" ry="2"></rect><line x1="8" y1="21" x2="16" y2="21"></line><line x1="12" y1="17" x2="12" y2="21"></line></svg>
+                  <span style={{marginLeft: '10px'}}>Construction</span>
+                  </Link>
+                  : "" }
 
 
                   {pagesAccess[9] && pagesAccess[9].name === "Settings Page" && pagesAccess[9] && pagesAccess[9].isChecked ?
