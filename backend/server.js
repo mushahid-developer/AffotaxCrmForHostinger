@@ -16,8 +16,10 @@ require('./server/controller/RecurringTaskPing');
 // initialization App
 const app = express();
 
-// Setting Port Number
+//Setting Evn File Path
 const envPath = path.resolve(__dirname, '../config.env');
+
+// Setting Port Number
 dotenv.config({ path: envPath });
 const PORT = process.env.PORT || 5000;
 
