@@ -12,6 +12,10 @@ import Loader from '../../../Common/Loader/Loader';
 import DropdownFilter from '../../../Jobs/JobPlaning/DropdownFilter';
 import ReactDatePicker from 'react-datepicker';
 
+import { saveAs } from 'file-saver';
+import * as XLSX from 'xlsx';
+
+
 var getClientsUrl = axiosURL.getClientsUrl;
 var deleteClientUrl = axiosURL.deleteClientUrl;
 var ActiveInactiveUrl = axiosURL.ActiveInactiveUrl;
@@ -20,8 +24,7 @@ var ActiveInactiveUrl = axiosURL.ActiveInactiveUrl;
 
 const Clients = () => {
 
-  const True = true
-  const False = false
+    const [gridApi, setGridApi] = useState(null);
 
     const [loader, setLoader] = useState(false)
     const [reRender, setReRender] = useState(true)
@@ -135,7 +138,7 @@ const Clients = () => {
             checkboxSelection: true,
             headerCheckboxSelection: true,
             editable: false,
-            cellRenderer: (params) => params.node.rowIndex + 1,
+            valueGetter: (params) => params.node.rowIndex + 1,
         },
         { 
           headerName: 'Book Start Date', 
@@ -273,6 +276,37 @@ const Clients = () => {
 const frameworkComponents = {
   selectFloatingFilter: DropdownFilter,
 };
+
+async function onGridReady(params) {
+  setGridApi(params);
+}
+
+
+  // Export grid data to Excel
+  const exportToExcel = (e) => {
+    e.preventDefault()
+    try {
+    const params = {
+      sheetName: 'Grid Data',
+      fileName: `Clients - ${new Date().toISOString().slice(0, 10)}`,
+      allColumns: true
+    };
+
+    const exportData = gridApi.api.exportDataAsCsv(params);
+    const workbook = XLSX.read(exportData, { type: 'binary' });
+    const excelBuffer = XLSX.write(workbook, {
+      bookType: 'csv',
+      type: 'array',
+      bookSST: false
+    });
+    saveAs(
+      new Blob([excelBuffer], { type: 'application/octet-stream' }),
+      `${params.fileName}.csv`
+    );
+    } catch (error) {
+    const a = error;
+  }
+  };
       
 
 
@@ -326,6 +360,12 @@ const frameworkComponents = {
 
           </div>
 
+          <div className="d-flex">
+
+          <Link onClick={exportToExcel} className='btn btn-primary'>
+            Download Excel File
+          </Link>
+
           <div style={{width: '260px'}} className='mx-4'>
             <ReactDatePicker
             className='form-control text-center'
@@ -343,6 +383,8 @@ const frameworkComponents = {
               isClearable={true}
             />
           </div>
+          </div>
+
           
 
         </div>
@@ -359,6 +401,7 @@ const frameworkComponents = {
 
             <AgGridReact
                 columnDefs={columnDefs}
+                onGridReady={onGridReady}
                 rowData={rowData}
                 defaultColDef={defaultColDef}
                 ref={gridRef}

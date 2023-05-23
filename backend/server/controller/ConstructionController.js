@@ -175,3 +175,23 @@ exports.CopyOneConstruction = async (req, res) => {
         })
     )
 }
+
+
+exports.SetCompletedOneConstruction = async (req, res) => {
+
+    try {
+        const id = req.params.id
+
+        await ConstructionDb.updateMany({houseNoList_id: id},{
+            isActive: false,
+        })
+            
+        res.status(200).json({
+            message: "Task Updated Successfully"
+        })
+
+} catch (err) {
+    console.error('Error:', err);
+}
+    
+}

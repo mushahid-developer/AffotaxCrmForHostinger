@@ -123,6 +123,7 @@ route.post('/construction/add/one', ConstructionController.AddOneConstruction)
 route.get('/construction/task/delete/one/:id', ConstructionController.deleteOneConstruction)
 route.post('/construction/task/edit/one/:id', ConstructionController.EditOneConstruction)
 route.get('/construction/task/copy/one/:id', ConstructionController.CopyOneConstruction)
+route.get('/construction/task/set/completed/one/:id', ConstructionController.SetCompletedOneConstruction)
 
 
 

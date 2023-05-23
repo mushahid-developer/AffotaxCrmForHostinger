@@ -6,6 +6,9 @@ import { Link } from 'react-router-dom';
 import { Store } from 'react-notifications-component';
 import { v4 as uuidv4 } from 'uuid';
 
+import { saveAs } from 'file-saver';
+import * as XLSX from 'xlsx';
+
 import axios from '../../../../Api/Axios';
 import * as axiosURL from '../../../../Api/AxiosUrls';
 import Loader from '../../../Common/Loader/Loader';
@@ -20,6 +23,8 @@ var SalesEditOneUrl = axiosURL.SalesEditOneUrl;
 
 
 const Sales = () => {
+
+    const [gridApi, setGridApi] = useState(null);
   
 
     const [loader, setLoader] = useState(false)
@@ -216,7 +221,7 @@ const Sales = () => {
             checkboxSelection: true,
             headerCheckboxSelection: true,
             editable: false,
-            cellRenderer: (params) => params.node.rowIndex + 1,
+            valueGetter: (params) => params.node.rowIndex + 1,
         },
         { headerName: 'Invoice No', field: 'invoice_no', flex:1 },
         { headerName: 'Client Name', field: 'book_start_date', flex:1,
@@ -627,7 +632,38 @@ const Sales = () => {
         };
       }
 
+
       
+  // Export grid data to Excel
+  const exportToExcel = (e) => {
+    e.preventDefault()
+    try {
+    const params = {
+      sheetName: 'Grid Data',
+      fileName: `Sales - ${new Date().toISOString().slice(0, 10)}`,
+      allColumns: true
+    };
+
+    const exportData = gridApi.api.exportDataAsCsv(params);
+    const workbook = XLSX.read(exportData, { type: 'binary' });
+    const excelBuffer = XLSX.write(workbook, {
+      bookType: 'csv',
+      type: 'array',
+      bookSST: false
+    });
+    saveAs(
+      new Blob([excelBuffer], { type: 'application/octet-stream' }),
+      `${params.fileName}.csv`
+    );
+    } catch (error) {
+    const a = error;
+  }
+  };
+      
+
+  async function onGridReady(params) {
+    setGridApi(params);
+  }
 
 
     if(loader)
@@ -680,8 +716,11 @@ const Sales = () => {
 
           </div>
 
-          <div className='mx-4'>
-            <Link onClick={beforeAddModelHandler} className='btn btn-primary'>
+          <div className=''>
+          <Link onClick={exportToExcel} className='btn btn-primary'>
+            Download Excel File
+          </Link>
+            <Link onClick={beforeAddModelHandler} className='btn btn-primary mx-4'>
               Add Sale
             </Link>
           </div>
@@ -700,6 +739,7 @@ const Sales = () => {
             {/* <button onClick={deleteHandler}>delete</button> */}
 
             <AgGridReact
+                onGridReady={onGridReady}
                 columnDefs={columnDefs}
                 rowData={rowData}
                 defaultColDef={defaultColDef}

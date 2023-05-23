@@ -11,6 +11,10 @@ import Loader from '../../../Common/Loader/Loader';
 import { Button, Modal, Form } from 'react-bootstrap';
 import DropdownFilter from '../../../Jobs/JobPlaning/DropdownFilter';
 
+import { saveAs } from 'file-saver';
+import * as XLSX from 'xlsx';
+
+
 var preDataUrl = axiosURL.addJobPreData;
 var LeadsGetAllUrl = axiosURL.LeadsGetAllUrl;
 var leadEditUrl = axiosURL.leadEditUrl;
@@ -372,7 +376,7 @@ const Leads = () => {
             checkboxSelection: true,
             headerCheckboxSelection: true,
             editable: false,
-            cellRenderer: (params) => params.node.rowIndex + 1,
+            valueGetter: (params) => params.node.rowIndex + 1,
         },
         { headerName: 'Co Name', field: 'companyName', flex:1.3 },
         { headerName: 'Client Name', field: 'clientName', flex:1.3 },
@@ -587,6 +591,35 @@ const Leads = () => {
         selectFloatingFilter: DropdownFilter,
       };
 
+      
+
+  // Export grid data to Excel
+  const exportToExcel = (e) => {
+    e.preventDefault()
+    try {
+    const params = {
+      sheetName: 'Grid Data',
+      fileName: `Leads - ${new Date().toISOString().slice(0, 10)}`,
+      allColumns: true
+    };
+
+    const exportData = gridApi.api.exportDataAsCsv(params);
+    const workbook = XLSX.read(exportData, { type: 'binary' });
+    const excelBuffer = XLSX.write(workbook, {
+      bookType: 'csv',
+      type: 'array',
+      bookSST: false
+    });
+    saveAs(
+      new Blob([excelBuffer], { type: 'application/octet-stream' }),
+      `${params.fileName}.csv`
+    );
+    } catch (error) {
+    const a = error;
+  }
+  };
+      
+
 
       if(loader)
       {
@@ -673,8 +706,11 @@ const Leads = () => {
 
           </div>
 
-          <div className='mx-4'>
-            <button onClick={handleAddRow} className='btn btn-primary'>
+          <div className=''>
+          <Link onClick={exportToExcel} className='btn btn-primary'>
+            Download Excel File
+          </Link>
+            <button onClick={handleAddRow} className='btn btn-primary mx-4'>
               Add Lead
             </button>
           </div>

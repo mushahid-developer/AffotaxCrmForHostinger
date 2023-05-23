@@ -15,6 +15,9 @@
   import DropdownFilterWithDate from './DropDownFilterWithDate';
   import { Form } from 'react-bootstrap';
 
+  import { saveAs } from 'file-saver';
+  import * as XLSX from 'xlsx';
+
   var preDataUrl = axiosURL.addJobPreData;
   var jobPlanningUrl = axiosURL.jobPlanning;
   var JobPlaning_Update_One_Url = axiosURL.JobPlaning_Update_One_Url;
@@ -36,7 +39,6 @@
     const [loader, setLoader] = useState(false)
     const [gridApi, setGridApi] = useState(null);
     const [rerender, setRerender] = useState(false);
-    const [headerReRender, setHeaderReRender] = useState(false);
 
     const [multipleRowFormData, setMultipleRowFormData] = useState({
       job_date: null,
@@ -934,14 +936,8 @@
         checkboxSelection: true,
         headerCheckboxSelection: true,
         editable: false,
-        cellRenderer: (params) => params.node.rowIndex + 1,
-        // floatingFilterComponent: 'clearFloatingFilter', 
-        // floatingFilterComponentParams: { 
-        //   handleClickk: (value) =>  handleFunClear(value) ,
-        //   gridVal: gridApi,
-        //   suppressFilterButton: true, 
-        //   suppressInput: true 
-        // }
+        valueGetter: (params) => params.node.rowIndex + 1,
+       
       },
       {
         headerName: "Company Name",
@@ -1484,6 +1480,36 @@
 
   }
 
+
+  
+  // Export grid data to Excel
+  const exportToExcel = (e) => {
+    e.preventDefault()
+    try {
+    const params = {
+      sheetName: 'Grid Data',
+      fileName: `Jobplanning - ${new Date().toISOString().slice(0, 10)}`,
+      allColumns: true
+    };
+
+    const exportData = gridApi.api.exportDataAsCsv(params);
+    const workbook = XLSX.read(exportData, { type: 'binary' });
+    const excelBuffer = XLSX.write(workbook, {
+      bookType: 'csv',
+      type: 'array',
+      bookSST: false
+    });
+    saveAs(
+      new Blob([excelBuffer], { type: 'application/octet-stream' }),
+      `${params.fileName}.csv`
+    );
+    } catch (error) {
+    const a = error;
+  }
+  };
+
+
+
   if(loader){
     return(
         <Loader />
@@ -1597,8 +1623,12 @@
 
             </div>
 
-            <div className='mx-4'>
-              <Link to="/clients/add" className='btn btn-primary'>
+
+            <div >
+              <Link onClick={exportToExcel} className='btn btn-primary'>
+                Download Excel File
+              </Link>
+              <Link to="/clients/add" className=' mx-4 btn btn-primary'>
                 Add Client
               </Link>
             </div>

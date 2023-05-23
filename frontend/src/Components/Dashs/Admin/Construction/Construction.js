@@ -12,6 +12,9 @@ import { Link } from 'react-router-dom';
 import DropdownFilter from '../../../Jobs/JobPlaning/DropdownFilter';
 import SelectUnSelectFilter from '../../../Jobs/JobPlaning/SelectUnSelectFilter';
 
+import { saveAs } from 'file-saver';
+import * as XLSX from 'xlsx';
+
 import { useSpring, animated } from 'react-spring';
 
 var addProjectName = axiosURL.ConstructionAddProjectHouseNo;
@@ -21,6 +24,7 @@ var addOneTasksUrl = axiosURL.ConstructionAddOneTasksUrl;
 var ProjDeleteUrl = axiosURL.ConstructionTaslDeleteUrl;
 var Tasks_Update_One_Url = axiosURL.ConstructionTasks_Update_One_Url;
 var ProjCopyUrl = axiosURL.ConstructionTaskCopyUrl;
+var ProjCompletedUrl = axiosURL.ConstructionTaskSetCompletedUrl;
 
 
 
@@ -47,6 +51,7 @@ const Construction = () => {
     const [supervisorFvalue, setSupervisorFvalue] = useState(null);
     const [jHolderFvalue, setJHolderFvalue] = useState(null);
     const [ManagerFvalue, setManagerFvalue] = useState(null);
+    const [filterFvalue, setFilterFvalue] = useState('Open');
 
     const [usersForFilter, setUsersForFilter] = useState([]);
 
@@ -106,6 +111,7 @@ const Construction = () => {
     
     const dropdownAnimation = useSpring({
       maxHeight: isOpen ? 'fit-content' : 0,
+      maxWidth: isOpen ? 'fit-content' : 0,
       opacity: isOpen ? 1 : 0,
       position: 'absolute',
       backgroundColor: 'white',
@@ -228,6 +234,15 @@ const Construction = () => {
     const filter = async ()=>{
 
       var filteredArray = mainRowData
+
+      //Completed Filter
+      if(filteredArray !== undefined && filterFvalue !== null && filterFvalue !== "" && filterFvalue === "Open"){
+        filteredArray = filteredArray.filter(obj => obj.isActive );
+      }
+      if(filteredArray !== undefined && filterFvalue !== null && filterFvalue !== "" && filterFvalue === "Close"){
+        filteredArray = filteredArray.filter(obj => !obj.isActive );
+      }
+      
     
       //Project Filter
       if(filteredArray !== undefined && projectFvalue !== null && projectFvalue !== ""){
@@ -261,7 +276,7 @@ const Construction = () => {
     useEffect(()=>{
       // setRowData(mainRowData)
       filter()
-    }, [mainRowData, statusFvalue, projectFvalue, jHolderFvalue, supervisorFvalue, ManagerFvalue])
+    }, [mainRowData, statusFvalue, projectFvalue, jHolderFvalue, supervisorFvalue, ManagerFvalue, filterFvalue])
 
     useEffect(()=>{
       
@@ -361,6 +376,21 @@ const Construction = () => {
       }
     }
 
+    const handleCompleteProject = async (projId)=>{
+      setLoader(true)
+      const confirmed = window.confirm('Are you sure you want to mark it as Completed?');
+      if (confirmed) {
+
+        await axios.get(`${ProjCompletedUrl}/${projId}`,
+            {
+            headers:{ 'Content-Type': 'application/json' }
+            }
+        );
+
+        setReRender(!reRender);
+      }
+    }
+
     const handleCopyProject = async (projId)=>{
       setLoader(true)
       await axios.get(`${ProjCopyUrl}/${projId}`,
@@ -411,10 +441,18 @@ const Construction = () => {
           filter: false,
           flex: 1.5,
           editable: false,
-          cellRenderer: (params) => `Task# ${params.node.rowIndex + 1}`,
+          valueGetter: (params) => `Task# ${params.node.rowIndex + 1}`,
         },
-        { headerName: 'Task', field: 'Task', flex:4,},
-        { headerName: 'Supervisor', field: 'supervisor_id', flex:4,
+        { 
+          headerName: 'Task', 
+          field: 'Task', 
+          flex:4,
+          cellStyle:(params)=>{
+          
+              return{color: "#0d6efd"}
+          },
+        },
+        { headerName: 'Supervisor', field: 'supervisor_id', flex:2,
         valueGetter: p => {
           return p.data.supervisor_id !== null ? p.data.supervisor_id.name : ' ' //to get value from obj inside obj
         },
@@ -566,7 +604,7 @@ const Construction = () => {
             }
           }
         },
-        { headerName: 'Note', field: 'Note', flex:4,},
+        { headerName: 'Note', field: 'Note', flex:6,},
         { headerName: 'Days-Actual', field: 'daysActual', flex:4, editable: false,
         valueGetter: p =>{
           if(p.data.completationDateActual && p.data.completationDateActual !== "Invalid Date" && p.data.startDate && p.data.startDate !== "Invalid Date"){
@@ -592,7 +630,7 @@ const Construction = () => {
             suppressInput: true 
           }
         },
-        { headerName: 'Manager', field: 'Manager', flex:4,
+        { headerName: 'Manager', field: 'Manager', flex:2,
           valueGetter: p => {
             return p.data.Manager !== null ? p.data.Manager.name : ' ' //to get value from obj inside obj
           },
@@ -618,11 +656,15 @@ const Construction = () => {
           flex:1.8,
           cellRendererFramework: (params)=>
           <>
-          <Link onClick={()=>{handleCopyProject(params.data._id)}} style={{all: 'unset', cursor: 'pointer', textAlign: 'center !important'}}>
-            <svg className="mx-1" xmlns="http://www.w3.org/2000/svg" width="20px" height="20px" viewBox="0 0 256 256">
-              <path d="M48.186 92.137c0-8.392 6.49-14.89 16.264-14.89s29.827-.225 29.827-.225-.306-6.99-.306-15.88c0-8.888 7.954-14.96 17.49-14.96 9.538 0 56.786.401 61.422.401 4.636 0 8.397 1.719 13.594 5.67 5.196 3.953 13.052 10.56 16.942 14.962 3.89 4.402 5.532 6.972 5.532 10.604 0 3.633 0 76.856-.06 85.34-.059 8.485-7.877 14.757-17.134 14.881-9.257.124-29.135.124-29.135.124s.466 6.275.466 15.15-8.106 15.811-17.317 16.056c-9.21.245-71.944-.49-80.884-.245-8.94.245-16.975-6.794-16.975-15.422s.274-93.175.274-101.566zm16.734 3.946l-1.152 92.853a3.96 3.96 0 0 0 3.958 4.012l73.913.22a3.865 3.865 0 0 0 3.91-3.978l-.218-8.892a1.988 1.988 0 0 0-2.046-1.953s-21.866.64-31.767.293c-9.902-.348-16.672-6.807-16.675-15.516-.003-8.709.003-69.142.003-69.142a1.989 1.989 0 0 0-2.007-1.993l-23.871.082a4.077 4.077 0 0 0-4.048 4.014zm106.508-35.258c-1.666-1.45-3.016-.84-3.016 1.372v17.255c0 1.106.894 2.007 1.997 2.013l20.868.101c2.204.011 2.641-1.156.976-2.606l-20.825-18.135zm-57.606.847a2.002 2.002 0 0 0-2.02 1.988l-.626 96.291a2.968 2.968 0 0 0 2.978 2.997l75.2-.186a2.054 2.054 0 0 0 2.044-2.012l1.268-62.421a1.951 1.951 0 0 0-1.96-2.004s-26.172.042-30.783.042c-4.611 0-7.535-2.222-7.535-6.482S152.3 63.92 152.3 63.92a2.033 2.033 0 0 0-2.015-2.018l-36.464-.23z" stroke="#979797" fill-rule="evenodd"/>
-            </svg>
-          </Link>
+          {params.data.isActive && 
+          <> 
+            <Link onClick={()=>{handleCopyProject(params.data._id)}} style={{all: 'unset', cursor: 'pointer', textAlign: 'center !important'}}>
+              <svg className="mx-1" xmlns="http://www.w3.org/2000/svg" width="20px" height="20px" viewBox="0 0 256 256">
+                <path d="M48.186 92.137c0-8.392 6.49-14.89 16.264-14.89s29.827-.225 29.827-.225-.306-6.99-.306-15.88c0-8.888 7.954-14.96 17.49-14.96 9.538 0 56.786.401 61.422.401 4.636 0 8.397 1.719 13.594 5.67 5.196 3.953 13.052 10.56 16.942 14.962 3.89 4.402 5.532 6.972 5.532 10.604 0 3.633 0 76.856-.06 85.34-.059 8.485-7.877 14.757-17.134 14.881-9.257.124-29.135.124-29.135.124s.466 6.275.466 15.15-8.106 15.811-17.317 16.056c-9.21.245-71.944-.49-80.884-.245-8.94.245-16.975-6.794-16.975-15.422s.274-93.175.274-101.566zm16.734 3.946l-1.152 92.853a3.96 3.96 0 0 0 3.958 4.012l73.913.22a3.865 3.865 0 0 0 3.91-3.978l-.218-8.892a1.988 1.988 0 0 0-2.046-1.953s-21.866.64-31.767.293c-9.902-.348-16.672-6.807-16.675-15.516-.003-8.709.003-69.142.003-69.142a1.989 1.989 0 0 0-2.007-1.993l-23.871.082a4.077 4.077 0 0 0-4.048 4.014zm106.508-35.258c-1.666-1.45-3.016-.84-3.016 1.372v17.255c0 1.106.894 2.007 1.997 2.013l20.868.101c2.204.011 2.641-1.156.976-2.606l-20.825-18.135zm-57.606.847a2.002 2.002 0 0 0-2.02 1.988l-.626 96.291a2.968 2.968 0 0 0 2.978 2.997l75.2-.186a2.054 2.054 0 0 0 2.044-2.012l1.268-62.421a1.951 1.951 0 0 0-1.96-2.004s-26.172.042-30.783.042c-4.611 0-7.535-2.222-7.535-6.482S152.3 63.92 152.3 63.92a2.033 2.033 0 0 0-2.015-2.018l-36.464-.23z" stroke="#979797" fill-rule="evenodd"/>
+              </svg>
+            </Link>
+          </>
+          }
           <Link onClick={()=>{handleDeleteProject(params.data._id)}} style={{all: 'unset', cursor: 'pointer', textAlign: 'center !important'}}>
               <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="feather feather-x icon-16"><line x1="18" y1="6" x2="6" y2="18"></line><line x1="6" y1="6" x2="18" y2="18"></line></svg>
           </Link>
@@ -742,6 +784,34 @@ useEffect(()=>{
       
 
 
+  // Export grid data to Excel
+  const exportToExcel = (e) => {
+    e.preventDefault()
+    try {
+    const params = {
+      sheetName: 'Grid Data',
+      fileName: `Construction - ${new Date().toISOString().slice(0, 10)}`,
+      allColumns: true
+    };
+
+    const exportData = gridApi.api.exportDataAsCsv(params);
+    const workbook = XLSX.read(exportData, { type: 'binary' });
+    const excelBuffer = XLSX.write(workbook, {
+      bookType: 'csv',
+      type: 'array',
+      bookSST: false
+    });
+    saveAs(
+      new Blob([excelBuffer], { type: 'application/octet-stream' }),
+      `${params.fileName}.csv`
+    );
+    } catch (error) {
+    const a = error;
+  }
+  };
+      
+
+
     if(loader)
     {
       return(<Loader/>)
@@ -819,12 +889,27 @@ useEffect(()=>{
                 </div>
               </div>
 
+              <div>
+                <select name='mon_week' onChange={(e)=>{setFilterFvalue(e.target.value)}} defaultValue={filterFvalue} style={{width: '110px'}} className='form-control mx-2'>
+                    
+                    <option value = "Open">
+                      Open
+                    </option>
+                    <option value = "Close">
+                        Close
+                    </option>
+                </select>
+            </div>
+
 
 
 
           </div>
 
         <div className='d-flex'>
+        <Link onClick={exportToExcel} className='btn btn-primary mx-2'>
+            Download Excel File
+          </Link>
         <div style={{
               width: '11rem',
               overflow: 'visible',
@@ -861,11 +946,14 @@ useEffect(()=>{
                         {projectNames && projectNames.map((task, ind)=>{
                             return(
                             <div style={{cursor: 'default'}} key={ind} className='row recurringTask_task'>
-                                <div className='col-10'>
+                                <div className='col-9'>
                                     <p> {task.name} </p>
                                 </div>
                                 
-                                <div className='col-2'>
+                                <div className='col-3 d-flex'>
+                                <Link onClick={()=>{handleCompleteProject(task._id)}} style={{marginRight: '5px', all: 'unset', cursor: 'pointer', textAlign: 'center !important'}}>
+                                    <svg xmlns="http://www.w3.org/2000/svg" width="16px" height="16px" viewBox="0 0 24 24"><title/><g id="Complete"><g id="tick"><polyline fill="none" points="3.7 14.3 9.6 19 20.3 5" stroke="#000000" stroke-linecap="round" stroke-linejoin="round" stroke-width="2"/></g></g></svg>          
+                                </Link>
                                   <div onClick={()=>{handleDeleteProjectName(task._id)}} style={{cursor: "pointer"}}>
                                     <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="feather feather-x icon-16"><line x1="18" y1="6" x2="6" y2="18"></line><line x1="6" y1="6" x2="18" y2="18"></line></svg>
                                   </div>

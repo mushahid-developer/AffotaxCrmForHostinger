@@ -20,7 +20,6 @@ export default function Login() {
 
   const handleCredsChange = e => {
     const { name, value } = e.target;
-    console.log(name,value )
     setCredentials(prevState => ({
         ...prevState,
         [name]: value
@@ -42,7 +41,6 @@ export default function Login() {
         );
           
         
-        console.log(response)
         
         
     if(response.status === 200)
