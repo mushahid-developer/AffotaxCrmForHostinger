@@ -17,6 +17,8 @@
 
   import { saveAs } from 'file-saver';
   import * as XLSX from 'xlsx';
+  import { jsPDF } from 'jspdf';
+  import 'jspdf-autotable';
 
   var preDataUrl = axiosURL.addJobPreData;
   var jobPlanningUrl = axiosURL.jobPlanning;
@@ -32,6 +34,7 @@
   export default function JobPlanning() {
 
     const [departmentSummaryToggle, setDepartmentSummaryToggle] = useState(false)
+    const [downloadOptionsToggle, setDownloadOptionsToggle] = useState(false)
     const [multipleRowEditToggle, setMultipleRowEditToggle] = useState(false)
     
     const [preData, setPreData] = useState([])
@@ -1482,8 +1485,56 @@
 
 
   
-  // Export grid data to Excel
   const exportToExcel = (e) => {
+    e.preventDefault()
+    const columnDefs = gridApi.columnApi.getAllDisplayedColumns();
+    const exportData = [columnDefs.map((columnDef) => columnDef.userProvidedColDef.headerName)];
+
+
+
+    gridApi.api.forEachNodeAfterFilterAndSort((node) => {
+      const rowData = columnDefs.map((columnDef) => {
+        const cellValue = gridApi.api.getValue(columnDef, node);
+        return cellValue !== undefined ? cellValue : '';
+      });
+      exportData.push(rowData);
+    });
+
+    const worksheet = XLSX.utils.aoa_to_sheet(exportData);
+    const workbook = XLSX.utils.book_new();
+    XLSX.utils.book_append_sheet(workbook, worksheet, 'Sheet1');
+    XLSX.writeFile(workbook, `Jobplanning - ${new Date().toISOString().slice(0, 10)}.xlsx`);
+  };
+
+  const exportToPdf = () => {
+    // Get the grid column headers
+    const columnDefs = gridApi.columnApi.getAllDisplayedColumns();
+    const headerData = columnDefs.map((columnDef) => columnDef.userProvidedColDef.headerName);
+
+    // Get the grid row data
+    const rowData = [];
+    gridApi.api.forEachNodeAfterFilterAndSort((node) => {
+      const rowDataItem = columnDefs.map((columnDef) => {
+        const cellValue = gridApi.api.getValue(columnDef, node);
+        return cellValue !== undefined ? cellValue : '';
+      });
+      rowData.push(rowDataItem);
+    });
+
+    // Create a new jsPDF instance
+    const doc = new jsPDF();
+
+    // Set the table headers and data
+    doc.autoTable({ head: [headerData], body: rowData });
+
+    // Save the PDF file
+    doc.save(`Jobplanning - ${new Date().toISOString().slice(0, 10)}.pdf`);
+  };
+
+
+  
+  // Export grid data to CSV
+  const exportToCsv = (e) => {
     e.preventDefault()
     try {
     const params = {
@@ -1507,6 +1558,7 @@
     const a = error;
   }
   };
+
 
 
 
@@ -1540,6 +1592,18 @@
                   <option value="100">100</option>
                   <option value="200">200</option>
                 </select>
+              </div>
+
+              <div  className='table-col-numbers mx-2'>
+                <button 
+                onClick={(e)=>{e.preventDefault(); setDownloadOptionsToggle(!downloadOptionsToggle)}} 
+                className='form-control'>
+                  <svg xmlns="http://www.w3.org/2000/svg" width="20px" height="20px" viewBox="0 0 24 24" fill="none">
+                    <g id="Interface / Download">
+                    <path id="Vector" d="M6 21H18M12 3V17M12 17L17 12M12 17L7 12" stroke="#000000" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
+                    </g>
+                  </svg>
+                </button>
               </div>
 
               <div  className='table-col-numbers mx-2'>
@@ -1625,10 +1689,7 @@
 
 
             <div >
-              <Link onClick={exportToExcel} className='btn btn-primary'>
-                Download Excel File
-              </Link>
-              <Link to="/clients/add" className=' mx-4 btn btn-primary'>
+              <Link to="/clients/add" className=' mx-2 btn btn-primary'>
                 Add Client
               </Link>
             </div>
@@ -1937,9 +1998,74 @@
           </div>
 
 
+          <div className={`downloadOptions ${downloadOptionsToggle ? 'open' : 'closed'} `}>
 
           <hr style={{marginBottom: "0px", marginTop: "0px", color: 'rgb(131 131 131)'}}/>
 
+            <div style={{justifyContent: 'right',}} className='d-flex mx-2'>
+              
+              <p style={{
+                fontSize: '12px',
+                border: '1px solid #b1b0b0',
+                borderRadius: '2px',
+                color: '#6e6e6e',
+                padding: '1px 4px 1px 4px',
+                margin: '4px 2px 4px 2px',
+                cursor: 'pointer',
+              }} onMouseEnter={(e) => {
+                e.target.style.backgroundColor = '#e3dcdc';
+                e.target.style.color = 'black';
+                e.target.style.border = '1px solid black';
+              }}
+              onMouseLeave={(e) => {
+                e.target.style.backgroundColor = 'white';
+                e.target.style.color = '#6e6e6e';
+                e.target.style.border = '1px solid #b1b0b0';
+              }} onClick={exportToCsv}> CSV </p>
+              
+              <p style={{
+                fontSize: '12px',
+                border: '1px solid #b1b0b0',
+                borderRadius: '2px',
+                color: '#6e6e6e',
+                padding: '1px 4px 1px 4px',
+                margin: '4px 2px 4px 2px',
+                cursor: 'pointer'
+              }} onMouseEnter={(e) => {
+                e.target.style.backgroundColor = '#e3dcdc';
+                e.target.style.color = 'black';
+                e.target.style.border = '1px solid black';
+              }}
+              onMouseLeave={(e) => {
+                e.target.style.backgroundColor = 'white';
+                e.target.style.color = '#6e6e6e';
+                e.target.style.border = '1px solid #b1b0b0';
+              }} onClick={exportToExcel}> Excel </p>
+              
+              <p style={{
+                fontSize: '12px',
+                border: '1px solid #b1b0b0',
+                borderRadius: '2px',
+                color: '#6e6e6e',
+                padding: '1px 4px 1px 4px',
+                margin: '4px 2px 4px 2px',
+                cursor: 'pointer'
+              }} onMouseEnter={(e) => {
+                e.target.style.backgroundColor = '#e3dcdc';
+                e.target.style.color = 'black';
+                e.target.style.border = '1px solid black';
+              }}
+              onMouseLeave={(e) => {
+                e.target.style.backgroundColor = 'white';
+                e.target.style.color = '#6e6e6e';
+                e.target.style.border = '1px solid #b1b0b0';
+              }} onClick={exportToPdf}> PDF </p>
+            
+            </div>
+          </div>
+
+          <hr style={{marginBottom: "0px", marginTop: "0px", color: 'rgb(131 131 131)'}}/>
+          
           <div>
             {/* On div wrapping Grid a) specify theme CSS Class Class and b) sets Grid size */}
             <div className="ag-theme-alpine" style={{ height: '81vh'}}>

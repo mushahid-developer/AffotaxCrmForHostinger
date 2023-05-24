@@ -519,6 +519,16 @@ transition: width .3s ease-in-out;
   height: 11rem ;
 }
 
+.downloadOptions {
+  height: 0;
+  overflow: hidden;
+  transition: height .3s ease-in-out;
+}
+
+.downloadOptions.open {
+  height: 2rem ;
+}
+
 /* JOb Planning */
 .multipleRowEdit {
   height: 0;
