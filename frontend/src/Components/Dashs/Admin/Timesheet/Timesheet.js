@@ -13,6 +13,9 @@ import { Link } from 'react-router-dom';
 import secureLocalStorage from 'react-secure-storage';
 import { Button, Form, Modal } from 'react-bootstrap';
 
+import { saveAs } from 'file-saver';
+import * as XLSX from 'xlsx';
+
 var timerReportUrl = axiosURL.timerReportUrl;
 var timerAddManualEntryUrl = axiosURL.timerAddManualEntryUrl;
 var timerDeleteOneEntryUrl = axiosURL.timerDeleteOneEntryUrl;
@@ -80,6 +83,10 @@ const Timesheet = (props) => {
         start_time: null,
         end_time: null
     });
+
+    async function onGridReady(params) {
+        setGridApi(params);
+      }
 
     const today = moment();
     const startDate = today.startOf('month').format('YYYY-MM-DD');
@@ -422,7 +429,7 @@ const Timesheet = (props) => {
             checkboxSelection: true,
             headerCheckboxSelection: true,
             editable: false,
-            cellRenderer: (params) => params.node.rowIndex + 1,
+            valueGetter: (params) => params.node.rowIndex + 1,
         },
         { 
             headerName: 'Date',
@@ -817,6 +824,34 @@ const Timesheet = (props) => {
         }
     }
 
+    
+  // Export grid data to Excel
+  const exportToExcel = (e) => {
+    e.preventDefault()
+    try {
+    const params = {
+      sheetName: 'Grid Data',
+      fileName: `TimeSheet - ${new Date().toISOString().slice(0, 10)}`,
+      allColumns: true
+    };
+
+    const exportData = gridApi.api.exportDataAsCsv(params);
+    const workbook = XLSX.read(exportData, { type: 'binary' });
+    const excelBuffer = XLSX.write(workbook, {
+      bookType: 'csv',
+      type: 'array',
+      bookSST: false
+    });
+    saveAs(
+      new Blob([excelBuffer], { type: 'application/octet-stream' }),
+      `${params.fileName}.csv`
+    );
+    } catch (error) {
+    const a = error;
+        console.log(error)
+    }
+  };
+
 
 
       if(loader)
@@ -924,8 +959,16 @@ const Timesheet = (props) => {
           </div>
 
           <div className='d-flex'>
-            <div className='mx-4'>
-            <Link onClick={()=>{setShowAddEntryModal(!showAddEntryModal)}} className='btn btn-primary'>
+            <div className=''>
+            <Link onClick={exportToExcel} style={{
+          backgroundColor: 'transparent',
+          color: 'black',
+          borderColor: 'lightgray',
+          alignSelf: 'center',
+        }} className='btn btn-primary'>
+            Excel
+          </Link>
+            <Link onClick={()=>{setShowAddEntryModal(!showAddEntryModal)}} className=' mx-4 btn btn-primary'>
               Manual Entry
             </Link>
           </div>
@@ -976,6 +1019,7 @@ const Timesheet = (props) => {
             {/* <button onClick={deleteHandler}>delete</button> */}
 
             <AgGridReact
+                onGridReady={onGridReady}
                 columnDefs={columnDefs}
                 rowData={rowData}
                 defaultColDef={defaultColDef}

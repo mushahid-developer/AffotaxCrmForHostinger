@@ -614,8 +614,13 @@ useEffect(() => {
           </div>
 
         <div className='d-flex'>
-        <Link onClick={exportToExcel} className='btn btn-primary mx-2'>
-            Download Excel File
+        <Link onClick={exportToExcel} style={{
+          backgroundColor: 'transparent',
+          color: 'black',
+          borderColor: 'lightgray',
+          alignSelf: 'center',
+        }} className='btn btn-primary mx-2'>
+            Excel
         </Link>
         <div style={{
               width: '11rem',

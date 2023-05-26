@@ -42,8 +42,10 @@ const Construction = () => {
     const [openProjectTasks, setOpenProjectTasks] = useState(null)
 
     const [preData, setPreData] = useState(null);
-    const [projectNames, setProjectNames] = useState(null);
-    const [projectFNames, setProjectFNames] = useState(null);
+    const [openProjectNames, setOpenProjectNames] = useState(null);
+    const [closeProjectNames, setCloseProjectNames] = useState(null);
+    const [projectFOpenNames, setProjectFOpenNames] = useState(null);
+    const [projectFCloseNames, setProjectFCloseNames] = useState(null);
     const [fPreData, setFPreData] = useState(null);
 
     const [statusFvalue, setStatusFvalue] = useState(null);
@@ -112,6 +114,7 @@ const Construction = () => {
     const dropdownAnimation = useSpring({
       maxHeight: isOpen ? 'fit-content' : 0,
       maxWidth: isOpen ? 'fit-content' : 0,
+      minWidth: isOpen ? '176px' : 0,
       opacity: isOpen ? 1 : 0,
       position: 'absolute',
       backgroundColor: 'white',
@@ -278,6 +281,8 @@ const Construction = () => {
       filter()
     }, [mainRowData, statusFvalue, projectFvalue, jHolderFvalue, supervisorFvalue, ManagerFvalue, filterFvalue])
 
+    var ii = 1;
+
     useEffect(()=>{
       
       const tempArr = usersForFilter
@@ -285,24 +290,35 @@ const Construction = () => {
           const newObj = { value: null, label: 'Select' };
   
           tempArr.unshift(newObj);
-  
-          console.log(tempArr)
           setUsersForFilter(tempArr)
   
      }, [usersForFilter])
 
+
+
      useEffect(()=>{
-      if(projectFNames){
-        const tempArr = projectFNames
+
+      if(projectFOpenNames){
+        const tempArr = projectFOpenNames
         
             const newObj = { value: null, label: 'Select' };
     
             tempArr.unshift(newObj);
     
-            setProjectFNames(tempArr)
-  
+            setProjectFOpenNames(tempArr)
       }
-     }, [projectFNames])
+
+
+      if(projectFCloseNames){
+        const tempArr = projectFCloseNames
+        
+            const newObj = { value: null, label: 'Select' };
+    
+            tempArr.unshift(newObj);
+    
+            setProjectFCloseNames(tempArr)
+      }
+     }, [fPreData])
 
 
     const getData = async ()=>{
@@ -317,11 +333,23 @@ const Construction = () => {
                 console.log(response.data)
                 setMainRowData(response.data.Construction)
                 setPreData(response.data.users)
-                setProjectNames(response.data.HouseNo)
                 
-                setProjectFNames(response.data.HouseNo.map(names => {
-                  return { value: names._id, label: names.name };
+                setOpenProjectNames(response.data.HouseNo.filter(names =>  names.isActive));
+                setCloseProjectNames(response.data.HouseNo.filter(names =>  !names.isActive));
+                const OpenProjsss = response.data.HouseNo.filter(names =>  names.isActive );
+                const CloseProjsss = response.data.HouseNo.filter(names =>  !names.isActive );
+
+
+                setProjectFOpenNames(OpenProjsss.map(names => {
+                  if(names.isActive){
+                    return { value: names._id, label: names.name };
+                  }
                 }));
+                setProjectFCloseNames(CloseProjsss.map(names => {
+                  if(!names.isActive){
+                    return { value: names._id, label: names.name };
+                  }
+                  }));
                 
                 setUsersForFilter(response.data.users.map(names => {
                   return { value: names._id, label: names.name };
@@ -424,11 +452,11 @@ const Construction = () => {
         valueGetter: (params)=>{return(params.data.houseNoList_id && params.data.houseNoList_id.name)} ,
         cellEditor: 'agSelectCellEditor',
         cellEditorParams:  {
-          values: projectFNames && projectFNames.map(option => option.label),
+          values: filterFvalue === "Open" ? projectFOpenNames && projectFOpenNames.map(option => option.label) : projectFCloseNames && projectFOpenNames.map(option => option.label) ,
         },
         floatingFilterComponent: 'selectFloatingFilter', 
         floatingFilterComponentParams: { 
-          options: projectNames && projectNames.map(option => option.name),
+          options: filterFvalue === "Open" ? openProjectNames && openProjectNames.map(option => option.name) : closeProjectNames && closeProjectNames.map(option => option.name),
           onValueChange:(value) => setProjectFvalue(value),
           value: projectFvalue,
           suppressFilterButton: true, 
@@ -713,7 +741,7 @@ const Construction = () => {
         }
 
         if(event.colDef.field === "houseNoList_id"){
-          const selectedOption = projectFNames.find(option => option.label === event.data.houseNoList_id);
+          const selectedOption = projectFOpenNames && filterFvalue === "Open" ? projectFOpenNames ? projectFOpenNames.find(option => option.label === event.data.houseNoList_id) : " " : projectFCloseNames ?  projectFOpenNames.find(option => option.label === event.data.houseNoList_id) : "";
           event.data.houseNoList_id = selectedOption ? selectedOption.value : '';
         }
         console.log()
@@ -907,8 +935,13 @@ useEffect(()=>{
           </div>
 
         <div className='d-flex'>
-        <Link onClick={exportToExcel} className='btn btn-primary mx-2'>
-            Download Excel File
+        <Link onClick={exportToExcel} style={{
+          backgroundColor: 'transparent',
+          color: 'black',
+          borderColor: 'lightgray',
+          alignSelf: 'center',
+        }} className='btn btn-primary mx-2'>
+            Excel
           </Link>
         <div style={{
               width: '11rem',
@@ -943,7 +976,8 @@ useEffect(()=>{
                     {isOpen && (
                     <div >
                         <div style={{margin: 10}}>
-                        {projectNames && projectNames.map((task, ind)=>{
+                          {filterFvalue === "Open" ? 
+                          openProjectNames && openProjectNames.map((task, ind)=>{
                             return(
                             <div style={{cursor: 'default'}} key={ind} className='row recurringTask_task'>
                                 <div className='col-9'>
@@ -960,7 +994,29 @@ useEffect(()=>{
                                 </div>
                             </div>
                             )}
-                        )}
+                        ) 
+                          : 
+
+                          closeProjectNames && closeProjectNames.map((task, ind)=>{
+                            return(
+                            <div style={{cursor: 'default'}} key={ind} className='row recurringTask_task'>
+                                <div className='col-9'>
+                                    <p> {task.name} </p>
+                                </div>
+                                
+                                <div className='col-3 d-flex'>
+                                <Link onClick={()=>{handleCompleteProject(task._id)}} style={{marginRight: '5px', all: 'unset', cursor: 'pointer', textAlign: 'center !important'}}>
+                                    <svg xmlns="http://www.w3.org/2000/svg" width="16px" height="16px" viewBox="0 0 24 24"><title/><g id="Complete"><g id="tick"><polyline fill="none" points="3.7 14.3 9.6 19 20.3 5" stroke="#000000" stroke-linecap="round" stroke-linejoin="round" stroke-width="2"/></g></g></svg>          
+                                </Link>
+                                  <div onClick={()=>{handleDeleteProjectName(task._id)}} style={{cursor: "pointer"}}>
+                                    <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="feather feather-x icon-16"><line x1="18" y1="6" x2="6" y2="18"></line><line x1="6" y1="6" x2="18" y2="18"></line></svg>
+                                  </div>
+                                </div>
+                            </div>
+                            )}
+                        )
+                            }
+                        
                            
                         </div>
                     </div>
@@ -1065,7 +1121,7 @@ useEffect(()=>{
               value = {addTaskFormData.houseNoList_id}
               >
                   <option>Project</option>
-                  {projectNames && projectNames.map((proj, ind)=>{
+                  {openProjectNames && openProjectNames.map((proj, ind)=>{
                     return(
                       <option key={ind} value={proj._id}>{proj.name}</option>
                     )

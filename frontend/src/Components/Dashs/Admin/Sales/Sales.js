@@ -717,9 +717,14 @@ const Sales = () => {
           </div>
 
           <div className=''>
-          <Link onClick={exportToExcel} className='btn btn-primary'>
-            Download Excel File
-          </Link>
+          <Link onClick={exportToExcel} style={{
+          backgroundColor: 'transparent',
+          color: 'black',
+          borderColor: 'lightgray',
+          alignSelf: 'center',
+        }} className='btn btn-primary'>
+            Excel
+            </Link>
             <Link onClick={beforeAddModelHandler} className='btn btn-primary mx-4'>
               Add Sale
             </Link>

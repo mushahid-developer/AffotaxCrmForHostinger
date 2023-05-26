@@ -10,6 +10,8 @@ import {
   Legend,
 } from 'chart.js';
 import { Bar } from 'react-chartjs-2';
+import ChartDataLabels from 'chartjs-plugin-datalabels';
+
 import { useNavigate } from 'react-router-dom';
 
 import DatePicker from "react-datepicker";
@@ -66,6 +68,11 @@ export default function Dashboard() {
 const options = {
   responsive: true,
   plugins: {
+    datalabels: {
+      display: true,
+      color: "black",
+      formatter: Math.round,
+    },
     legend: {
       position: 'top',
     },
@@ -104,6 +111,11 @@ const data = {
 const options2 = {
   responsive: true,
   plugins: {
+    datalabels: {
+      display: true,
+      color: "black",
+      formatter: Math.round,
+    },
     legend: {
       position: 'top',
     },
@@ -134,6 +146,11 @@ const data2 = {
 const options3 = {
   responsive: true,
   plugins: {
+    datalabels: {
+      display: true,
+      color: "white",
+      formatter: Math.round,
+    },
     legend: {
       position: 'top',
     },
@@ -182,6 +199,11 @@ const options4 = {
     }
   },
   plugins: {
+    datalabels: {
+      display: true,
+      color: "black",
+      formatter: Math.round,
+    },
     legend: {
       position: 'top',
     },
@@ -227,6 +249,11 @@ const options5 = {
   },
   barThickness: 15, 
   plugins: {
+    datalabels: {
+      display: true,
+      color: "white",
+      formatter: Math.round,
+    },
     legend: {
       position: 'top',
     },
@@ -440,7 +467,7 @@ if(!loader)
           {showHideCharts.clientsCounterGraph && 
             <div className='col-4'>
                 <div style={{overflow: 'hidden', padding: '10px', backgroundColor: 'white'}}>
-                  <Bar options={options} data={data} />
+                  <Bar options={options} plugins={[ChartDataLabels]} data={data} />
                 </div>
             </div>
           }
@@ -448,7 +475,7 @@ if(!loader)
             {showHideCharts.departmentsCounterGraph && 
             <div className='col-4'>
                 <div style={{overflow: 'hidden', padding: '10px', backgroundColor: 'white'}}>
-                  <Bar options={options2} data={data2} />
+                  <Bar options={options2} plugins={[ChartDataLabels]} data={data2} />
                 </div>
             </div>
             }
@@ -456,7 +483,7 @@ if(!loader)
             {showHideCharts.clientsFeeGraph && 
               <div className='col-4'>
                   <div style={{overflow: 'hidden', padding: '10px', backgroundColor: 'white'}}>
-                    <Bar options={options3} data={data3} />
+                    <Bar options={options3} plugins={[ChartDataLabels]} data={data3} />
                   </div>
               </div>
             }
@@ -464,7 +491,7 @@ if(!loader)
             {showHideCharts.departmentsOverDueGraph && 
               <div className='col-6 mt-4'>
                   <div style={{overflow: 'hidden', padding: '10px', backgroundColor: 'white'}}>
-                    <Bar options={options4} data={data4} />
+                    <Bar options={options4} plugins={[ChartDataLabels]} data={data4} />
                   </div>
               </div>
             }
@@ -472,7 +499,7 @@ if(!loader)
             {showHideCharts.departmentsDueGraph && 
               <div className='col-6 mt-4'>
                   <div style={{overflow: 'hidden', padding: '10px', backgroundColor: 'white' }}>
-                    <Bar options={options5} data={data5} />
+                    <Bar options={options5} plugins={[ChartDataLabels]} data={data5} />
                   </div>
               </div>
             }
