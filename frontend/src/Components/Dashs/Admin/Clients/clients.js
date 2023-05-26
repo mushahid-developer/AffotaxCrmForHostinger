@@ -362,8 +362,13 @@ async function onGridReady(params) {
 
           <div className="d-flex">
 
-          <Link onClick={exportToExcel} className='btn btn-primary'>
-            Download Excel File
+          <Link onClick={exportToExcel} style={{
+          backgroundColor: 'transparent',
+          color: 'black',
+          borderColor: 'lightgray',
+          alignSelf: 'center',
+        }} className='btn btn-primary'>
+            Excel
           </Link>
 
           <div style={{width: '260px'}} className='mx-4'>
