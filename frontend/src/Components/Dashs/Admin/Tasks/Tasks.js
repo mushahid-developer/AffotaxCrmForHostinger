@@ -30,7 +30,7 @@ var ProjCopyUrl = axiosURL.ProjCopyUrl;
 
 
 const Tasks = () => {
-    const [loader, setLoader] = useState(true)
+    const [loader, setLoader] = useState(false)
     const [reRender, setReRender] = useState(true)
     const [reRender2, setReRender2] = useState(0)
 

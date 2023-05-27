@@ -32,7 +32,7 @@ const DropdownFilter = (props) => {
 
       }} value={selectedValue || ''} onChange={handleChange}>
         <option value="">Select</option>
-        {options.map((option, index) => (
+        {options && options.map((option, index) => (
           <option key={index} value={option}>
             {option}
           </option>
