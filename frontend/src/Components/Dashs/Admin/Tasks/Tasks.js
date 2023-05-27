@@ -275,7 +275,6 @@ const Tasks = () => {
             );
             if(response.status === 200){
                 setMainRowData(response.data.projects)
-                setPreData(response.data.users)
                 setProjectNames(response.data.projectNames)
                 setJHolderFPrevalue(response.data.curUser)
                 
@@ -290,6 +289,7 @@ const Tasks = () => {
                   return { value: names._id, label: names.name };
                 }))
                 setLoader(false)
+                setPreData(response.data.users)
             }
             
         
