@@ -30,7 +30,7 @@ var ProjCopyUrl = axiosURL.ProjCopyUrl;
 
 
 const Tasks = () => {
-    const [loader, setLoader] = useState(false)
+    const [loader, setLoader] = useState(true)
     const [reRender, setReRender] = useState(true)
     const [reRender2, setReRender2] = useState(0)
 
@@ -51,7 +51,6 @@ const Tasks = () => {
     const [statusFvalue, setStatusFvalue] = useState(null);
     const [projectFvalue, setProjectFvalue] = useState(null);
     const [jHolderFvalue, setJHolderFvalue] = useState(null);
-    const [jHolderFPrevalue, setJHolderFPrevalue] = useState(null);
 
     const [usersForFilter, setUsersForFilter] = useState([]);
 
@@ -200,9 +199,7 @@ const Tasks = () => {
     }
 
 
-    useEffect(()=>{
-      setJHolderFvalue(jHolderFPrevalue)
-    }, [preData])
+    
 
     const filter = async ()=>{
 
@@ -274,22 +271,22 @@ const Tasks = () => {
                 }
             );
             if(response.status === 200){
-                setMainRowData(response.data.projects)
-                setPreData(response.data.users)
-                setProjectNames(response.data.projectNames)
-                setJHolderFPrevalue(response.data.curUser)
-                
-                setProjectFNames(response.data.projectNames.map(names => {
-                  return { value: names._id, label: names.name };
-                }));
-                
-                setUsersForFilter(response.data.users.map(names => {
-                  return { value: names._id, label: names.name };
-                }));
-                setFPreData(response.data.users.map(names => {
-                  return { value: names._id, label: names.name };
-                }))
-                setLoader(false)
+              setPreData(response.data.users)
+              setProjectNames(response.data.projectNames)
+              
+              setProjectFNames(response.data.projectNames.map(names => {
+                return { value: names._id, label: names.name };
+              }));
+              
+              setUsersForFilter(response.data.users.map(names => {
+                return { value: names._id, label: names.name };
+              }));
+              setFPreData(response.data.users.map(names => {
+                return { value: names._id, label: names.name };
+              }))
+              setLoader(false)
+              setJHolderFvalue(response.data.curUser)
+              setMainRowData(response.data.projects)
             }
             
         
