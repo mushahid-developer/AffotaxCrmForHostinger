@@ -285,8 +285,8 @@ const Tasks = () => {
                 return { value: names._id, label: names.name };
               }))
               setLoader(false)
-              setJHolderFvalue(response.data.curUser)
               setMainRowData(response.data.projects)
+              setJHolderFvalue(response.data.curUser)
             }
             
         
