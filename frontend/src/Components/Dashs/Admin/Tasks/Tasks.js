@@ -51,6 +51,7 @@ const Tasks = () => {
     const [statusFvalue, setStatusFvalue] = useState(null);
     const [projectFvalue, setProjectFvalue] = useState(null);
     const [jHolderFvalue, setJHolderFvalue] = useState(null);
+    const [jHolderPreFvalue, setJHolderPreFvalue] = useState(null);
 
     const [usersForFilter, setUsersForFilter] = useState([]);
 
@@ -62,6 +63,8 @@ const Tasks = () => {
       Jobholder_id: null,
       status: 'Progress',
     })
+
+    const [load, setLoad] = useState(0) ;
 
 
     const [mainRowData, setMainRowData] = useState([ ]);
@@ -202,8 +205,21 @@ const Tasks = () => {
     
 
     const filter = async ()=>{
+      console.log(load)
 
       var filteredArray = mainRowData
+
+      if(load === 1){
+        // Job Holder Filter
+        if(filteredArray != undefined && jHolderPreFvalue != null && jHolderPreFvalue !== ""){
+          filteredArray = filteredArray.filter(obj => obj.Jobholder_id && obj.Jobholder_id.name === jHolderPreFvalue);
+        }
+      }else {
+        // Job Holder Filter
+        if(filteredArray != undefined && jHolderFvalue != null && jHolderFvalue !== ""){
+          filteredArray = filteredArray.filter(obj => obj.Jobholder_id && obj.Jobholder_id.name === jHolderFvalue);
+        }
+      }
 
       
     
@@ -217,10 +233,6 @@ const Tasks = () => {
         filteredArray = filteredArray.filter(obj => obj.status && obj.status === statusFvalue);
       }
 
-      // Job Holder Filter
-      if(filteredArray != undefined && jHolderFvalue != null && jHolderFvalue !== ""){
-        filteredArray = filteredArray.filter(obj => obj.Jobholder_id && obj.Jobholder_id.name === jHolderFvalue);
-      }
     
       setRowData(filteredArray)
     
@@ -229,7 +241,11 @@ const Tasks = () => {
     useEffect(()=>{
       // setRowData(mainRowData)
       filter()
-    }, [mainRowData, statusFvalue, projectFvalue, jHolderFvalue])
+    }, [mainRowData, statusFvalue, projectFvalue, jHolderFvalue, jHolderPreFvalue])
+    
+    useEffect(()=>{
+      setLoad(2);
+    }, [statusFvalue, projectFvalue, jHolderFvalue, jHolderPreFvalue])
 
     useEffect(()=>{
       
@@ -284,9 +300,12 @@ const Tasks = () => {
               setFPreData(response.data.users.map(names => {
                 return { value: names._id, label: names.name };
               }))
+              if(load === 0){
+                setLoad(1);
+              }
               setLoader(false)
               setMainRowData(response.data.projects)
-              setJHolderFvalue(response.data.curUser)
+              setJHolderPreFvalue(response.data.curUser)
             }
             
         
@@ -325,12 +344,15 @@ const Tasks = () => {
 
         const filteredArray = rowData.filter(obj => obj._id !== projId);
         setRowData(filteredArray)
+        try{
+          await axios.get(`${ProjDeleteUrl}/${projId}`,
+              {
+              headers:{ 'Content-Type': 'application/json' }
+              }
+          );
+        } catch (err) {
 
-        await axios.get(`${ProjDeleteUrl}/${projId}`,
-            {
-            headers:{ 'Content-Type': 'application/json' }
-            }
-        );
+        }
 
         setReRender(!reRender);
       }
@@ -348,12 +370,17 @@ const Tasks = () => {
         _id: `${projData._id}1001`,
       }
       setRowData(prev => [...prev, copiedProj])
+      try {
+        await axios.get(`${ProjCopyUrl}/${projId}`,
+            {
+            headers:{ 'Content-Type': 'application/json' }
+            }
+        );
 
-      await axios.get(`${ProjCopyUrl}/${projId}`,
-          {
-          headers:{ 'Content-Type': 'application/json' }
-          }
-      );
+
+      } catch (err) {
+        //
+      }
 
       setReRender(!reRender);
     }
