@@ -37,8 +37,10 @@ exports.getAllProjects = async (req, res) => {
 
     try {
         const projects = await ProjectDb.find().populate('Jobholder_id').populate('projectname_id').populate({path: 'task_id',populate: {path: 'subtasks_id'},});
-        const users = await Userdb.find({ isActive: true });
+        const users_all = await Userdb.find({ isActive: true }).populate('role_id');
         const projectNames = await ProjectNameDb.find();
+
+        const users = users_all.filter((user) => user.role_id.pages[10] && user.role_id.pages[10].isChecked)
 
         res.status(200).json({
             projects: projects,

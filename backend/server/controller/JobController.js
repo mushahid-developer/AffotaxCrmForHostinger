@@ -5,13 +5,16 @@ const mongoose = require('mongoose');
 
 
 exports.addNewClientPreData = async (req, res) => {
-  const users = await Userdb.find({ isActive: true });
+  const users_all = await Userdb.find({ isActive: true }).populate('role_id');
 
-  if (!users) {
+
+  if (!users_all) {
     return res.status(400).json({
         message: "Some Error, Please try again later",
     })
 }
+
+const users = users_all.filter((user) => user.role_id.pages[9] && user.role_id.pages[9].isChecked)
 
 res.json(users);
 }

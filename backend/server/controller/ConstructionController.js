@@ -44,8 +44,10 @@ exports.getAllConstruction = async (req, res) => {
 
     try {
         const Construction = await ConstructionDb.find().populate('Manager').populate('Jobholder_id').populate('supervisor_id').populate('houseNoList_id');
-        const users = await Userdb.find({ isActive: true });
+        const users_all = await Userdb.find({ isActive: true }).populate('role_id');
         const HouseNo = await HosueNoDb.find();
+
+        const users = users_all.filter((user) => user.role_id.pages[11] && user.role_id.pages[11].isChecked)
 
         res.status(200).json({
             Construction: Construction,
@@ -183,6 +185,10 @@ exports.SetCompletedOneConstruction = async (req, res) => {
         const id = req.params.id
 
         await ConstructionDb.updateMany({houseNoList_id: id},{
+            isActive: false,
+        })
+
+        await HosueNoDb.updateMany({_id: id},{
             isActive: false,
         })
             

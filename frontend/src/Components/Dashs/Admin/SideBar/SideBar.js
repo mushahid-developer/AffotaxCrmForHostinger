@@ -11,13 +11,16 @@ export default function SideBar(props) {
   const [settingsisOpen, setSettingsIsOpen] = useState(false);
   const [hrIsOpen, setHrIsOpen] = useState(false);
 
+  console.log(pagesAccess)
+
+
   return (
     <>
         <div className='sidebar_main'>
 
           
               <>
-              {(pagesAccess[0] && pagesAccess[0].name === "Dashboard Page") && (pagesAccess[0] && pagesAccess[0].isChecked) ? 
+              {(pagesAccess[7] && pagesAccess[7].name === "Dashboard Page") && (pagesAccess[7] && pagesAccess[7].isChecked) ? 
                 <Link to="/admin/dashboard" className="sidebar_link_active">
                   <svg style={{heigh: '20px', width: '20px'}} xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" className="feather feather-monitor icon"><rect x="2" y="3" width="20" height="14" rx="2" ry="2"></rect><line x1="8" y1="21" x2="16" y2="21"></line><line x1="12" y1="17" x2="12" y2="21"></line></svg>
                   <span style={{marginLeft: '10px'}}>Dashboard</span>
@@ -31,7 +34,7 @@ export default function SideBar(props) {
                   </Link>
                   : "" }
 
-                  {pagesAccess[2] && pagesAccess[2].name === "Leads Page" && pagesAccess[2] && pagesAccess[2].isChecked ?
+                  {pagesAccess[8] && pagesAccess[8].name === "Leads Page" && pagesAccess[8] && pagesAccess[8].isChecked ?
                   <Link 
                   to='/leads' 
                   className="sidebar_link">
@@ -40,7 +43,7 @@ export default function SideBar(props) {
                   </Link>
                   : "" }
                   
-                  {pagesAccess[3] && pagesAccess[3].name === "Jobs Page" && pagesAccess[3] && pagesAccess[3].isChecked ?
+                  {pagesAccess[9] && pagesAccess[9].name === "Jobs Page" && pagesAccess[9] && pagesAccess[9].isChecked ?
                   <Link to="/clients/job-planning" className="sidebar_link">
                   <svg style={{heigh: '20px', width: '20px'}} xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" className="feather feather-shopping-cart icon"><circle cx="9" cy="21" r="1"></circle><circle cx="20" cy="21" r="1"></circle><path d="M1 1h4l2.68 13.39a2 2 0 0 0 2 1.61h9.72a2 2 0 0 0 2-1.61L23 6H6"></path></svg>
                   <span style={{marginLeft: '10px'}}>Jobs</span>
@@ -54,14 +57,14 @@ export default function SideBar(props) {
                     </Link>
                   : "" }
 
-                  {pagesAccess[4] && pagesAccess[4].name === "Sales Page" && pagesAccess[4] && pagesAccess[4].isChecked ?
+                  {pagesAccess[2] && pagesAccess[2].name === "Sales Page" && pagesAccess[2] && pagesAccess[2].isChecked ?
                   <Link to="/sales" className="sidebar_link">
                   <svg style={{heigh: '20px', width: '20px'}} xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" className="feather feather-shopping-cart icon"><circle cx="9" cy="21" r="1"></circle><circle cx="20" cy="21" r="1"></circle><path d="M1 1h4l2.68 13.39a2 2 0 0 0 2 1.61h9.72a2 2 0 0 0 2-1.61L23 6H6"></path></svg>
                   <span style={{marginLeft: '10px'}}>Sales</span>
                   </Link>
                   : "" }
 
-                  {pagesAccess[5] && pagesAccess[5].name === "HR Page" && pagesAccess[5] && pagesAccess[5].isChecked ?
+                  {pagesAccess[3] && pagesAccess[3].name === "HR Page" && pagesAccess[3] && pagesAccess[3].isChecked ?
                     <>
                       <Link className="sidebar_link" onClick={()=>{setHrIsOpen(!hrIsOpen)}}>
                       <div style={{justifyContent: 'space-between',}} className='d-flex'>
@@ -92,7 +95,7 @@ export default function SideBar(props) {
                       </div>
                     </>
                   : "" }
-                  {pagesAccess[6] && pagesAccess[6].name === "Reports Page" && pagesAccess[6] && pagesAccess[6].isChecked ?
+                  {pagesAccess[0] && pagesAccess[0].name === "Reports Page" && pagesAccess[0] && pagesAccess[0].isChecked ?
                     <>
                       <Link className="sidebar_link" onClick={()=>{setJobsIsOpen(!jobsisOpen)}}>
                       <div style={{justifyContent: 'space-between',}} className='d-flex'>
@@ -134,21 +137,21 @@ export default function SideBar(props) {
                   <span style={{marginLeft: '10px'}}>Reports</span>
                   </Link> */}
                   
-                  {pagesAccess[7] && pagesAccess[7].name === "Tickets Page" && pagesAccess[7] && pagesAccess[7].isChecked ?
+                  {pagesAccess[4] && pagesAccess[4].name === "Tickets Page" && pagesAccess[4] && pagesAccess[4].isChecked ?
                   <Link className="sidebar_link">
                   <svg style={{heigh: '20px', width: '20px'}} xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" className="feather feather-life-buoy icon"><circle cx="12" cy="12" r="10"></circle><circle cx="12" cy="12" r="4"></circle><line x1="4.93" y1="4.93" x2="9.17" y2="9.17"></line><line x1="14.83" y1="14.83" x2="19.07" y2="19.07"></line><line x1="14.83" y1="9.17" x2="19.07" y2="4.93"></line><line x1="14.83" y1="9.17" x2="18.36" y2="5.64"></line><line x1="4.93" y1="19.07" x2="9.17" y2="14.83"></line></svg>
                   <span style={{marginLeft: '10px'}}>Tickets</span>
                   </Link>
                   : "" }
 
-                  {pagesAccess[8] && pagesAccess[8].name === "Template Page" && pagesAccess[8] && pagesAccess[8].isChecked ?
+                  {pagesAccess[5] && pagesAccess[5].name === "Template Page" && pagesAccess[5] && pagesAccess[5].isChecked ?
                   <Link className="sidebar_link">
                   <svg style={{heigh: '20px', width: '20px'}} xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" className="feather feather-monitor icon"><rect x="2" y="3" width="20" height="14" rx="2" ry="2"></rect><line x1="8" y1="21" x2="16" y2="21"></line><line x1="12" y1="17" x2="12" y2="21"></line></svg>
                   <span style={{marginLeft: '10px'}}>Templates</span>
                   </Link>
                   : "" }
                   
-                  {pagesAccess[8] && pagesAccess[8].name === "Template Page" && pagesAccess[8] && pagesAccess[8].isChecked ?
+                  {pagesAccess[11] && pagesAccess[11].name === "Construction Page" && pagesAccess[11] && pagesAccess[11].isChecked ?
                   <Link to='/construction' className="sidebar_link">
                   <svg style={{heigh: '20px', width: '20px'}} xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" className="feather feather-monitor icon"><rect x="2" y="3" width="20" height="14" rx="2" ry="2"></rect><line x1="8" y1="21" x2="16" y2="21"></line><line x1="12" y1="17" x2="12" y2="21"></line></svg>
                   <span style={{marginLeft: '10px'}}>Construction</span>
@@ -156,7 +159,7 @@ export default function SideBar(props) {
                   : "" }
 
 
-                  {pagesAccess[9] && pagesAccess[9].name === "Settings Page" && pagesAccess[9] && pagesAccess[9].isChecked ?
+                  {pagesAccess[6] && pagesAccess[6].name === "Settings Page" && pagesAccess[6] && pagesAccess[6].isChecked ?
                   <>
                     <Link className="sidebar_link" onClick={()=>{setSettingsIsOpen(!settingsisOpen)}}>
                     <div style={{justifyContent: 'space-between',}} className='d-flex'>
@@ -191,6 +194,9 @@ export default function SideBar(props) {
 
                     </div>
 
+
+                  </>
+                  : "" }
                   <Link onClick={()=>{
                     secureLocalStorage.removeItem("token");
                     setToken(secureLocalStorage.getItem('token'))
@@ -202,9 +208,6 @@ export default function SideBar(props) {
                       </svg>
                     <span style={{marginLeft: '10px'}}>Logout</span>
                   </Link>
-
-                  </>
-                  : "" }
               </>
             
 

@@ -8,7 +8,8 @@ exports.getDashboardData = async (req, res) => {
       var previousYear = null
       var selectedDate = req.body.selectedDate
       if(selectedDate){
-        currentYear = new Date(selectedDate).getFullYear();
+        const aaa = new Date(selectedDate)
+        currentYear = aaa.getFullYear() +   1;
         previousYear = currentYear - 1;
       } else{
         currentYear = new Date().getFullYear();
