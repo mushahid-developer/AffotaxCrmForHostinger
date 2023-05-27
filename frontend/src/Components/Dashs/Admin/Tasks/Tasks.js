@@ -17,6 +17,7 @@ import { saveAs } from 'file-saver';
 import * as XLSX from 'xlsx';
 
 import { useSpring, animated } from 'react-spring';
+import secureLocalStorage from 'react-secure-storage';
 
 var addProjectName = axiosURL.addProjectName;
 var deleteProjectName = axiosURL.deleteProjectName;
@@ -50,6 +51,7 @@ const Tasks = () => {
     const [statusFvalue, setStatusFvalue] = useState(null);
     const [projectFvalue, setProjectFvalue] = useState(null);
     const [jHolderFvalue, setJHolderFvalue] = useState(null);
+    const [jHolderFPrevalue, setJHolderFPrevalue] = useState(null);
 
     const [usersForFilter, setUsersForFilter] = useState([]);
 
@@ -197,9 +199,16 @@ const Tasks = () => {
       }
     }
 
+
+    useEffect(()=>{
+      setJHolderFvalue(jHolderFPrevalue)
+    }, [preData])
+
     const filter = async ()=>{
 
       var filteredArray = mainRowData
+
+      
     
       //Project Filter
       if(filteredArray !== undefined && projectFvalue !== null && projectFvalue !== ""){
@@ -254,15 +263,21 @@ const Tasks = () => {
     const getData = async ()=>{
         // setLoader(true)
         try {
+
+            const token = secureLocalStorage.getItem('token') 
             const response = await axios.get(getAllTasksUrl,
                 {
-                    headers:{ 'Content-Type': 'application/json' }
+                    headers:{ 
+                      'Content-Type': 'application/json',
+                      'Authorization': 'Bearer ' + token
+                    }
                 }
             );
             if(response.status === 200){
                 setMainRowData(response.data.projects)
                 setPreData(response.data.users)
                 setProjectNames(response.data.projectNames)
+                setJHolderFPrevalue(response.data.curUser)
                 
                 setProjectFNames(response.data.projectNames.map(names => {
                   return { value: names._id, label: names.name };

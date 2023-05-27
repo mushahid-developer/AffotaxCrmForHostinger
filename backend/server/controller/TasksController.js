@@ -42,10 +42,14 @@ exports.getAllProjects = async (req, res) => {
 
         const users = users_all.filter((user) => user.role_id.pages[10] && user.role_id.pages[10].isChecked)
 
+        const curUser = req.user.name
+        console.log(req.user)
+
         res.status(200).json({
             projects: projects,
             projectNames: projectNames,
-            users: users
+            users: users,
+            curUser: curUser
         })
         
       } catch (err) {
