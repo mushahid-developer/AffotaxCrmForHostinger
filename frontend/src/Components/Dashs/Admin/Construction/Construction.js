@@ -50,7 +50,6 @@ const Construction = () => {
 
     const [statusFvalue, setStatusFvalue] = useState(null);
     const [projectFvalue, setProjectFvalue] = useState('CRM-Affotax');
-    const [supervisorFvalue, setSupervisorFvalue] = useState(null);
     const [jHolderFvalue, setJHolderFvalue] = useState(null);
     const [ManagerFvalue, setManagerFvalue] = useState(null);
     const [filterFvalue, setFilterFvalue] = useState('Open');
@@ -60,24 +59,25 @@ const Construction = () => {
     const [addTaskFormData, setAddTaskFormData] = useState({
       houseNoList_id: '',
       Task: '',
-      supervisor_id: '',
+      hrs: '',
       Jobholder_id: '',
-      startDate: null,
-      completationDate: null,
-      JobDate: null,
-      Note: null,
-      budgetPlan: null,
-      budgetActual: null,
+      startDate: '',
+      completationDate: '',
+      JobDate: '',
+      Note: '',
+      budgetPlan: '',
+      budgetActual: '',
       status: 'Progress',
-      Manager: null,
-      comments: null,
+      Manager: '',
+      comments: '',
+      contractor: '',
     })
 
     const [colVisibility, setColVisibility] = useState({
       houseNoList_id:false,
       Task_No:false,
+      hrs:false,
       Task:false,
-      supervisor_id:false,
       Jobholder_id:false,
       startDate:false,
       completationDate:false,
@@ -257,11 +257,7 @@ const Construction = () => {
         filteredArray = filteredArray.filter(obj => obj.status && obj.status === statusFvalue);
       }
 
-      // Supervisor Filter
-      if(filteredArray != undefined && supervisorFvalue != null && supervisorFvalue !== ""){
-        filteredArray = filteredArray.filter(obj => obj.supervisor_id && obj.supervisor_id.name === supervisorFvalue);
-      }
-
+      
       // Job Holder Filter
       if(filteredArray != undefined && jHolderFvalue != null && jHolderFvalue !== ""){
         filteredArray = filteredArray.filter(obj => obj.Jobholder_id && obj.Jobholder_id.name === jHolderFvalue);
@@ -279,7 +275,7 @@ const Construction = () => {
     useEffect(()=>{
       // setRowData(mainRowData)
       filter()
-    }, [mainRowData, statusFvalue, projectFvalue, jHolderFvalue, supervisorFvalue, ManagerFvalue, filterFvalue])
+    }, [mainRowData, statusFvalue, projectFvalue, jHolderFvalue, ManagerFvalue, filterFvalue])
 
     var ii = 1;
 
@@ -330,7 +326,6 @@ const Construction = () => {
                 }
             );
             if(response.status === 200){
-                console.log(response.data)
                 setMainRowData(response.data.Construction)
                 setPreData(response.data.users)
                 
@@ -385,7 +380,6 @@ const Construction = () => {
           var filteredArray = rowData.filter(obj => obj && obj._id === openProjectId);
         }
         setOpenProjectTasks(filteredArray && filteredArray[0])
-        console.log(filteredArray)
       }
     }, rowData)
 
@@ -429,7 +423,7 @@ const Construction = () => {
       const copiedProj = {
         houseNoList_id: projData.houseNoList_id,
         Task: projData.Task,
-        supervisor_id: projData.supervisor_id,
+        hrs: projData.hrs,
         Jobholder_id: projData.Jobholder_id,
         startDate: projData.startDate,
         completationDate: projData.completationDate,
@@ -472,13 +466,13 @@ const Construction = () => {
     
       const columnDefs = [
         
-        { headerName: 'House No', field: 'houseNoList_id', flex:2.5,
+        { headerName: 'Projects', field: 'houseNoList_id', flex:2.5,
         valueGetter: (params)=>{
           return(params.data.houseNoList_id ? params.data.houseNoList_id.name ? params.data.houseNoList_id.name : params.data.houseNoList_id_name : params.data.houseNoList_id_name)
         } ,
         cellEditor: 'agSelectCellEditor',
         cellEditorParams:  {
-          values: filterFvalue === "Open" ? projectFOpenNames && projectFOpenNames.map(option => option.label) : projectFCloseNames && projectFOpenNames.map(option => option.label) ,
+          values: filterFvalue === "Open" ? projectFOpenNames && projectFOpenNames.map(option => option.label) : projectFCloseNames && projectFCloseNames.map(option => option.label) ,
         },
         floatingFilterComponent: 'selectFloatingFilter', 
         floatingFilterComponentParams: { 
@@ -490,40 +484,12 @@ const Construction = () => {
         } 
         },
         {
-          headerName: "Task No",
+          headerName: "Task#",
           field: "Task_No",
           filter: false,
           flex: 1.5,
           editable: false,
           valueGetter: (params) => `Task# ${params.node.rowIndex + 1}`,
-        },
-        { 
-          headerName: 'Task', 
-          field: 'Task', 
-          flex:4,
-          cellStyle:(params)=>{
-          
-              return{color: "#0d6efd"}
-          },
-        },
-        { headerName: 'Supervisor', field: 'supervisor_id', flex:2,
-        valueGetter: params => {
-          return(params.data.supervisor_id ? params.data.supervisor_id.name ? params.data.supervisor_id.name : params.data.supervisor_id_name : params.data.supervisor_id_name)
-        },
-        cellEditor: 'agSelectCellEditor',
-          cellEditorParams: {
-            values: usersForFilter && usersForFilter.map(option => option.label),
-          },
-          onCellValueChanged: function(event) {
-          },
-          floatingFilterComponent: 'selectFloatingFilter', 
-          floatingFilterComponentParams: { 
-            options: fPreData && fPreData.map(option => option.label),
-            onValueChange:(value) => setSupervisorFvalue(value),
-            value: supervisorFvalue,
-            suppressFilterButton: true, 
-            suppressInput: true 
-          }
         },
         { headerName: 'Job Holder', field: 'Jobholder_id', flex:2,
         valueGetter: p => {
@@ -544,6 +510,24 @@ const Construction = () => {
             suppressInput: true 
           }
         },
+        
+        { 
+          headerName: 'Hrs', 
+          field: 'hrs', 
+          flex: 1,
+          
+        },
+        { 
+          headerName: 'Task', 
+          field: 'Task', 
+          flex:8,
+          cellStyle:(params)=>{
+          
+              return{color: "#0d6efd"}
+          },
+        },
+        
+        
         { 
           headerName: 'Start Date', 
           field: 'startDate', 
@@ -670,40 +654,44 @@ const Construction = () => {
         },
         { headerName: 'Budget-Plan', field: 'budgetPlan', flex:4,},
         { headerName: 'Budget-Actual', field: 'budgetActual', flex:4,},
-        { 
-          headerName: 'Status', 
-          field: 'status', flex:2,
-          cellEditor: 'agSelectCellEditor',
-          cellEditorParams: { values: ["Select", 'To do', 'Progress', 'Review', 'Completed'] },
-          floatingFilterComponent: 'SelectUnSelectFilter', 
-          floatingFilterComponentParams: { 
-            options: ['To do', 'Progress', 'Review', 'Completed'],
-            onValueChange:(value) => setStatusFvalue(value),
-            value: statusFvalue,
-            suppressFilterButton: true, 
-            suppressInput: true 
-          }
-        },
         { headerName: 'Manager', field: 'Manager', flex:2,
-          valueGetter: params => {
-            return(params.data.Manager ? params.data.Manager.name ? params.data.Manager.name : params.data.Manager_name : params.data.Manager_name)
-          },
-          cellEditor: 'agSelectCellEditor',
-          cellEditorParams: {
-            values: usersForFilter && usersForFilter.map(option => option.label),
-          },
-          onCellValueChanged: function(event) {
-          },
-          floatingFilterComponent: 'selectFloatingFilter', 
-          floatingFilterComponentParams: { 
-            options: fPreData && fPreData.map(option => option.label),
-            onValueChange:(value) => setManagerFvalue(value),
-            value: ManagerFvalue,
-            suppressFilterButton: true, 
-            suppressInput: true 
-          }
+        valueGetter: params => {
+          return(params.data.Manager ? params.data.Manager.name ? params.data.Manager.name : params.data.Manager_name : params.data.Manager_name)
         },
-        { 
+        cellEditor: 'agSelectCellEditor',
+        cellEditorParams: {
+          values: usersForFilter && usersForFilter.map(option => option.label),
+        },
+        onCellValueChanged: function(event) {
+        },
+        floatingFilterComponent: 'selectFloatingFilter', 
+        floatingFilterComponentParams: { 
+          options: fPreData && fPreData.map(option => option.label),
+          onValueChange:(value) => setManagerFvalue(value),
+          value: ManagerFvalue,
+          suppressFilterButton: true, 
+          suppressInput: true 
+        }
+      },
+      { 
+        headerName: 'Status', 
+        field: 'status', flex:2,
+        cellEditor: 'agSelectCellEditor',
+        cellEditorParams: { values: ["Select", 'To do', 'Progress', 'Review', 'Completed'] },
+        floatingFilterComponent: 'SelectUnSelectFilter', 
+        floatingFilterComponentParams: { 
+          options: ['To do', 'Progress', 'Review', 'Completed'],
+          onValueChange:(value) => setStatusFvalue(value),
+          value: statusFvalue,
+          suppressFilterButton: true, 
+          suppressInput: true 
+        }
+      },
+      { 
+        headerName: 'Contractor', 
+        field: 'contractor', flex:2,
+      },
+      { 
           headerName: 'Action', 
           editable: false,
           field: 'Actions', 
@@ -763,18 +751,18 @@ const Construction = () => {
           event.data.Jobholder_id_name = selectedOption ? selectedOption.label : '';
         }
         
-        if(event.colDef.field === "supervisor_id"){
-          const selectedOption = fPreData.find(option => option.label === event.data.supervisor_id);
-          event.data.supervisor_id = selectedOption ? selectedOption.value : '';
-          event.data.supervisor_id_name = selectedOption ? selectedOption.label : '';
-        }
 
         if(event.colDef.field === "houseNoList_id"){
-          const selectedOption = projectFOpenNames && filterFvalue === "Open" ? projectFOpenNames ? projectFOpenNames.find(option => option.label === event.data.houseNoList_id) : " " : projectFCloseNames ?  projectFOpenNames.find(option => option.label === event.data.houseNoList_id) : "";
-          event.data.houseNoList_id = selectedOption ? selectedOption.value : '';
-          event.data.houseNoList_id_name = selectedOption ? selectedOption.label : '';
+          if(filterFvalue === "Open"){
+            const selectedOption = projectFOpenNames ? projectFOpenNames.find(option => option.label === event.data.houseNoList_id) : " ";
+            event.data.houseNoList_id = selectedOption ? selectedOption.value : '';
+            event.data.houseNoList_id_name = selectedOption ? selectedOption.label : '';
+          } else if(filterFvalue === "Close") {
+            const selectedOption = projectFCloseNames ? projectFCloseNames.find(option => option.label === event.data.houseNoList_id) : " ";
+            event.data.houseNoList_id = selectedOption ? selectedOption.value : '';
+            event.data.houseNoList_id_name = selectedOption ? selectedOption.label : '';
+          }
         }
-        console.log()
       }, [gridApi]);
 
       var i = 1
@@ -783,7 +771,7 @@ const Construction = () => {
 const onRowValueChanged = useCallback(async (event) => {
   var data = event.data;
   try{
-    const resp = await axios.post(`${Tasks_Update_One_Url}/${data._id}`, 
+    await axios.post(`${Tasks_Update_One_Url}/${data._id}`, 
       {
         formData: data
       },
@@ -917,7 +905,7 @@ useEffect(()=>{
                           <li><button onClick={(e)=>{toggleColHandler(e, "houseNoList_id")}} className={`dropdown-item ${!colVisibility.houseNoList_id? "" : "active"}`}  >House No</button></li>
                           <li><button onClick={(e)=>{toggleColHandler(e, "Task_No")}} className={`dropdown-item ${!colVisibility.Task_No? "" : "active"}`}  >Task No</button></li>
                           <li><button onClick={(e)=>{toggleColHandler(e, "Task")}} className={`dropdown-item ${!colVisibility.Task? "" : "active"}`} >Task</button></li>
-                          <li><button onClick={(e)=>{toggleColHandler(e, "supervisor_id")}} className={`dropdown-item ${!colVisibility.supervisor_id? "" : "active"}`} >Supervisor</button></li>
+                          <li><button onClick={(e)=>{toggleColHandler(e, "hrs")}} className={`dropdown-item ${!colVisibility.hrs? "" : "active"}`} >Hrs</button></li>
                           <li><button onClick={(e)=>{toggleColHandler(e, "Jobholder_id")}} className={`dropdown-item ${!colVisibility.Jobholder_id? "" : "active"}`} >J.Holder</button></li>
                           <li><button onClick={(e)=>{toggleColHandler(e, "startDate")}} className={`dropdown-item ${!colVisibility.startDate? "" : "active"}`} >Start Date</button></li>
                           <li><button onClick={(e)=>{toggleColHandler(e, "completationDate")}} className={`dropdown-item ${!colVisibility.completationDate? "" : "active"}`} >Completation Date</button></li>
@@ -946,7 +934,7 @@ useEffect(()=>{
               </div>
 
               <div>
-                <select name='mon_week' onChange={(e)=>{setFilterFvalue(e.target.value)}} defaultValue={filterFvalue} style={{width: '110px'}} className='form-control mx-2'>
+                <select name='mon_week' onChange={(e)=>{setFilterFvalue(e.target.value); if(gridApi){ gridApi.api.refreshHeader(); }}} defaultValue={filterFvalue} style={{width: '110px'}} className='form-control mx-2'>
                     
                     <option value = "Open">
                       Open
@@ -1170,20 +1158,15 @@ useEffect(()=>{
             </Form.Group>
 
             <Form.Group className='mt-2'>
-    
-               <Form.Label>Supervisor</Form.Label>
-              <Form.Select 
-              name='supervisor_id'
-              onChange={handleAddFormDataChange}
-              value = {addTaskFormData.supervisor_id}
-              >
-                  <option>Supervisor</option>
-                  {preData && preData.map((manager, index)=>
-                      <option key={index} value={manager._id}>{manager.name}</option>
-                  )}
-              </Form.Select>
-
-            </Form.Group>
+               <Form.Label>Hrs</Form.Label>
+              <Form.Control
+                  name='hrs'
+                  type="text"
+                  placeholder="Hrs"
+                  onChange={handleAddFormDataChange}
+                  value = {addTaskFormData.hrs}
+              />
+            </Form.Group>           
 
             <Form.Group className='mt-2'>
     
@@ -1262,6 +1245,16 @@ useEffect(()=>{
 
             </Form.Group>
 
+            <Form.Group className='mt-2'>
+               <Form.Label>Contractor</Form.Label>
+              <Form.Control
+                  name='contractor'
+                  type="text"
+                  placeholder="Contractor"
+                  onChange={handleAddFormDataChange}
+                  value = {addTaskFormData.contractor}
+              />
+            </Form.Group>
 
           </Form>
 

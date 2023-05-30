@@ -11,6 +11,7 @@ const TasksController = require('../controller/TasksController')
 const QuickNotesController = require('../controller/QuickNotesController')
 const SalesController = require('../controller/SalesController')
 const ConstructionController = require('../controller/ConstructionController')
+const TemplateController = require('../controller/TemplateController')
 
 const authMiddleware = require('../middlewares/authMiddleware');
 const { addOneChartOfAccounts, getAllChartOfAccounts } = require('../controller/ChartOfAccountsController');
@@ -125,6 +126,14 @@ route.post('/construction/task/edit/one/:id', ConstructionController.EditOneCons
 route.get('/construction/task/copy/one/:id', ConstructionController.CopyOneConstruction)
 route.get('/construction/task/set/completed/one/:id', ConstructionController.SetCompletedOneConstruction)
 
+//Templates
+route.post('/template/category/add/one', TemplateController.addTemplateCategory)
+route.get('/template/category/delete/one/:id', TemplateController.deleteTemplateCategory)
+route.get('/template/get/all', TemplateController.getAllTemplates)
+route.post('/template/add/one', TemplateController.addOneTemplates)
+route.post('/template/edit/one/:id', TemplateController.EditOneTemplate)
+route.get('/template/delete/one/:id', TemplateController.DeleteOneTemplate)
+route.get('/template/copy/one/:id', TemplateController.CopyOneTemplate)
 
 
 module.exports = route

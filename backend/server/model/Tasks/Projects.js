@@ -5,6 +5,9 @@ var ProjectSchema = new mongoose.Schema({
         type: mongoose.Types.ObjectId,
         ref: 'projectName'
     },
+    hrs: {
+        type: String,
+    },
     description: {
         type: String,
     },
@@ -13,6 +16,13 @@ var ProjectSchema = new mongoose.Schema({
     },
     deadline: {
         type: String
+    },
+    job_date: {
+        type: String
+    },
+    lead: {
+        type: mongoose.Types.ObjectId,
+        ref: 'users'
     },
     Jobholder_id: {
         type: mongoose.Types.ObjectId,

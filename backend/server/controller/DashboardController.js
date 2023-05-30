@@ -1,4 +1,6 @@
 const Clientdb = require("../model/Client/client");
+const ConstructionDb = require("../model/Construction/Construction");
+const HosueNoDb = require("../model/Construction/HouseNoForList");
 const Jobsdb = require("../model/Jobs/jobs");
 
 exports.getDashboardData = async (req, res) => {
@@ -844,6 +846,108 @@ exports.getDashboardData = async (req, res) => {
         
         // Partners and Sources Grpah End
 
+        
+    function calculateDaysBetweenDates(date1, date2) {
+      // Convert the dates to UTC to avoid time zone issues
+      const utcDate1 = new Date(date1.toUTCString());
+      const utcDate2 = new Date(date2.toUTCString());
+    
+      // Calculate the time difference in milliseconds
+      const timeDiff = Math.abs(utcDate2 - utcDate1);
+    
+      // Convert the time difference to days
+      const days = Math.floor(timeDiff / (1000 * 60 * 60 * 24));
+    
+      return days;
+    }
+
+
+        //Construction Graph Starts
+
+        const ConstructionOpenProjectsFinalArray = [];
+        const ConstructionCloseProjectsFinalArray = [];
+
+        const constructionProjects = await HosueNoDb.find();
+        const constructionProjectOpen = constructionProjects.filter(data => data.isActive);
+        const constructionProjectClose = constructionProjects.filter(data => !data.isActive);
+
+        for (const data of constructionProjectOpen) {
+          const constructionOpenData = await ConstructionDb.find({ houseNoList_id: data._id });
+
+          let ConstructionTotalDays = 0;
+          let ConstructionTotalActualDays = 0;
+          let ConstructionTotalBudget = 0;
+          let ConstructionTotalActualBudget = 0;
+
+          for (const data2 of constructionOpenData) {
+            const startDate = new Date(data2.startDate);
+            const EndDate = new Date(data2.completationDate);
+            const EndActualDate = new Date(data2.completationDateActual);
+            const budgetPlan = data2.budgetPlan;
+            const budgetActual = data2.budgetActual;
+
+            const days = calculateDaysBetweenDates(startDate, EndDate);
+            const actualDays = calculateDaysBetweenDates(startDate, EndActualDate);
+
+            ConstructionTotalDays += +days;
+            ConstructionTotalActualDays += +actualDays;
+            ConstructionTotalBudget += +budgetPlan;
+            ConstructionTotalActualBudget += +budgetActual;
+          }
+
+          const objToPush = {
+            projName: data.name,
+            ConstructionTotalDays,
+            ConstructionTotalActualDays,
+            ConstructionTotalBudget,
+            ConstructionTotalActualBudget,
+          };
+
+          ConstructionOpenProjectsFinalArray.push(objToPush);
+        }
+
+        for (const data of constructionProjectClose) {
+          const constructionCloseData = await ConstructionDb.find({ houseNoList_id: data._id });
+
+          let ConstructionTotalDays = 0;
+          let ConstructionTotalActualDays = 0;
+          let ConstructionTotalBudget = 0;
+          let ConstructionTotalActualBudget = 0;
+
+          for (const data2 of constructionCloseData) {
+            const startDate = new Date(data2.startDate);
+            const EndDate = new Date(data2.completationDate);
+            const EndActualDate = new Date(data2.completationDateActual);
+            const budgetPlan = data2.budgetPlan;
+            const budgetActual = data2.budgetActual;
+
+            const days = calculateDaysBetweenDates(startDate, EndDate);
+            const actualDays = calculateDaysBetweenDates(startDate, EndActualDate);
+
+            ConstructionTotalDays += +days;
+            ConstructionTotalActualDays += +actualDays;
+            ConstructionTotalBudget += +budgetPlan;
+            ConstructionTotalActualBudget += +budgetActual;
+          }
+
+          const objToPush = {
+            projName: data.name,
+            ConstructionTotalDays,
+            ConstructionTotalActualDays,
+            ConstructionTotalBudget,
+            ConstructionTotalActualBudget,
+          };
+
+          ConstructionCloseProjectsFinalArray.push(objToPush);
+        }
+
+        const ConstructionGraph = {
+          ConstructionOpenProjectsFinalArray,
+          ConstructionCloseProjectsFinalArray
+        }
+
+      //Construction Graph Ends
+
 
 
         const response = {
@@ -853,7 +957,8 @@ exports.getDashboardData = async (req, res) => {
             JobsOverdue,
             Jobsdue,
             PartnersGraph,
-            SourcesGraph
+            SourcesGraph,
+            ConstructionGraph
         }
         res.json(response);
     } catch (err) {

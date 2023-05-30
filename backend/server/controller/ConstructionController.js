@@ -43,7 +43,7 @@ exports.deleteHouseNo = async (req, res) => {
 exports.getAllConstruction = async (req, res) => {
 
     try {
-        const Construction = await ConstructionDb.find().populate('Manager').populate('Jobholder_id').populate('supervisor_id').populate('houseNoList_id');
+        const Construction = await ConstructionDb.find().populate('Manager').populate('Jobholder_id').populate('houseNoList_id');
         const users_all = await Userdb.find({ isActive: true }).populate('role_id');
         const HouseNo = await HosueNoDb.find();
 
@@ -73,8 +73,8 @@ exports.AddOneConstruction = async (req, res) => {
         await ConstructionDb.create({
             houseNoList_id: req.body.formData.houseNoList_id,
             Task: req.body.formData.Task,
-            supervisor_id: req.body.formData.supervisor_id,
             Jobholder_id: req.body.formData.Jobholder_id,
+            hrs: req.body.formData.hrs,
             startDate: startDate != 'Invalid Date' ? startDate : null,
             completationDate: completationDate != 'Invalid Date' ? completationDate : null,
             completationDateActual: completationDateActual != 'Invalid Date' ? completationDateActual : null,
@@ -85,6 +85,7 @@ exports.AddOneConstruction = async (req, res) => {
             status: req.body.formData.status,
             Manager: req.body.formData.Manager,
             comments: req.body.formData.comments,
+            contractor: req.body.formData.contractor,
         })
         
         res.status(200).json({
@@ -111,8 +112,8 @@ exports.EditOneConstruction = async (req, res) => {
         await ConstructionDb.findOneAndUpdate({_id: id},{
             houseNoList_id: req.body.formData.houseNoList_id,
             Task: req.body.formData.Task,
-            supervisor_id: req.body.formData.supervisor_id,
             Jobholder_id: req.body.formData.Jobholder_id,
+            hrs: req.body.formData.hrs,
             startDate: startDate != 'Invalid Date' ? startDate : null,
             completationDate: completationDate != 'Invalid Date' ? completationDate : null,
             completationDateActual: completationDateActual != 'Invalid Date' ? completationDateActual : null,
@@ -123,6 +124,7 @@ exports.EditOneConstruction = async (req, res) => {
             status: req.body.formData.status,
             Manager: req.body.formData.Manager,
             comments: req.body.formData.comments,
+            contractor: req.body.formData.contractor,
         })
             
         res.status(200).json({
@@ -159,7 +161,7 @@ exports.CopyOneConstruction = async (req, res) => {
     await ConstructionDb.create({
         houseNoList_id: projects.houseNoList_id,
         Task: projects.Task,
-        supervisor_id: projects.supervisor_id,
+        hrs: projects.hrs,
         Jobholder_id: projects.Jobholder_id,
         startDate: projects.startDate,
         completationDate: projects.completationDate,
@@ -171,6 +173,7 @@ exports.CopyOneConstruction = async (req, res) => {
         status: projects.status,
         Manager: projects.Manager,
         comments: projects.comments,
+        contractor: projects.contractor,
     }).then(
         res.status(200).json({
             message: "Project Added Successfully"

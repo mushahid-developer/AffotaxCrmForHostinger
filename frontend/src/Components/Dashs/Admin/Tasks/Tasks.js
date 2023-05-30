@@ -51,6 +51,7 @@ const Tasks = () => {
     const [statusFvalue, setStatusFvalue] = useState(null);
     const [projectFvalue, setProjectFvalue] = useState(null);
     const [jHolderFvalue, setJHolderFvalue] = useState(null);
+    const [leadFvalue, setLeadFvalue] = useState(null);
     const [jHolderPreFvalue, setJHolderPreFvalue] = useState(null);
 
     const [usersForFilter, setUsersForFilter] = useState([]);
@@ -60,7 +61,10 @@ const Tasks = () => {
       description: '',
       startDate: '',
       deadline: '',
-      Jobholder_id: null,
+      Jobholder_id: '',
+      hrs: '',
+      lead: '',
+      job_date: '',
       status: 'Progress',
     })
 
@@ -119,8 +123,11 @@ const Tasks = () => {
             description: '',
             startDate: '',
             deadline: '',
-            Jobholder_id: null,
+            Jobholder_id: '',
             status: 'Progress',
+            hrs: '',
+            lead: '',
+            job_date: '',
           })
           setShowAddTaskModal(false);
           setLoader(false);
@@ -211,16 +218,20 @@ const Tasks = () => {
 
       if(load === 1){
         // Job Holder Filter
-        if(filteredArray != undefined && jHolderPreFvalue != null && jHolderPreFvalue !== ""){
+        if(filteredArray !== undefined && jHolderPreFvalue !== null && jHolderPreFvalue !== ""){
           filteredArray = filteredArray.filter(obj => obj.Jobholder_id && obj.Jobholder_id.name === jHolderPreFvalue);
         }
       }else {
         // Job Holder Filter
-        if(filteredArray != undefined && jHolderFvalue != null && jHolderFvalue !== ""){
+        if(filteredArray !== undefined && jHolderFvalue !== null && jHolderFvalue !== ""){
           filteredArray = filteredArray.filter(obj => obj.Jobholder_id && obj.Jobholder_id.name === jHolderFvalue);
         }
       }
-
+      
+      // Lead Filter
+      if(filteredArray !== undefined && leadFvalue !== null && leadFvalue !== ""){
+        filteredArray = filteredArray.filter(obj => obj.lead && obj.lead.name === leadFvalue);
+      }
       
     
       //Project Filter
@@ -241,11 +252,11 @@ const Tasks = () => {
     useEffect(()=>{
       // setRowData(mainRowData)
       filter()
-    }, [mainRowData, statusFvalue, projectFvalue, jHolderFvalue, jHolderPreFvalue])
+    }, [mainRowData, statusFvalue, projectFvalue, jHolderFvalue, jHolderPreFvalue, leadFvalue])
     
     useEffect(()=>{
       setLoad(2);
-    }, [statusFvalue, projectFvalue, jHolderFvalue, jHolderPreFvalue])
+    }, [statusFvalue, projectFvalue, jHolderFvalue, jHolderPreFvalue, leadFvalue])
 
     useEffect(()=>{
       
@@ -415,6 +426,34 @@ const Tasks = () => {
           suppressInput: true 
         } 
         },
+        { 
+          headerName: 'Job Holder', 
+          field: 'Jobholder_id', 
+          flex:1.5,
+          valueGetter: p => {
+            return  p.data.Jobholder_id ? p.data.Jobholder_id.name ? p.data.Jobholder_id.name : p.data.Jobholder_id_name :p.data.Jobholder_id_name
+          },
+          cellEditor: 'agSelectCellEditor',
+          cellEditorParams: {
+            values: usersForFilter && usersForFilter.map(option => option.label),
+          },
+          onCellValueChanged: function(event) {
+          },
+          floatingFilterComponent: 'selectFloatingFilter', 
+          floatingFilterComponentParams: { 
+            options: fPreData && fPreData.map(option => option.label),
+            onValueChange:(value) => setJHolderFvalue(value),
+            value: jHolderFvalue,
+            suppressFilterButton: true, 
+            suppressInput: true 
+          }
+        },
+        
+        { 
+          headerName: 'Hrs', 
+          field: 'hrs', 
+          flex:0.5,
+        },
         { headerName: 'Tasks', field: 'description', flex:4,
         cellRendererFramework: (params)=>
         <>
@@ -460,11 +499,64 @@ const Tasks = () => {
           },
         },
         { 
-          headerName: 'Job Holder', 
-          field: 'Jobholder_id', 
+          headerName: 'Job Date', 
+          field: 'job_date', 
+          flex:1.5, 
+          valueGetter: p => {
+            if(p.data.job_date && p.data.job_date !== "Invalid Date")
+            {
+              const deadline = new Date(p.data.job_date)
+              let ye = new Intl.DateTimeFormat('en', { year: 'numeric' }).format(deadline);
+              let mo = new Intl.DateTimeFormat('en', { month: 'short' }).format(deadline);
+              let da = new Intl.DateTimeFormat('en', { day: '2-digit' }).format(deadline);
+              return(`${da}-${mo}-${ye}`);
+              }
+              else{
+                return ""
+            }    
+          },
+        },
+        {
+          headerName: "Status",
+          field:"jStatus",
+          flex: 1.5,
+          editable: false,
+          valueGetter: p => {
+            const deadline = new Date(p.data.deadline)
+            const yearEnd = new Date(p.data.startDate)
+            var today = new Date();
+            
+            if ((deadline.setHours(0, 0, 0, 0) < today.setHours(0, 0, 0, 0) && (yearEnd.setHours(0, 0, 0, 0) < today.setHours(0, 0, 0, 0)))) {
+              return "Overdue";
+            }
+            else if (deadline.setHours(0, 0, 0, 0) < today.setHours(0, 0, 0, 0))  {
+              return "Overdue";
+            }
+            else if(((yearEnd.setHours(0, 0, 0, 0) <= today.setHours(0, 0, 0, 0)) && !(deadline.setHours(0, 0, 0, 0) <= today.setHours(0, 0, 0, 0))))
+            {
+              return "Due"
+            }
+            else if(( (deadline.setHours(0, 0, 0, 0) === today.setHours(0, 0, 0, 0))))
+            {
+              return "Due"
+            }
+  
+          },
+          floatingFilterComponent: 'selectFloatingFilter', 
+          floatingFilterComponentParams: { 
+            options: ['Overdue', 'Due'],
+            onValueChange:(value) => setStatusFvalue(value),
+            value: statusFvalue,
+            suppressFilterButton: true, 
+            suppressInput: true 
+          }
+        },
+        { 
+          headerName: 'Lead', 
+          field: 'lead', 
           flex:1.5,
           valueGetter: p => {
-            return  p.data.Jobholder_id ? p.data.Jobholder_id.name ? p.data.Jobholder_id.name : p.data.Jobholder_id_name :p.data.Jobholder_id_name
+            return  p.data.lead ? p.data.lead.name ? p.data.lead.name : p.data.lead_name :p.data.lead_name
           },
           cellEditor: 'agSelectCellEditor',
           cellEditorParams: {
@@ -475,8 +567,8 @@ const Tasks = () => {
           floatingFilterComponent: 'selectFloatingFilter', 
           floatingFilterComponentParams: { 
             options: fPreData && fPreData.map(option => option.label),
-            onValueChange:(value) => setJHolderFvalue(value),
-            value: jHolderFvalue,
+            onValueChange:(value) => setLeadFvalue(value),
+            value: leadFvalue,
             suppressFilterButton: true, 
             suppressInput: true 
           }
@@ -498,7 +590,7 @@ const Tasks = () => {
         { 
           headerName: 'Action', 
           field: 'delete', 
-          flex:0.5,
+          flex:0.7,
           cellRendererFramework: (params)=>
           <>
           <Link onClick={()=>{handleCopyProject(params.data._id, params.data)}} style={{all: 'unset', cursor: 'pointer', textAlign: 'center !important'}}>
@@ -542,6 +634,12 @@ const Tasks = () => {
           event.data.Jobholder_id = selectedOption ? selectedOption.value : '';
           event.data.Jobholder_id_name = selectedOption ? selectedOption.label : '';
           }
+
+        if(event.colDef.field === "lead"){
+          const selectedOption = fPreData.find(option => option.label === event.data.lead);
+          event.data.lead = selectedOption ? selectedOption.value : '';
+          event.data.lead_name = selectedOption ? selectedOption.label : '';
+          }
         
         if(event.colDef.field === "projectname_id"){
           const selectedOption = projectFNames.find(option => option.label === event.data.projectname_id);
@@ -556,14 +654,17 @@ const Tasks = () => {
 const onRowValueChanged = useCallback(async (event) => {
   var data = event.data;
   try{
-    const resp = await axios.post(`${Tasks_Update_One_Url}/${data._id}`, 
+    await axios.post(`${Tasks_Update_One_Url}/${data._id}`, 
       {
         name: data.projectname_id,
         description: data.description,
         startDate: data.startDate,
         deadline: data.deadline,
         Jobholder_id: data.Jobholder_id,
-        status: data.status
+        status: data.status,
+        hrs: data.hrs,
+        lead: data.lead,
+        job_date: data.job_date,
       },
       {
         headers:{ 'Content-Type': 'application/json' }
@@ -607,7 +708,7 @@ useEffect(() => {
       `${params.fileName}.csv`
     );
     } catch (error) {
-    const a = error;
+      //
   }
   };
       
@@ -819,8 +920,18 @@ useEffect(() => {
                   })}
                  
               </Form.Select>
-              
             </Form.Group>
+
+            <Form.Group className='mt-2'>
+              <Form.Control
+                  name='hrs'
+                  type="number"
+                  placeholder="Hrs"
+                  onChange={handleAddFormDataChange}
+                  value = {addTaskFormData.hrs}
+              />
+            </Form.Group>
+            
             <Form.Group className='mt-2'>
               <Form.Control
                   name='description'
@@ -850,6 +961,16 @@ useEffect(() => {
             </Form.Group>
 
             <Form.Group className='mt-2'>
+              <Form.Control
+                  name='job_date'
+                  type="text"
+                  placeholder="Job Date"
+                  onChange={handleAddFormDataChange}
+                  value = {addTaskFormData.job_date}
+              />
+            </Form.Group>
+
+            <Form.Group className='mt-2'>
     
               <Form.Select 
               name='Jobholder_id'
@@ -862,6 +983,21 @@ useEffect(() => {
                   )}
               </Form.Select>
 
+            </Form.Group>
+
+            <Form.Group className='mt-2'>
+            <Form.Select 
+              name='lead'
+              onChange={handleAddFormDataChange}
+              value = {addTaskFormData.lead}
+              >
+                  <option>Lead</option>
+                  {preData && preData.map((manager, index)=>
+                      <option key={index} value={manager._id}>{manager.name}</option>
+                  )}
+                 
+              </Form.Select>
+              
             </Form.Group>
             
 

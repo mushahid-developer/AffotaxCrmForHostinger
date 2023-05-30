@@ -8,9 +8,8 @@ var ConstructionSchema = new mongoose.Schema({
     Task: {
         type: String,
     },
-    supervisor_id: {
-        type: mongoose.Types.ObjectId,
-        ref: 'users'
+    hrs: {
+        type: String,
     },
     Jobholder_id: {
         type: mongoose.Types.ObjectId,
@@ -45,6 +44,9 @@ var ConstructionSchema = new mongoose.Schema({
         ref: 'users'
     },
     comments: {
+        type: String
+    },
+    contractor: {
         type: String
     },
     isActive:{

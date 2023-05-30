@@ -36,14 +36,13 @@ exports.deleteProjectName = async (req, res) => {
 exports.getAllProjects = async (req, res) => {
 
     try {
-        const projects = await ProjectDb.find().populate('Jobholder_id').populate('projectname_id').populate({path: 'task_id',populate: {path: 'subtasks_id'},});
+        const projects = await ProjectDb.find().populate('Jobholder_id').populate('projectname_id').populate('lead').populate({path: 'task_id',populate: {path: 'subtasks_id'},});
         const users_all = await Userdb.find({ isActive: true }).populate('role_id');
         const projectNames = await ProjectNameDb.find();
 
         const users = users_all.filter((user) => user.role_id.pages[10] && user.role_id.pages[10].isChecked)
 
         const curUser = req.user.name
-        console.log(req.user)
 
         res.status(200).json({
             projects: projects,
@@ -64,6 +63,7 @@ exports.AddOneProject = async (req, res) => {
 
     const startDate = new Date(req.body.formData.startDate)
     const deadline = new Date(req.body.formData.deadline)
+    const jobDate = new Date(req.body.formData.job_date)
 
     await ProjectDb.create({
         projectname_id: req.body.formData.name,
@@ -72,6 +72,9 @@ exports.AddOneProject = async (req, res) => {
         deadline: deadline != 'Invalid Date' ? deadline : null,
         Jobholder_id: req.body.formData.Jobholder_id,
         status: req.body.formData.status,
+        job_date: jobDate != 'Invalid Date' ? jobDate : null,
+        hrs: req.body.formData.hrs,
+        lead: req.body.formData.lead,
     }).then(
         res.status(200).json({
             message: "Project Added Successfully"
@@ -86,15 +89,31 @@ exports.EditOneProject = async (req, res) => {
 
     const startDate = new Date(req.body.startDate)
     const deadline = new Date(req.body.deadline)
+    const jobDate = new Date(req.body.job_date)
 
-    await ProjectDb.findOneAndUpdate({_id: id},{
+    var data = {
         projectname_id: req.body.name,
         description: req.body.description,
         startDate: startDate != 'Invalid Date' ? startDate : null,
         deadline: deadline != 'Invalid Date' ? deadline : null,
-        Jobholder_id: req.body.Jobholder_id,
         status: req.body.status,
-    }).then(
+        job_date: jobDate != 'Invalid Date' ? jobDate : null,
+        hrs: req.body.hrs,
+    }
+
+    
+    if(req.body.lead && req.body.lead !== ''){
+        console.log(req.body.lead)
+        data.lead = req.body.lead
+    }
+    if(req.body.Jobholder_id && req.body.Jobholder_id !== ''){
+        data.Jobholder_id = req.body.Jobholder_id
+    }
+    
+
+    await ProjectDb.findOneAndUpdate({_id: id},
+        data
+        ).then(
         res.status(200).json({
             message: "Task Updated Successfully"
         })
@@ -205,8 +224,8 @@ exports.deleteSubTaskofMainTask = async (req, res) => {
 
     const id = req.params.id
 
-    const projects = await SubTaskdb.deleteOne({_id: id});
-    const mainTask = await MainTaskdb.findByIdAndUpdate(req.body.mtId, { $pull: { subtasks_id: id } }, { new: true });
+    await SubTaskdb.deleteOne({_id: id});
+    await MainTaskdb.findByIdAndUpdate(req.body.mtId, { $pull: { subtasks_id: id } }, { new: true });
     
     res.status(200).json({
         message: "Deleted Successfully"
@@ -225,6 +244,9 @@ exports.CopyOneProject = async (req, res) => {
         deadline: projects.deadline,
         Jobholder_id: projects.Jobholder_id,
         status: projects.status,
+        hrs: projects.hrs,
+        job_date: projects.job_date,
+        lead: projects.lead,
     }).then(
         res.status(200).json({
             message: "Project Added Successfully"

@@ -1,6 +1,6 @@
 //BaseUrl
 export const BaseUrl = 'https://crm.affotax.com/api/'; // Live
-// export const BaseUrl = 'http://192.168.18.59:7878/api/'; // Local
+// export const BaseUrl = 'http://localhost:7878/api/'; // Local
 // 192.168.18.59
 
 //Auth / Users
@@ -109,3 +109,12 @@ export const ConstructionTaslDeleteUrl = '/construction/task/delete/one';
 export const ConstructionTasks_Update_One_Url = 'construction/task/edit/one';
 export const ConstructionTaskCopyUrl = 'construction/task/copy/one';
 export const ConstructionTaskSetCompletedUrl = 'construction/task/set/completed/one';
+
+//Templates
+export const TemplatesCategoryAddOneUrl = 'template/category/add/one';
+export const TemplatesCategoryDeleteOneUrl = 'template/category/delete/one';
+export const TemplatesGetAllUrl = 'template/get/all';
+export const TemplatesAddOneUrl = 'template/add/one';
+export const TemplatesEditOneUrl = 'template/edit/one';
+export const deleteTemplateUrl = 'template/delete/one';
+export const copyTemplateUrl = 'template/copy/one';

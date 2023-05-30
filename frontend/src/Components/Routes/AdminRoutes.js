@@ -24,6 +24,7 @@ import ChartsOfAccounts from "../Dashs/Admin/Finance/ChartsOfAccounts/ChartsOfAc
 import Attendance from "../Dashs/Admin/Hr/Attendance/Attendance";
 import PublicDash from "../Dashs/Admin/DashBoard/PublicDash";
 import Construction from "../Dashs/Admin/Construction/Construction";
+import Templates from "../Dashs/Admin/Templates/Templates";
 
 export default function AdminRoutes(props) {
 
@@ -72,6 +73,7 @@ export default function AdminRoutes(props) {
                   <Route path="/finance/charts_of_accounts" element = {<ChartsOfAccounts />}></Route>
                   <Route path="/hr/attendance" element = {<Attendance />}></Route>
                   <Route path="/construction" element = {<Construction />}></Route>
+                  <Route path="/templates" element = {<Templates />}></Route>
                 </Routes>
                 </div>
               </div>

@@ -57,11 +57,16 @@ export default function Dashboard() {
     departmentsDueGraph: true,
     partnersGraph: true,
     sourcesGraph: true,
+    constructionOpenProjectDays: false,
+    constructionCloseProjectDays: false,
+    constructionOpenProjectBudget: false,
+    constructionCloseProjectBudget: false,
   })
 
   useEffect(()=>{
     if(dashboardData){
       setSelectedDate(new Date(`01/01/${dashboardData.clientsCount.selectedYear}`))
+      console.log(dashboardData.ConstructionGraph)
     }
   }, [dashboardData])
   
@@ -150,6 +155,7 @@ const options3 = {
       display: true,
       color: "white",
       formatter: Math.round,
+      rotation: -90
     },
     legend: {
       position: 'top',
@@ -281,6 +287,160 @@ const data5 = {
     
   ],
 };
+
+
+
+const options6 = {
+  responsive: true,
+  plugins: {
+    datalabels: {
+      display: true,
+      color: "black",
+      formatter: Math.round,
+    },
+    legend: {
+      position: 'top',
+    },
+    title: {
+      display: true,
+      text: 'Construction Open Projects Days',
+    },
+  },
+};
+
+
+
+const data6 = {
+  labels: dashboardData && dashboardData.ConstructionGraph.ConstructionOpenProjectsFinalArray.map(data => data.projName),
+  datasets: [
+    {
+      label: `Days`,
+      data: dashboardData && dashboardData.ConstructionGraph.ConstructionOpenProjectsFinalArray.map(data => data.ConstructionTotalDays),
+      backgroundColor: '#b5b5b9',
+    },
+    {
+      label: `Actual Days`,
+      data: dashboardData && dashboardData.ConstructionGraph.ConstructionOpenProjectsFinalArray.map(data => data.ConstructionTotalActualDays),
+      backgroundColor: '#67c160',
+    },
+    
+  ],
+};
+
+
+const options7 = {
+  responsive: true,
+  plugins: {
+    datalabels: {
+      display: true,
+      color: "black",
+      formatter: Math.round,
+    },
+    legend: {
+      position: 'top',
+    },
+    title: {
+      display: true,
+      text: 'Construction Close Projects Days',
+    },
+  },
+};
+
+
+
+const data7 = {
+  labels: dashboardData && dashboardData.ConstructionGraph.ConstructionCloseProjectsFinalArray.map(data => data.projName),
+  datasets: [
+    {
+      label: `Days`,
+      data: dashboardData && dashboardData.ConstructionGraph.ConstructionCloseProjectsFinalArray.map(data => data.ConstructionTotalDays),
+      backgroundColor: '#b5b5b9',
+    },
+    {
+      label: `Actual Days`,
+      data: dashboardData && dashboardData.ConstructionGraph.ConstructionCloseProjectsFinalArray.map(data => data.ConstructionTotalActualDays),
+      backgroundColor: '#67c160',
+    },
+    
+  ],
+};
+
+
+const options8 = {
+  responsive: true,
+  plugins: {
+    datalabels: {
+      display: true,
+      color: "black",
+      formatter: Math.round,
+    },
+    legend: {
+      position: 'top',
+    },
+    title: {
+      display: true,
+      text: 'Construction Open Projects Budget',
+    },
+  },
+};
+
+
+
+const data8 = {
+  labels: dashboardData && dashboardData.ConstructionGraph.ConstructionOpenProjectsFinalArray.map(data => data.projName),
+  datasets: [
+    {
+      label: `Days`,
+      data: dashboardData && dashboardData.ConstructionGraph.ConstructionOpenProjectsFinalArray.map(data => data.ConstructionTotalBudget),
+      backgroundColor: '#b5b5b9',
+    },
+    {
+      label: `Actual Days`,
+      data: dashboardData && dashboardData.ConstructionGraph.ConstructionOpenProjectsFinalArray.map(data => data.ConstructionTotalActualBudget),
+      backgroundColor: '#67c160',
+    },
+    
+  ],
+};
+
+
+const options9 = {
+  responsive: true,
+  plugins: {
+    datalabels: {
+      display: true,
+      color: "black",
+      formatter: Math.round,
+    },
+    legend: {
+      position: 'top',
+    },
+    title: {
+      display: true,
+      text: 'Construction Close Projects Budget',
+    },
+  },
+};
+
+
+
+const data9 = {
+  labels: dashboardData && dashboardData.ConstructionGraph.ConstructionCloseProjectsFinalArray.map(data => data.projName),
+  datasets: [
+    {
+      label: `Days`,
+      data: dashboardData && dashboardData.ConstructionGraph.ConstructionCloseProjectsFinalArray.map(data => data.ConstructionTotalBudget),
+      backgroundColor: '#b5b5b9',
+    },
+    {
+      label: `Actual Days`,
+      data: dashboardData && dashboardData.ConstructionGraph.ConstructionCloseProjectsFinalArray.map(data => data.ConstructionTotalActualBudget),
+      backgroundColor: '#67c160',
+    },
+    
+  ],
+};
+
 
 
   useEffect(()=>{
@@ -418,13 +578,17 @@ if(!loader)
                         <li><button onClick={(e)=>{handleShowHideCharts(e, "departmentsCounterGraph")}} className={`dropdown-item ${!showHideCharts.departmentsCounterGraph? "active" : ""}`} >Department Count Graph</button></li>
                         <li><button onClick={(e)=>{handleShowHideCharts(e, "clientsFeeGraph")}} className={`dropdown-item ${!showHideCharts.clientsFeeGraph? "active" : ""}`} >Clients Fee</button></li>
                         <li><button onClick={(e)=>{handleShowHideCharts(e, "departmentsOverDueGraph")}} className={`dropdown-item ${!showHideCharts.departmentsOverDueGraph? "active" : ""}`} >Departments Overdue Graph</button></li>
+                        <li><button onClick={(e)=>{handleShowHideCharts(e, "departmentsDueGraph")}} className={`dropdown-item ${!showHideCharts.departmentsDueGraph? "active" : ""}`}  >Departments Due Graph</button></li>
                         </ul>
                     </div>
                     <div className="col-6">
                       <ul style={{all: 'unset'}}>
-                        <li><button onClick={(e)=>{handleShowHideCharts(e, "departmentsDueGraph")}} className={`dropdown-item ${!showHideCharts.departmentsDueGraph? "active" : ""}`}  >Departments Due Graph</button></li>
                         <li><button onClick={(e)=>{handleShowHideCharts(e, "partnersGraph")}} className={`dropdown-item ${!showHideCharts.partnersGraph? "active" : ""}`}>Partners Graph</button></li>
                         <li><button onClick={(e)=>{handleShowHideCharts(e, "sourcesGraph")}} className={`dropdown-item ${!showHideCharts.sourcesGraph? "active" : ""}`} >Sources Graph</button></li>
+                        <li><button onClick={(e)=>{handleShowHideCharts(e, "constructionOpenProjectDays")}} className={`dropdown-item ${!showHideCharts.constructionOpenProjectDays? "active" : ""}`} >Construction Open Projects Days</button></li>
+                        <li><button onClick={(e)=>{handleShowHideCharts(e, "constructionCloseProjectDays")}} className={`dropdown-item ${!showHideCharts.constructionCloseProjectDays? "active" : ""}`} >Construction Close Projects Days</button></li>
+                        <li><button onClick={(e)=>{handleShowHideCharts(e, "constructionOpenProjectBudget")}} className={`dropdown-item ${!showHideCharts.constructionOpenProjectBudget? "active" : ""}`} >Construction Open Projects Budget</button></li>
+                        <li><button onClick={(e)=>{handleShowHideCharts(e, "constructionCloseProjectBudget")}} className={`dropdown-item ${!showHideCharts.constructionCloseProjectBudget? "active" : ""}`} >Construction Close Projects Budget</button></li>
                         </ul>
                     </div>
                   </div>
@@ -528,6 +692,38 @@ if(!loader)
                       data={chartsData.pieData2}
                       options={chartsData.pieOptions2}
                       />
+                  </div>
+              </div> 
+            }
+            
+            {showHideCharts.constructionOpenProjectDays && 
+              <div className='col-6 mt-4'>
+                  <div style={{padding: '10px', backgroundColor: 'white'}}>
+                    <Bar options={options6} plugins={[ChartDataLabels]} data={data6} />
+                  </div>
+              </div> 
+            }
+            
+            {showHideCharts.constructionCloseProjectDays && 
+              <div className='col-6 mt-4'>
+                  <div style={{padding: '10px', backgroundColor: 'white'}}>
+                    <Bar options={options7} plugins={[ChartDataLabels]} data={data7} />
+                  </div>
+              </div> 
+            }
+            
+            {showHideCharts.constructionOpenProjectBudget && 
+              <div className='col-6 mt-4'>
+                  <div style={{padding: '10px', backgroundColor: 'white'}}>
+                    <Bar options={options8} plugins={[ChartDataLabels]} data={data8} />
+                  </div>
+              </div> 
+            }
+            
+            {showHideCharts.constructionCloseProjectBudget && 
+              <div className='col-6 mt-4'>
+                  <div style={{padding: '10px', backgroundColor: 'white'}}>
+                    <Bar options={options9} plugins={[ChartDataLabels]} data={data9} />
                   </div>
               </div> 
             }
