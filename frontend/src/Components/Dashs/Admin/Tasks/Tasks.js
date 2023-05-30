@@ -257,9 +257,6 @@ const Tasks = () => {
     }, [mainRowData, statusFvalue, projectFvalue, jHolderFvalue, jHolderPreFvalue, leadFvalue])
     
     useEffect(()=>{
-      if(load === 1){
-        setJHolderFvalue(jHolderPreFvalue)
-      }
       setLoad(2);
     }, [statusFvalue, projectFvalue, jHolderFvalue, jHolderPreFvalue, leadFvalue])
 
