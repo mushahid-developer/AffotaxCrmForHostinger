@@ -503,6 +503,12 @@ const Construction = () => {
           editable: false,
           valueGetter: (params) => `Task# ${params.node.rowIndex + 1}`,
         },
+        { 
+          headerName: 'Month', 
+          field: 'hrs', 
+          flex: 2,
+          
+        },
         { headerName: 'Job Holder', field: 'Jobholder_id', flex:2,
         valueGetter: p => {
           return  p.data.Jobholder_id ? p.data.Jobholder_id.name ? p.data.Jobholder_id.name : p.data.Jobholder_id_name :p.data.Jobholder_id_name
@@ -523,12 +529,7 @@ const Construction = () => {
           }
         },
         
-        { 
-          headerName: 'Hrs', 
-          field: 'hrs', 
-          flex: 1,
-          
-        },
+        
         { 
           headerName: 'Task', 
           field: 'Task', 
@@ -613,38 +614,7 @@ const Construction = () => {
             }    
           },
         },
-        { 
-          headerName: 'Status', 
-          field: 'Jstatus', 
-          flex:2,
-          editable: false,
-          valueGetter: p => {
-            const deadline = new Date(p.data.completationDate)
-            const startDate = new Date(p.data.startDate)
-            var today = new Date();
-            
-            if ((deadline.setHours(0, 0, 0, 0) < today.setHours(0, 0, 0, 0) )) {
-              return "Overdue";
-            }
-            else if(( (startDate.setHours(0, 0, 0, 0) <= today.setHours(0, 0, 0, 0))))
-            {
-              return "Due"
-            }
-            else if(( (startDate.setHours(0, 0, 0, 0) === today.setHours(0, 0, 0, 0))))
-            {
-              return "Due"
-            }
-
-          },
-          floatingFilterComponent: 'selectFloatingFilter', 
-          floatingFilterComponentParams: { 
-            options: ['Overdue', 'Due'],
-            onValueChange:(value) => setStatusFvalue(value),
-            value: statusFvalue,
-            suppressFilterButton: true, 
-            suppressInput: true 
-          }
-        },
+        
         { headerName: 'Days', field: 'days', flex:4, editable: false,
           valueGetter: p =>{
             if(p.data.completationDate && p.data.completationDate !== "Invalid Date" && p.data.startDate && p.data.startDate !== "Invalid Date"){
@@ -693,6 +663,38 @@ const Construction = () => {
         floatingFilterComponent: 'SelectUnSelectFilter', 
         floatingFilterComponentParams: { 
           options: ['To do', 'Progress', 'Review', 'Completed'],
+          onValueChange:(value) => setStatusFvalue(value),
+          value: statusFvalue,
+          suppressFilterButton: true, 
+          suppressInput: true 
+        }
+      },
+      { 
+        headerName: 'Status', 
+        field: 'Jstatus', 
+        flex:2,
+        editable: false,
+        valueGetter: p => {
+          const deadline = new Date(p.data.completationDate)
+          const startDate = new Date(p.data.startDate)
+          var today = new Date();
+          
+          if ((deadline.setHours(0, 0, 0, 0) < today.setHours(0, 0, 0, 0) )) {
+            return "Overdue";
+          }
+          else if(( (startDate.setHours(0, 0, 0, 0) <= today.setHours(0, 0, 0, 0))))
+          {
+            return "Due"
+          }
+          else if(( (startDate.setHours(0, 0, 0, 0) === today.setHours(0, 0, 0, 0))))
+          {
+            return "Due"
+          }
+
+        },
+        floatingFilterComponent: 'selectFloatingFilter', 
+        floatingFilterComponentParams: { 
+          options: ['Overdue', 'Due'],
           onValueChange:(value) => setStatusFvalue(value),
           value: statusFvalue,
           suppressFilterButton: true, 
