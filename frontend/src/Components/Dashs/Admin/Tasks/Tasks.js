@@ -454,7 +454,7 @@ const Tasks = () => {
           field: 'hrs', 
           flex:0.5,
         },
-        { headerName: 'Tasks', field: 'description', flex:4,
+        { headerName: 'Tasks', field: 'description', flex:8,
         cellRendererFramework: (params)=>
         <>
         <Link style={{textDecoration: 'none',}} onClick={()=>{setOpenProjectId(params.data._id); setOpenProjectTasks(params.data); setShowViewTaskModal(true)}}>
