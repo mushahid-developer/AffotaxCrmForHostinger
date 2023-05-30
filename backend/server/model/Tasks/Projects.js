@@ -31,6 +31,9 @@ var ProjectSchema = new mongoose.Schema({
     status: {
         type: String
     },
+    notes: {
+        type: String
+    },
     task_id: [{
         type: mongoose.Types.ObjectId,
         ref: 'mainTask'

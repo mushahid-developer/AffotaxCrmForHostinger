@@ -66,6 +66,7 @@ const Tasks = () => {
       lead: '',
       job_date: '',
       status: 'Progress',
+      notes: '',
     })
 
     const [load, setLoad] = useState(0) ;
@@ -128,6 +129,7 @@ const Tasks = () => {
             hrs: '',
             lead: '',
             job_date: '',
+            notes: '',
           })
           setShowAddTaskModal(false);
           setLoader(false);
@@ -454,7 +456,7 @@ const Tasks = () => {
           field: 'hrs', 
           flex:0.5,
         },
-        { headerName: 'Tasks', field: 'description', flex:8,
+        { headerName: 'Tasks', field: 'description', flex:4,
         cellRendererFramework: (params)=>
         <>
         <Link style={{textDecoration: 'none',}} onClick={()=>{setOpenProjectId(params.data._id); setOpenProjectTasks(params.data); setShowViewTaskModal(true)}}>
@@ -587,10 +589,15 @@ const Tasks = () => {
             suppressInput: true 
           }
         },
+        { headerName: 'Notes', 
+          field: 'notes', 
+          flex:4,
+          
+        },
         { 
           headerName: 'Action', 
           field: 'delete', 
-          flex:0.7,
+          flex:0.9,
           cellRendererFramework: (params)=>
           <>
           <Link onClick={()=>{handleCopyProject(params.data._id, params.data)}} style={{all: 'unset', cursor: 'pointer', textAlign: 'center !important'}}>
@@ -665,6 +672,7 @@ const onRowValueChanged = useCallback(async (event) => {
         hrs: data.hrs,
         lead: data.lead,
         job_date: data.job_date,
+        notes: data.notes,
       },
       {
         headers:{ 'Content-Type': 'application/json' }

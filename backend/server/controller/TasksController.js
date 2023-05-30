@@ -74,7 +74,7 @@ exports.AddOneProject = async (req, res) => {
         status: req.body.formData.status,
         job_date: jobDate != 'Invalid Date' ? jobDate : null,
         hrs: req.body.formData.hrs,
-        lead: req.body.formData.lead,
+        lead: req.body.formData.lead
     }).then(
         res.status(200).json({
             message: "Project Added Successfully"
@@ -99,6 +99,7 @@ exports.EditOneProject = async (req, res) => {
         status: req.body.status,
         job_date: jobDate != 'Invalid Date' ? jobDate : null,
         hrs: req.body.hrs,
+        notes: req.body.notes,
     }
 
     
