@@ -218,19 +218,16 @@ const Tasks = () => {
 
       var filteredArray = mainRowData
 
-      var jHolderFvalueLoc = ""
-
       if(load === 1){
-        jHolderFvalueLoc = jHolderPreFvalue
-        setJHolderFvalue(jHolderPreFvalue)
+        // Job Holder Filter
+        if(filteredArray !== undefined && jHolderPreFvalue !== null && jHolderPreFvalue !== ""){
+          filteredArray = filteredArray.filter(obj => obj.Jobholder_id && obj.Jobholder_id.name === jHolderPreFvalue);
+        }
       }else {
-        jHolderFvalueLoc = jHolderFvalue
-      }
-
-
-      // Job Holder Filter
-      if(filteredArray !== undefined && jHolderFvalueLoc !== null && jHolderFvalueLoc !== ""){
-        filteredArray = filteredArray.filter(obj => obj.Jobholder_id && obj.Jobholder_id.name === jHolderFvalueLoc);
+        // Job Holder Filter
+        if(filteredArray !== undefined && jHolderFvalue !== null && jHolderFvalue !== ""){
+          filteredArray = filteredArray.filter(obj => obj.Jobholder_id && obj.Jobholder_id.name === jHolderFvalue);
+        }
       }
       
       // Lead Filter
