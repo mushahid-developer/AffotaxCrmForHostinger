@@ -614,7 +614,38 @@ const Construction = () => {
             }    
           },
         },
-        
+        { 
+          headerName: 'Status', 
+          field: 'Jstatus', 
+          flex:2,
+          editable: false,
+          valueGetter: p => {
+            const deadline = new Date(p.data.completationDate)
+            const startDate = new Date(p.data.startDate)
+            var today = new Date();
+            
+            if ((deadline.setHours(0, 0, 0, 0) < today.setHours(0, 0, 0, 0) )) {
+              return "Overdue";
+            }
+            else if(( (startDate.setHours(0, 0, 0, 0) <= today.setHours(0, 0, 0, 0))))
+            {
+              return "Due"
+            }
+            else if(( (startDate.setHours(0, 0, 0, 0) === today.setHours(0, 0, 0, 0))))
+            {
+              return "Due"
+            }
+
+          },
+          floatingFilterComponent: 'selectFloatingFilter', 
+          floatingFilterComponentParams: { 
+            options: ['Overdue', 'Due'],
+            onValueChange:(value) => setStatusFvalue(value),
+            value: statusFvalue,
+            suppressFilterButton: true, 
+            suppressInput: true 
+          }
+        },
         { headerName: 'Days', field: 'days', flex:4, editable: false,
           valueGetter: p =>{
             if(p.data.completationDate && p.data.completationDate !== "Invalid Date" && p.data.startDate && p.data.startDate !== "Invalid Date"){
@@ -636,6 +667,20 @@ const Construction = () => {
         },
         { headerName: 'Budget-Plan', field: 'budgetPlan', flex:4,},
         { headerName: 'Budget-Actual', field: 'budgetActual', flex:4,},
+        { 
+          headerName: 'Status', 
+          field: 'status', flex:2,
+          cellEditor: 'agSelectCellEditor',
+          cellEditorParams: { values: ["Select", 'To do', 'Progress', 'Review', 'Completed'] },
+          floatingFilterComponent: 'SelectUnSelectFilter', 
+          floatingFilterComponentParams: { 
+            options: ['To do', 'Progress', 'Review', 'Completed'],
+            onValueChange:(value) => setStatusFvalue(value),
+            value: statusFvalue,
+            suppressFilterButton: true, 
+            suppressInput: true 
+          }
+        },
         { headerName: 'Manager', field: 'Manager', flex:2,
         valueGetter: params => {
           return(params.data.Manager ? params.data.Manager.name ? params.data.Manager.name : params.data.Manager_name : params.data.Manager_name)
@@ -655,52 +700,7 @@ const Construction = () => {
           suppressInput: true 
         }
       },
-      { 
-        headerName: 'Status', 
-        field: 'status', flex:2,
-        cellEditor: 'agSelectCellEditor',
-        cellEditorParams: { values: ["Select", 'To do', 'Progress', 'Review', 'Completed'] },
-        floatingFilterComponent: 'SelectUnSelectFilter', 
-        floatingFilterComponentParams: { 
-          options: ['To do', 'Progress', 'Review', 'Completed'],
-          onValueChange:(value) => setStatusFvalue(value),
-          value: statusFvalue,
-          suppressFilterButton: true, 
-          suppressInput: true 
-        }
-      },
-      { 
-        headerName: 'Status', 
-        field: 'Jstatus', 
-        flex:2,
-        editable: false,
-        valueGetter: p => {
-          const deadline = new Date(p.data.completationDate)
-          const startDate = new Date(p.data.startDate)
-          var today = new Date();
-          
-          if ((deadline.setHours(0, 0, 0, 0) < today.setHours(0, 0, 0, 0) )) {
-            return "Overdue";
-          }
-          else if(( (startDate.setHours(0, 0, 0, 0) <= today.setHours(0, 0, 0, 0))))
-          {
-            return "Due"
-          }
-          else if(( (startDate.setHours(0, 0, 0, 0) === today.setHours(0, 0, 0, 0))))
-          {
-            return "Due"
-          }
-
-        },
-        floatingFilterComponent: 'selectFloatingFilter', 
-        floatingFilterComponentParams: { 
-          options: ['Overdue', 'Due'],
-          onValueChange:(value) => setStatusFvalue(value),
-          value: statusFvalue,
-          suppressFilterButton: true, 
-          suppressInput: true 
-        }
-      },
+      
       { 
         headerName: 'Contractor', 
         field: 'contractor', flex:2,
