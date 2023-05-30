@@ -219,6 +219,7 @@ const Tasks = () => {
       var filteredArray = mainRowData
 
       if(load === 1){
+        setJHolderFvalue(jHolderPreFvalue)
         // Job Holder Filter
         if(filteredArray !== undefined && jHolderPreFvalue !== null && jHolderPreFvalue !== ""){
           filteredArray = filteredArray.filter(obj => obj.Jobholder_id && obj.Jobholder_id.name === jHolderPreFvalue);
@@ -456,7 +457,7 @@ const Tasks = () => {
           field: 'hrs', 
           flex:0.5,
         },
-        { headerName: 'Tasks', field: 'description', flex:4,
+        { headerName: 'Tasks', field: 'description', flex:6,
         cellRendererFramework: (params)=>
         <>
         <Link style={{textDecoration: 'none',}} onClick={()=>{setOpenProjectId(params.data._id); setOpenProjectTasks(params.data); setShowViewTaskModal(true)}}>
@@ -591,7 +592,7 @@ const Tasks = () => {
         },
         { headerName: 'Notes', 
           field: 'notes', 
-          flex:4,
+          flex:3,
           
         },
         { 
