@@ -34,6 +34,8 @@ const Tasks = () => {
     const [reRender, setReRender] = useState(true)
     const [reRender2, setReRender2] = useState(0)
 
+    const [sumOfMarks, setSumOfMarks] = useState(0)
+
     const [showAddTaskModal, setShowAddTaskModal] = useState(false);
     const [showViewTaskModal, setShowViewTaskModal] = useState(false);
     
@@ -244,6 +246,16 @@ const Tasks = () => {
       //Status Filter
       if(filteredArray !== undefined && statusFvalue !== null && statusFvalue !== ""){
         filteredArray = filteredArray.filter(obj => obj.status && obj.status === statusFvalue);
+      }
+
+      if(filteredArray){
+        var summ = 0;
+        filteredArray.forEach((item) => {
+          if(item.hrs && item.hrs !== ""){
+            summ = +summ + +item.hrs
+          }
+        })
+        setSumOfMarks(summ);
       }
 
     
@@ -866,6 +878,12 @@ useEffect(() => {
               onCellValueChanged={onCellValueChanged}
               onRowValueChanged={onRowValueChanged}
             />
+
+                    <div className="fixed-row">
+                      <div className="fixed-row-cell">Total Hours: {sumOfMarks.toFixed(1)}</div>
+                  
+                      {/* Add more cells or custom content as needed */}
+                    </div>
             
           </div>
         </div>

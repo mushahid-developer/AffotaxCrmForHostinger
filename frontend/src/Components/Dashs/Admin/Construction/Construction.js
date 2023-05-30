@@ -33,6 +33,8 @@ const Construction = () => {
     const [reRender, setReRender] = useState(true)
     const [reRender2, setReRender2] = useState(0)
 
+    const [sumOfMarks, setSumOfMarks] = useState(0)
+
     const [showAddTaskModal, setShowAddTaskModal] = useState(false);
     
     const [showAddProjectModal, setShowAddProjectModal] = useState(false);
@@ -266,6 +268,16 @@ const Construction = () => {
       // Manager Filter
       if(filteredArray != undefined && ManagerFvalue != null && ManagerFvalue !== ""){
         filteredArray = filteredArray.filter(obj => obj.Manager && obj.Manager.name === ManagerFvalue);
+      }
+
+      if(filteredArray){
+        var summ = 0;
+        filteredArray.forEach((item) => {
+          if(item.hrs && item.hrs !== ""){
+            summ = +summ + +item.hrs
+          }
+        })
+        setSumOfMarks(summ);
       }
     
       setRowData(filteredArray)
@@ -1081,6 +1093,10 @@ useEffect(()=>{
               onCellValueChanged={onCellValueChanged}
               onRowValueChanged={onRowValueChanged}
             />
+             {/* <div className="fixed-row">
+                <div className="fixed-row-cell">Total Hours: {sumOfMarks.toFixed(1)}</div>
+            
+              </div> */}
             
           </div>
         </div>
