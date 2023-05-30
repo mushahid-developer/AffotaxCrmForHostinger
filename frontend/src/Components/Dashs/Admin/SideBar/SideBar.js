@@ -1,5 +1,5 @@
 import React, { useState } from 'react';
-import { Link } from 'react-router-dom';
+import { Link, useLocation } from 'react-router-dom';
 import secureLocalStorage from 'react-secure-storage';
 
 export default function SideBar(props) {
@@ -11,7 +11,7 @@ export default function SideBar(props) {
   const [settingsisOpen, setSettingsIsOpen] = useState(false);
   const [hrIsOpen, setHrIsOpen] = useState(false);
 
-  console.log(pagesAccess)
+  const location = useLocation();
 
 
   return (
@@ -21,14 +21,14 @@ export default function SideBar(props) {
           
               <>
               {(pagesAccess[7] && pagesAccess[7].name === "Dashboard Page") && (pagesAccess[7] && pagesAccess[7].isChecked) ? 
-                <Link to="/admin/dashboard" className="sidebar_link_active">
+                <Link to="/admin/dashboard" className={location.pathname === '/admin/dashboard' ? 'sidebar_link_active' : 'sidebar_link'}>
                   <svg style={{heigh: '20px', width: '20px'}} xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" className="feather feather-monitor icon"><rect x="2" y="3" width="20" height="14" rx="2" ry="2"></rect><line x1="8" y1="21" x2="16" y2="21"></line><line x1="12" y1="17" x2="12" y2="21"></line></svg>
                   <span style={{marginLeft: '10px'}}>Dashboard</span>
                 </Link>
               : "" }
                   
                   {pagesAccess[1] && pagesAccess[1].name === "Clients Page" && pagesAccess[1] && pagesAccess[1].isChecked ?
-                  <Link to='/clients' className="sidebar_link">
+                  <Link to='/clients' className={location.pathname === '/clients' ? 'sidebar_link_active' : 'sidebar_link'}>
                   <svg style={{heigh: '20px', width: '20px'}} xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" className="feather feather-briefcase icon"><rect x="2" y="7" width="20" height="14" rx="2" ry="2"></rect><path d="M16 21V5a2 2 0 0 0-2-2h-4a2 2 0 0 0-2 2v16"></path></svg>
                   <span style={{marginLeft: '10px'}}>Clients</span>
                   </Link>
@@ -36,29 +36,28 @@ export default function SideBar(props) {
 
                   {pagesAccess[8] && pagesAccess[8].name === "Leads Page" && pagesAccess[8] && pagesAccess[8].isChecked ?
                   <Link 
-                  to='/leads' 
-                  className="sidebar_link">
+                  to='/leads' className={location.pathname === '/leads' ? 'sidebar_link_active' : 'sidebar_link'}>
                   <svg style={{heigh: '20px', width: '20px'}} xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" className="feather feather-layers icon"><polygon points="12 2 2 7 12 12 22 7 12 2"></polygon><polyline points="2 17 12 22 22 17"></polyline><polyline points="2 12 12 17 22 12"></polyline></svg>
                   <span style={{marginLeft: '10px'}}>Leads</span>
                   </Link>
                   : "" }
                   
                   {pagesAccess[9] && pagesAccess[9].name === "Jobs Page" && pagesAccess[9] && pagesAccess[9].isChecked ?
-                  <Link to="/clients/job-planning" className="sidebar_link">
+                  <Link to="/clients/job-planning" className={location.pathname === '/clients/job-planning' ? 'sidebar_link_active' : 'sidebar_link'}>
                   <svg style={{heigh: '20px', width: '20px'}} xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" className="feather feather-shopping-cart icon"><circle cx="9" cy="21" r="1"></circle><circle cx="20" cy="21" r="1"></circle><path d="M1 1h4l2.68 13.39a2 2 0 0 0 2 1.61h9.72a2 2 0 0 0 2-1.61L23 6H6"></path></svg>
                   <span style={{marginLeft: '10px'}}>Jobs</span>
                   </Link>
                   : "" }
 
                   {pagesAccess[10] && pagesAccess[10].name === "Tasks Page" && pagesAccess[10] && pagesAccess[10].isChecked ?
-                    <Link to='/tasks' className="sidebar_link">
+                    <Link to='/tasks' className={location.pathname === '/tasks' ? 'sidebar_link_active' : 'sidebar_link'}>
                     <svg style={{heigh: '20px', width: '20px'}} xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="feather feather-check-circle icon"><path d="M22 11.08V12a10 10 0 1 1-5.93-9.14"></path><polyline points="22 4 12 14.01 9 11.01"></polyline></svg>
                     <span style={{marginLeft: '10px'}}>Tasks</span>
                     </Link>
                   : "" }
 
                   {pagesAccess[2] && pagesAccess[2].name === "Sales Page" && pagesAccess[2] && pagesAccess[2].isChecked ?
-                  <Link to="/sales" className="sidebar_link">
+                  <Link to="/sales" className={location.pathname === '/sales' ? 'sidebar_link_active' : 'sidebar_link'}>
                   <svg style={{heigh: '20px', width: '20px'}} xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" className="feather feather-shopping-cart icon"><circle cx="9" cy="21" r="1"></circle><circle cx="20" cy="21" r="1"></circle><path d="M1 1h4l2.68 13.39a2 2 0 0 0 2 1.61h9.72a2 2 0 0 0 2-1.61L23 6H6"></path></svg>
                   <span style={{marginLeft: '10px'}}>Sales</span>
                   </Link>
@@ -82,12 +81,12 @@ export default function SideBar(props) {
 
                       <div className={`sidebar_subtasks_hr ${hrIsOpen ? 'open' : 'closed'}`}  >
 
-                          <Link to='/hr/employees' className="sidebar_link">
+                          <Link to='/hr/employees' className={location.pathname === '/hr/employees' ? 'sidebar_link_active' : 'sidebar_link'}>
                           <svg style={{heigh: '12px', width: '15px'}} xmlns="http://www.w3.org/2000/svg" width="12" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" className="feather feather-minus"><line x1="5" y1="12" x2="19" y2="12"></line></svg>
                           <span style={{marginLeft: '10px'}}>Employees</span>
                           </Link>
 
-                          <Link to='/hr/attendance' className="sidebar_link">
+                          <Link to='/hr/attendance' className={location.pathname === '/hr/attendance' ? 'sidebar_link_active' : 'sidebar_link'}>
                           <svg style={{heigh: '12px', width: '15px'}} xmlns="http://www.w3.org/2000/svg" width="12" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" className="feather feather-minus"><line x1="5" y1="12" x2="19" y2="12"></line></svg>
                           <span style={{marginLeft: '10px'}}>Attendance</span>
                           </Link>
@@ -113,17 +112,17 @@ export default function SideBar(props) {
 
                       <div className={`sidebar_subtasks ${jobsisOpen ? 'open' : 'closed'}`}  >
 
-                          <Link to="/timesheet" className="sidebar_link">
+                          <Link to="/timesheet" className={location.pathname === '/timesheet' ? 'sidebar_link_active' : 'sidebar_link'}>
                           <svg style={{heigh: '12px', width: '15px'}} xmlns="http://www.w3.org/2000/svg" width="12" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" className="feather feather-minus"><line x1="5" y1="12" x2="19" y2="12"></line></svg>
                           <span style={{marginLeft: '10px'}}>Timesheet</span>
                           </Link>
                           
-                          {/* <Link to="/clients/job-planning" className="sidebar_link">
+                          {/* <Link to="/clients/job-planning" className={location.pathname === '/admin/dashboard' ? 'sidebar_link_active' : 'sidebar_link'}>
                           <svg style={{heigh: '12px', width: '15px'}} xmlns="http://www.w3.org/2000/svg" width="12" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" className="feather feather-minus"><line x1="5" y1="12" x2="19" y2="12"></line></svg>
                           <span style={{marginLeft: '10px'}}>Job Planing</span>
                           </Link>
 
-                          <Link className="sidebar_link">
+                          <Link className={location.pathname === '/admin/dashboard' ? 'sidebar_link_active' : 'sidebar_link'}>
                           <svg style={{heigh: '12px', width: '15px'}} xmlns="http://www.w3.org/2000/svg" width="12" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" className="feather feather-minus"><line x1="5" y1="12" x2="19" y2="12"></line></svg>
                           <span style={{marginLeft: '10px'}}>Database</span>
                           </Link> */}
@@ -132,26 +131,26 @@ export default function SideBar(props) {
                     </>
                   : "" }
                   
-                  {/* <Link className="sidebar_link">
+                  {/* <Link className={location.pathname === '/admin/dashboard' ? 'sidebar_link_active' : 'sidebar_link'}>
                   <svg style={{heigh: '20px', width: '20px'}} xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" className="feather feather-pie-chart icon"><path d="M21.21 15.89A10 10 0 1 1 8 2.83"></path><path d="M22 12A10 10 0 0 0 12 2v10z"></path></svg>
                   <span style={{marginLeft: '10px'}}>Reports</span>
                   </Link> */}
                   
                   {pagesAccess[4] && pagesAccess[4].name === "Tickets Page" && pagesAccess[4] && pagesAccess[4].isChecked ?
-                  <Link className="sidebar_link">
+                  <Link className={location.pathname === '/tickets' ? 'sidebar_link_active' : 'sidebar_link'}>
                   <svg style={{heigh: '20px', width: '20px'}} xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" className="feather feather-life-buoy icon"><circle cx="12" cy="12" r="10"></circle><circle cx="12" cy="12" r="4"></circle><line x1="4.93" y1="4.93" x2="9.17" y2="9.17"></line><line x1="14.83" y1="14.83" x2="19.07" y2="19.07"></line><line x1="14.83" y1="9.17" x2="19.07" y2="4.93"></line><line x1="14.83" y1="9.17" x2="18.36" y2="5.64"></line><line x1="4.93" y1="19.07" x2="9.17" y2="14.83"></line></svg>
                   <span style={{marginLeft: '10px'}}>Tickets</span>
                   </Link>
                   : "" }
 
                   {pagesAccess[5] && pagesAccess[5].name === "Template Page" && pagesAccess[5] && pagesAccess[5].isChecked ?
-                  <Link to='/templates' className="sidebar_link">
+                  <Link to='/templates' className={location.pathname === '/templates' ? 'sidebar_link_active' : 'sidebar_link'}>
                     <svg xmlns="http://www.w3.org/2000/svg" width="20px" height="20px" viewBox="0 0 1024 1024" fill="#000000" class="icon" version="1.1"><path d="M528.028 80.056H304.024a8.028 8.028 0 0 1-6.656-3.562L265.374 28.5a8 8 0 0 1 2.218-11.092 8.012 8.012 0 0 1 11.092 2.218l29.622 44.432h216.41l45.62-45.65a8 8 0 0 1 11.31 11.312l-47.962 47.994a8.01 8.01 0 0 1-5.656 2.342zM256.032 64.058H80.054c-4.42 0-8-3.578-8-8s3.578-8 8-8h175.978c4.42 0 7.998 3.578 7.998 8s-3.578 8-7.998 8zM767.964 64.058h-191.974c-4.422 0-8-3.578-8-8s3.578-8 8-8h191.974c4.42 0 7.998 3.578 7.998 8s-3.578 8-7.998 8z" fill=""/><path d="M480.002 48.06h-127.984a7.994 7.994 0 0 1-7.998-8 7.994 7.994 0 0 1 7.998-7.998h127.984A7.994 7.994 0 0 1 488 40.06c0 4.422-3.578 8-7.998 8zM735.968 879.952h-63.992c-4.42 0-7.998-3.576-7.998-7.998s3.578-8 7.998-8h63.992c4.42 0 7.998 3.578 7.998 8s-3.578 7.998-7.998 7.998z" fill=""/><path d="M671.976 943.944a7.994 7.994 0 0 1-7.998-7.998v-63.992c0-4.422 3.578-8 7.998-8a7.994 7.994 0 0 1 7.998 8v63.992a7.994 7.994 0 0 1-7.998 7.998zM80.054 975.94c-4.42 0-8-3.578-8-7.998V56.058c0-4.422 3.578-8 8-8s8 3.578 8 8V967.94a7.998 7.998 0 0 1-8 8zM767.964 895.95c-4.422 0-8-3.578-8-7.998V56.058c0-4.422 3.578-8 8-8a7.994 7.994 0 0 1 7.998 8v831.892c0 4.422-3.578 8-7.998 8z" fill=""/><path d="M687.974 975.94a7.996 7.996 0 0 1-5.656-13.654l79.99-79.99a7.996 7.996 0 1 1 11.31 11.31l-79.988 79.99a7.974 7.974 0 0 1-5.656 2.344z" fill=""/><path d="M687.974 975.94H80.054c-4.42 0-8-3.578-8-7.998 0-4.422 3.578-8 8-8h607.92c4.422 0 8 3.578 8 8a7.994 7.994 0 0 1-8 7.998zM815.958 1023.934c-4.422 0-8-3.578-8-8V8.064a7.994 7.994 0 0 1 8-7.998 7.994 7.994 0 0 1 7.998 7.998v1007.87a7.994 7.994 0 0 1-7.998 8z" fill=""/><path d="M815.958 1023.934H32.06c-4.422 0-8-3.578-8-8s3.578-7.998 8-7.998h783.898c4.42 0 7.998 3.576 7.998 7.998s-3.578 8-7.998 8z" fill=""/><path d="M32.06 1023.934c-4.422 0-8-3.578-8-8V8.064a7.994 7.994 0 0 1 8-7.998 7.994 7.994 0 0 1 7.998 7.998v1007.87c0 4.422-3.578 8-7.998 8z" fill=""/><path d="M815.958 16.064H32.06c-4.422 0-8-3.578-8-8a7.994 7.994 0 0 1 8-7.998h783.898a7.994 7.994 0 0 1 7.998 7.998 7.994 7.994 0 0 1-7.998 8zM943.942 911.962a7.994 7.994 0 0 1-6.654-3.56l-31.996-47.996a7.974 7.974 0 0 1-0.938-6.966l15.592-46.76v-14.702c0-4.42 3.576-7.998 7.998-7.998s8 3.578 8 7.998v15.998c0 0.86-0.14 1.718-0.406 2.532l-14.766 44.276 29.824 44.744a8 8 0 0 1-6.654 12.434z" fill=""/><path d="M943.942 911.962a8 8 0 0 1-6.654-12.436l29.824-44.744-14.766-44.276a8.16 8.16 0 0 1-0.406-2.532v-15.998c0-4.42 3.578-7.998 8-7.998s8 3.578 8 7.998v14.702l15.59 46.76a7.968 7.968 0 0 1-0.938 6.966L950.596 908.4a7.99 7.99 0 0 1-6.654 3.562zM975.938 671.994h-63.992a7.994 7.994 0 0 1-7.998-7.998c0-4.422 3.578-8 7.998-8h63.992a7.994 7.994 0 0 1 7.998 8 7.994 7.994 0 0 1-7.998 7.998z" fill=""/><path d="M911.946 671.994a8.004 8.004 0 0 1-7.998-7.686l-15.998-399.964a8.016 8.016 0 0 1 7.686-8.31c4.64 0.312 8.14 3.264 8.312 7.686l15.998 399.964a8.018 8.018 0 0 1-7.688 8.31h-0.312zM975.938 671.994h-0.312a8.018 8.018 0 0 1-7.686-8.31l15.996-399.964c0.188-4.42 4.172-7.326 8.312-7.686a8.02 8.02 0 0 1 7.686 8.31l-15.998 399.964a8.004 8.004 0 0 1-7.998 7.686z" fill=""/><path d="M991.936 272.032c-4.422 0-8-3.578-8-8 0-37.15-13.452-55.992-39.994-55.992s-39.994 18.842-39.994 55.992c0 4.422-3.578 8-8 8s-7.998-3.578-7.998-8c0-45.744 20.404-71.99 55.992-71.99 35.59 0 55.992 26.246 55.992 71.99 0 4.422-3.576 8-7.998 8z" fill=""/><path d="M959.94 208.04h-31.996c-4.422 0-7.998-3.578-7.998-8s3.576-8 7.998-8h31.996c4.422 0 8 3.578 8 8s-3.578 8-8 8zM943.942 480.004a7.994 7.994 0 0 1-7.998-8V232.036c0-4.42 3.576-7.998 7.998-7.998s7.998 3.578 7.998 7.998v239.97a7.994 7.994 0 0 1-7.998 7.998zM975.938 703.99h-63.992a7.994 7.994 0 0 1-7.998-7.998c0-4.422 3.578-8 7.998-8h63.992a7.994 7.994 0 0 1 7.998 8 7.994 7.994 0 0 1-7.998 7.998z" fill=""/><path d="M975.938 703.99a7.994 7.994 0 0 1-7.998-7.998v-31.996c0-4.422 3.576-8 7.998-8s7.998 3.578 7.998 8v31.996a7.994 7.994 0 0 1-7.998 7.998zM911.946 703.99a7.994 7.994 0 0 1-7.998-7.998v-31.996c0-4.422 3.578-8 7.998-8 4.422 0 8 3.578 8 8v31.996a7.994 7.994 0 0 1-8 7.998zM975.938 799.976h-63.992a7.994 7.994 0 0 1-7.998-7.998 7.994 7.994 0 0 1 7.998-7.998h63.992a7.994 7.994 0 0 1 7.998 7.998 7.992 7.992 0 0 1-7.998 7.998z" fill=""/><path d="M975.938 799.976a7.992 7.992 0 0 1-7.998-7.998v-95.986c0-4.422 3.576-8 7.998-8s7.998 3.578 7.998 8v95.986a7.992 7.992 0 0 1-7.998 7.998zM911.946 799.976a7.994 7.994 0 0 1-7.998-7.998v-95.986c0-4.422 3.578-8 7.998-8 4.422 0 8 3.578 8 8v95.986a7.994 7.994 0 0 1-8 7.998zM208.038 320.024a7.982 7.982 0 0 1-5.656-2.342l-31.996-31.996a8 8 0 1 1 11.312-11.312l31.996 31.996a8 8 0 0 1-5.656 13.654z" fill=""/><path d="M208.038 320.024a8 8 0 0 1-5.656-13.654l63.992-63.992a7.996 7.996 0 1 1 11.31 11.31l-63.992 63.992a7.964 7.964 0 0 1-5.654 2.344z" fill=""/><path d="M671.976 240.036H352.018a7.994 7.994 0 0 1-7.998-8 7.994 7.994 0 0 1 7.998-7.998h319.958a7.994 7.994 0 0 1 7.998 7.998c0 4.422-3.576 8-7.998 8z" fill=""/><path d="M671.976 288.03H352.018a7.994 7.994 0 0 1-7.998-8 7.994 7.994 0 0 1 7.998-7.998h319.958a7.994 7.994 0 0 1 7.998 7.998c0 4.422-3.576 8-7.998 8z" fill=""/><path d="M511.998 336.022h-159.98c-4.42 0-7.998-3.578-7.998-8s3.578-8 7.998-8h159.98c4.422 0 7.998 3.578 7.998 8s-3.576 8-7.998 8z" fill=""/><path d="M176.042 559.992a7.996 7.996 0 0 1-5.656-13.652l79.99-79.99a7.996 7.996 0 1 1 11.31 11.31l-79.988 79.99a7.986 7.986 0 0 1-5.656 2.342z" fill=""/><path d="M256.032 559.992a7.982 7.982 0 0 1-5.656-2.342L170.386 477.66a8 8 0 0 1 11.312-11.31l79.988 79.99a7.996 7.996 0 0 1-5.654 13.652z" fill=""/><path d="M671.976 464.006H352.018c-4.42 0-7.998-3.578-7.998-8s3.578-8 7.998-8h319.958c4.422 0 7.998 3.578 7.998 8s-3.576 8-7.998 8z" fill=""/><path d="M671.976 512H352.018a7.994 7.994 0 0 1-7.998-8 7.994 7.994 0 0 1 7.998-7.998h319.958a7.994 7.994 0 0 1 7.998 7.998c0 4.422-3.576 8-7.998 8z" fill=""/><path d="M511.998 559.992h-159.98a7.994 7.994 0 0 1-7.998-7.998 7.994 7.994 0 0 1 7.998-7.998h159.98a7.994 7.994 0 0 1 7.998 7.998 7.992 7.992 0 0 1-7.998 7.998z" fill=""/><path d="M208.038 767.966a7.976 7.976 0 0 1-5.656-2.344l-31.996-31.996a8 8 0 0 1 11.312-11.31l31.996 31.996a7.996 7.996 0 0 1-5.656 13.654z" fill=""/><path d="M208.038 767.966a7.996 7.996 0 0 1-5.656-13.654l63.992-63.992a7.996 7.996 0 1 1 11.31 11.31l-63.992 63.992a7.964 7.964 0 0 1-5.654 2.344z" fill=""/><path d="M671.976 687.976H352.018a7.994 7.994 0 0 1-7.998-8 7.994 7.994 0 0 1 7.998-7.998h319.958a7.994 7.994 0 0 1 7.998 7.998c0 4.422-3.576 8-7.998 8z" fill=""/><path d="M671.976 735.97H352.018a7.994 7.994 0 0 1-7.998-7.998c0-4.422 3.578-8 7.998-8h319.958a7.994 7.994 0 0 1 7.998 8 7.994 7.994 0 0 1-7.998 7.998z" fill=""/><path d="M511.998 783.964h-159.98c-4.42 0-7.998-3.578-7.998-8s3.578-7.998 7.998-7.998h159.98c4.422 0 7.998 3.576 7.998 7.998s-3.576 8-7.998 8z" fill=""/></svg>                  <span style={{marginLeft: '10px'}}>Templates</span>
                   </Link>
                   : "" }
                   
                   {pagesAccess[11] && pagesAccess[11].name === "Construction Page" && pagesAccess[11] && pagesAccess[11].isChecked ?
-                  <Link to='/construction' className="sidebar_link">
+                  <Link to='/construction' className={location.pathname === '/construction' ? 'sidebar_link_active' : 'sidebar_link'}>
                     <svg xmlns="http://www.w3.org/2000/svg" width="20px" height="20px" viewBox="0 -6 1036 1036" fill="#000000" class="icon" version="1.1"><path d="M719.426083 455.245822h234.197458v73.724278H719.426083zM960.258726 580.454221v68.686453h-87.609017v-99.527776h-73.724279v100.387893a203.479008 203.479008 0 0 0-187.505414 202.618891h92.523969a110.586418 110.586418 0 0 1 110.586418-110.586417h145.482576v82.694065h73.724278V580.454221h-73.724278zM610.682773 973.527499a48.043655 48.043655 0 1 0 95.964435 0c0-26.54074-48.043655-104.934223-48.043654-104.934223s-47.920781 78.516356-47.920781 104.934223zM130.000478 762.92181h79.867968v45.094684h-79.867968zM130.000478 688.82891h79.867968v45.094684h-79.867968zM130.000478 837.137584h79.867968v45.094683h-79.867968zM902.016546 252.504056L679.123478 10.442675A35.633401 35.633401 0 0 0 650.985378 0.121276h-15.359224L138.724517 275.112835 45.340431 381.030048a28.629595 28.629595 0 0 0 0 40.548353 32.561556 32.561556 0 0 0 12.28738 7.74105V528.478605a81.711075 81.711075 0 1 0 112.429525 75.813133h-61.436899a20.274177 20.274177 0 1 1-20.274177-20.39705h30.71845V434.725898l98.299037 9.092661h140.936246v29.735459a53.204354 53.204354 0 0 0 50.501131 50.50113h57.873558v376.362441h-127.788749V491.616466h-147.448557v73.724278h73.724279v362.477702H73.724278V745.10511H0V1001.542725h578.735585a84.291425 84.291425 0 0 1-4.792078-27.892352c0-18.676817 11.304389-46.692043 24.57476-73.724279h-56.521947v-65.614607h33.298799a237.023555 237.023555 0 0 1 18.553943-75.567386h-51.852742V688.214541h71.266802v35.019033a243.412993 243.412993 0 0 1 69.177948-70.160939V417.892187h226.947904a33.544547 33.544547 0 0 0 2.58035-12.287379V280.273534a35.387654 35.387654 0 0 0-9.952778-27.769478zM190.085764 376.975213h-58.856548l58.856548-58.856549v58.856549z m129.631857 0h-71.143929v-58.856549h71.143929v58.856549z m-8.232545-128.034497L556.372554 116.851384l-78.270609 132.089332H311.485076z m77.533366 124.962652v-55.784704h64.508744z m224.24468 244.887478h-71.266802v-88.34626h71.266802v88.34626z m0-167.722733H446.400506v-40.056858l80.850958-73.724279h86.011658v113.412515z m0-202.250271h-49.149518l49.149518-78.516356v78.516356z m114.764127 128.034497h-39.196741v-58.856549h39.196741v58.856549z m-45.586179-128.034497V126.681288l112.675273 122.136554h-112.675273z m160.350306 128.034497h-45.217558v-58.856549h45.586179v58.856549z"/></svg>                  <span style={{marginLeft: '10px'}}>Construction</span>
                   </Link>
                   : "" }
@@ -175,17 +174,17 @@ export default function SideBar(props) {
 
                     <div className={`sidebar_subtasks_settings ${settingsisOpen ? 'open' : 'closed'}`}  >
 
-                        <Link to="/roles" className="sidebar_link">
+                        <Link to="/roles" className={location.pathname === '/roles' ? 'sidebar_link_active' : 'sidebar_link'}>
                         <svg style={{heigh: '12px', width: '15px'}} xmlns="http://www.w3.org/2000/svg" width="12" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" className="feather feather-minus"><line x1="5" y1="12" x2="19" y2="12"></line></svg>
                         <span style={{marginLeft: '10px'}}>Roles</span>
                         </Link>
                         
-                        <Link to="/roles/user" className="sidebar_link">
+                        <Link to="/roles/user" className={location.pathname === '/roles/user' ? 'sidebar_link_active' : 'sidebar_link'}>
                         <svg style={{heigh: '12px', width: '15px'}} xmlns="http://www.w3.org/2000/svg" width="12" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" className="feather feather-minus"><line x1="5" y1="12" x2="19" y2="12"></line></svg>
                         <span style={{marginLeft: '10px'}}>User Roles</span>
                         </Link>
 
-                        <Link to='/finance/charts_of_accounts' className="sidebar_link">
+                        <Link to='/finance/charts_of_accounts' className={location.pathname === '/finance/charts_of_accounts' ? 'sidebar_link_active' : 'sidebar_link'}>
                         <svg style={{heigh: '12px', width: '15px'}} xmlns="http://www.w3.org/2000/svg" width="12" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" className="feather feather-minus"><line x1="5" y1="12" x2="19" y2="12"></line></svg>
                         <span style={{marginLeft: '10px'}}>Chart Of Accounts</span>
                         </Link>
