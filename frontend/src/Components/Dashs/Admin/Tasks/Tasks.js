@@ -219,7 +219,6 @@ const Tasks = () => {
       var filteredArray = mainRowData
 
       if(load === 1){
-        setJHolderFvalue(jHolderPreFvalue)
         // Job Holder Filter
         if(filteredArray !== undefined && jHolderPreFvalue !== null && jHolderPreFvalue !== ""){
           filteredArray = filteredArray.filter(obj => obj.Jobholder_id && obj.Jobholder_id.name === jHolderPreFvalue);
@@ -258,6 +257,9 @@ const Tasks = () => {
     }, [mainRowData, statusFvalue, projectFvalue, jHolderFvalue, jHolderPreFvalue, leadFvalue])
     
     useEffect(()=>{
+      if(load === 1){
+        setJHolderFvalue(jHolderPreFvalue)
+      }
       setLoad(2);
     }, [statusFvalue, projectFvalue, jHolderFvalue, jHolderPreFvalue, leadFvalue])
 
