@@ -16,12 +16,6 @@ import { saveAs } from 'file-saver';
 import * as XLSX from 'xlsx';
 import { Button, Form, Modal } from 'react-bootstrap';
 
-
-var deleteClientUrl = axiosURL.deleteClientUrl;
-var ActiveInactiveUrl = axiosURL.ActiveInactiveUrl;
-
-
-
 export default function Templates() {
  
   const [isOpen, setIsOpen] = useState(false);
@@ -30,6 +24,8 @@ export default function Templates() {
   const [showAddTemplateModal, setshowAddTemplateModal] = useState(false);
   const [showEditTemplateModal, setshowEditTemplateModal] = useState(false);
   const [showTemplateModal, setShowTemplateModal] = useState(false);
+  
+  const [categoriesFvalue, setCategoriesFvalue] = useState("");
 
   const [showTemplateModalData, setShowTemplateModalData] = useState("");
 
@@ -199,6 +195,10 @@ export default function Templates() {
     // const roo = mainrowData; 
     var filteredArray = mainRowData
 
+    // Categories Filter
+    if(filteredArray !== undefined && categoriesFvalue !== null && categoriesFvalue !== ""){
+      filteredArray = filteredArray.filter(obj => obj.category_id && obj.category_id.name === categoriesFvalue);
+    }
     
 
     setRowData(filteredArray)
@@ -209,8 +209,7 @@ export default function Templates() {
   useEffect(()=>{
     setRowData(mainRowData)
     handleFilters()
-  },[mainRowData])
-
+  },[mainRowData, categoriesFvalue])
 
   const getData = async ()=>{
       setLoader(true)
@@ -223,7 +222,9 @@ export default function Templates() {
           if(response.status === 200){
 
               setMainRowData(response.data.Templates)
-              setCategoriesNames(response.data.TemplateCategories)
+              setCategoriesNames(response.data.TemplateCategories.map(names => {
+                return { value: names._id, label: names.name };
+              }));
               setLoader(false)
           }
           
@@ -260,7 +261,15 @@ export default function Templates() {
         flex:1,
         valueGetter: p => {
             return(p.data.category_id.name); 
-        }
+        },
+        floatingFilterComponent: 'selectFloatingFilter', 
+          floatingFilterComponentParams: { 
+            options: categoriesNames && categoriesNames.map(option => option.label),
+            onValueChange:(value) => setCategoriesFvalue(value),
+            value: categoriesFvalue,
+            suppressFilterButton: true, 
+            suppressInput: true 
+          }
       },
       { headerName: 'Template Name', field: 'name', flex:3 },
       { 
@@ -487,11 +496,11 @@ const exportToExcel = (e) => {
                             return(
                             <div style={{cursor: 'default'}} key={ind} className='row recurringTask_task'>
                                 <div className='col-10'>
-                                    <p> {task.name} </p>
+                                    <p> {task.label} </p>
                                 </div>
                                 
                                 <div className='col-2'>
-                                  <div onClick={()=>{handleDeleteCategoryName(task._id)}} style={{cursor: "pointer"}}>
+                                  <div onClick={()=>{handleDeleteCategoryName(task.value)}} style={{cursor: "pointer"}}>
                                     <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="feather feather-x icon-16"><line x1="18" y1="6" x2="6" y2="18"></line><line x1="6" y1="6" x2="18" y2="18"></line></svg>
                                   </div>
                                 </div>
@@ -604,7 +613,7 @@ const exportToExcel = (e) => {
                   <option>Category</option>
                   {categoriesNames && categoriesNames.map((proj, ind)=>{
                     return(
-                      <option key={ind} value={proj._id}>{proj.name}</option>
+                      <option key={ind} value={proj.value}>{proj.label}</option>
                     )
                   })}
                  
@@ -673,7 +682,7 @@ const exportToExcel = (e) => {
                   <option>Category</option>
                   {categoriesNames && categoriesNames.map((proj, ind)=>{
                     return(
-                      <option key={ind} value={proj._id}>{proj.name}</option>
+                      <option key={ind} value={proj.value}>{proj.label}</option>
                     )
                   })}
                  

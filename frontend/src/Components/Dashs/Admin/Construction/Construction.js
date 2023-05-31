@@ -115,8 +115,6 @@ const Construction = () => {
     
     const dropdownAnimation = useSpring({
       maxHeight: isOpen ? 'fit-content' : 0,
-      maxWidth: isOpen ? 'fit-content' : 0,
-      minWidth: isOpen ? '176px' : 0,
       opacity: isOpen ? 1 : 0,
       position: 'absolute',
       backgroundColor: 'white',
@@ -1005,7 +1003,7 @@ useEffect(()=>{
                 <animated.div style={dropdownAnimation}>
                     {isOpen && (
                     <div >
-                        <div style={{margin: 10}}>
+                        <div style={{padding: 10}}>
                           {filterFvalue === "Open" ? 
                           openProjectNames && openProjectNames.map((task, ind)=>{
                             return(
