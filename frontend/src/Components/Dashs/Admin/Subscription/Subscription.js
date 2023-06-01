@@ -941,7 +941,7 @@ useEffect(()=>{
     {
       headerName: "Subscription#",
       filter: false,
-      flex: 0.8,
+      flex: 2.3,
       checkboxSelection: true,
       headerCheckboxSelection: true,
       editable: false,
