@@ -1009,7 +1009,7 @@ useEffect(()=>{
     },
     
     {
-      headerName: "First Billing Date",
+      headerName: "Start Date",
       field: 'year_end',
       // filter: 'agDateColumnFilter',
       // filterParams: filterParams,
@@ -1038,16 +1038,6 @@ useEffect(()=>{
           else{
             return ""
         }    
-      },
-      cellStyle:(params)=>{
-        const today = new Date()
-        const deadline = new Date(params.value)
-        if(!(deadline.setHours(0, 0, 0, 0) >= today.setHours(0, 0, 0, 0))){
-          return{color: "red"}
-        }
-        if((deadline.setHours(0, 0, 0, 0) >= today.setHours(0, 0, 0, 0))){
-          return{color: "black"}
-        }
       },
     },
     {
@@ -1120,7 +1110,17 @@ useEffect(()=>{
         else{
           return ""
         }
-      }
+      },
+      cellStyle:(params)=>{
+        const today = new Date()
+        const deadline = new Date(params.value)
+        if(!(deadline.setHours(0, 0, 0, 0) >= today.setHours(0, 0, 0, 0))){
+          return{color: "red"}
+        }
+        if((deadline.setHours(0, 0, 0, 0) >= today.setHours(0, 0, 0, 0))){
+          return{color: "black"}
+        }
+      },
       // cellEditorFramework: AgDatePicker,
     },
     {
@@ -1130,7 +1130,7 @@ useEffect(()=>{
       editable: false,
       valueGetter: p => {
         const deadline = new Date(p.data.job_deadline)
-        const yearEnd = new Date(p.data.year_end)
+        const yearEnd = new Date(p.data.work_deadline)
         var today = new Date();
         
         if ((deadline.setHours(0, 0, 0, 0) < today.setHours(0, 0, 0, 0) && (yearEnd.setHours(0, 0, 0, 0) < today.setHours(0, 0, 0, 0)))) {
@@ -1695,7 +1695,7 @@ else{
               }} className='btn btn-primary mx-2'>
                   Excel
           </Link>
-          
+
             <Link to="/clients/add" className=' mx-2 btn btn-primary'>
               Add Client
             </Link>
