@@ -811,7 +811,7 @@ console.log(departmentFvalue, statusFvalue)
 
   if(filteredArray){
     var summ = 0;
-    filteredArray.forEach((item) => {summ = +summ + +item.hours})
+    filteredArray.forEach((item) => {summ = +summ + +item.fee})
     setSumOfMarks(summ);
   }
 
@@ -2101,7 +2101,7 @@ else{
                 frameworkComponents={frameworkComponents}
                 />
                   <div className="fixed-row">
-                    <div className="fixed-row-cell">Total Hours: {sumOfMarks.toFixed(1)}</div>
+                    <div className="fixed-row-cell">Total Fee: {sumOfMarks.toFixed(1)}</div>
                 
                     {/* Add more cells or custom content as needed */}
                   </div>
