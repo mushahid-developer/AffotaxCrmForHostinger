@@ -1095,10 +1095,10 @@ useEffect(()=>{
               onCellValueChanged={onCellValueChanged}
               onRowValueChanged={onRowValueChanged}
             />
-             {/* <div className="fixed-row">
-                <div className="fixed-row-cell">Total Hours: {sumOfMarks.toFixed(1)}</div>
+             <div className="fixed-row">
+                <div className="fixed-row-cell">Total Months: {sumOfMarks.toFixed(1)}</div>
             
-              </div> */}
+              </div>
             
           </div>
         </div>

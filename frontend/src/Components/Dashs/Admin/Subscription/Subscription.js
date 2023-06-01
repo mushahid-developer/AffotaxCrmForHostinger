@@ -1592,7 +1592,7 @@ else{
               </select>
             </div>
 
-            <div  className='table-col-numbers mx-2'>
+            {/* <div  className='table-col-numbers mx-2'>
               <button 
               onClick={(e)=>{e.preventDefault(); setDownloadOptionsToggle(!downloadOptionsToggle)}} 
               className='form-control'>
@@ -1602,7 +1602,7 @@ else{
                   </g>
                 </svg>
               </button>
-            </div>
+            </div> */}
 
             {/* <div  className='table-col-numbers mx-2'>
               <button 
@@ -1687,6 +1687,15 @@ else{
 
 
           <div >
+          <Link onClick={exportToExcel} style={{
+                backgroundColor: 'transparent',
+                color: 'black',
+                borderColor: 'lightgray',
+                alignSelf: 'center',
+              }} className='btn btn-primary mx-2'>
+                  Excel
+          </Link>
+          
             <Link to="/clients/add" className=' mx-2 btn btn-primary'>
               Add Client
             </Link>
