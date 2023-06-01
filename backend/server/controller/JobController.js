@@ -128,7 +128,8 @@ exports.addNewClient = async (req, res) => {
           notes: req.body.notes,
           job_status: req.body.job_status,
           manager_id: req.body.manager_id,
-          fee: req.body.fee
+          fee: req.body.fee,
+          subscription: req.body.subscription
 
         }, function (err, place) {
           Clientdb.findOneAndUpdate({_id:req.body.client_id}, {

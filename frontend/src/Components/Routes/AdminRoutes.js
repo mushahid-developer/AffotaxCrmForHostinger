@@ -25,6 +25,7 @@ import Attendance from "../Dashs/Admin/Hr/Attendance/Attendance";
 import PublicDash from "../Dashs/Admin/DashBoard/PublicDash";
 import Construction from "../Dashs/Admin/Construction/Construction";
 import Templates from "../Dashs/Admin/Templates/Templates";
+import Subscription from "../Dashs/Admin/Subscription/Subscription";
 
 export default function AdminRoutes(props) {
 
@@ -58,6 +59,7 @@ export default function AdminRoutes(props) {
                   <Route path="/admin/dashboard" element = {<Dashboard />}></Route>
                   <Route path="/clients/add" element = {<AddClients />}></Route>
                   <Route path="/clients/job-planning" element = {<JobPlanning />}></Route>
+                  <Route path="/subscription" element = {<Subscription />}></Route>
                   <Route path="/hr/employees" element = {<Employees />}></Route>
                   <Route path="/hr/employees/add" element = {<AddEmployee />}></Route>
                   <Route path="/hr/employees/edit/:id" element = {<EditEmployee />}></Route>

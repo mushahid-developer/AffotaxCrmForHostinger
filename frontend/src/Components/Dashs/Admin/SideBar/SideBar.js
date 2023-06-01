@@ -49,6 +49,13 @@ export default function SideBar(props) {
                   </Link>
                   : "" }
 
+                  {pagesAccess[4] && pagesAccess[4].name === "Subscription Page" && pagesAccess[4] && pagesAccess[4].isChecked ?
+                  <Link to='/subscription' className={location.pathname === '/tickets' ? 'sidebar_link_active' : 'sidebar_link'}>
+                  <svg xmlns="http://www.w3.org/2000/svg" width="20px" height="20px" viewBox="0 0 24 24" fill="none"><path fill-rule="evenodd" clip-rule="evenodd" d="M3.691 8.507c0 2.847 1.582 5.29 3.806 5.29 2.223 0 3.803-2.443 3.803-5.29 0-2.846-1.348-4.51-3.803-4.51-2.456 0-3.806 1.664-3.806 4.51zM1.326 19.192c.82.537 2.879.805 6.174.805 3.295 0 5.353-.268 6.174-.804a.5.5 0 0 0 .225-.453c-.152-2.228-2.287-3.343-6.403-3.343-4.117 0-6.249 1.115-6.395 3.344a.5.5 0 0 0 .225.451zm21.381-8.485a1 1 0 1 0-1.414-1.414L17 13.586l-2.293-2.293a1 1 0 0 0-1.414 1.414l3 3a1 1 0 0 0 1.414 0l5-5z" fill="#000000"/></svg>
+                  <span style={{marginLeft: '10px'}}>Subscription</span>
+                  </Link>
+                  : "" }
+
                   {pagesAccess[10] && pagesAccess[10].name === "Tasks Page" && pagesAccess[10] && pagesAccess[10].isChecked ?
                     <Link to='/tasks' className={location.pathname === '/tasks' ? 'sidebar_link_active' : 'sidebar_link'}>
                     <svg style={{heigh: '20px', width: '20px'}} xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="feather feather-check-circle icon"><path d="M22 11.08V12a10 10 0 1 1-5.93-9.14"></path><polyline points="22 4 12 14.01 9 11.01"></polyline></svg>
@@ -136,12 +143,7 @@ export default function SideBar(props) {
                   <span style={{marginLeft: '10px'}}>Reports</span>
                   </Link> */}
                   
-                  {pagesAccess[4] && pagesAccess[4].name === "Tickets Page" && pagesAccess[4] && pagesAccess[4].isChecked ?
-                  <Link className={location.pathname === '/tickets' ? 'sidebar_link_active' : 'sidebar_link'}>
-                  <svg style={{heigh: '20px', width: '20px'}} xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" className="feather feather-life-buoy icon"><circle cx="12" cy="12" r="10"></circle><circle cx="12" cy="12" r="4"></circle><line x1="4.93" y1="4.93" x2="9.17" y2="9.17"></line><line x1="14.83" y1="14.83" x2="19.07" y2="19.07"></line><line x1="14.83" y1="9.17" x2="19.07" y2="4.93"></line><line x1="14.83" y1="9.17" x2="18.36" y2="5.64"></line><line x1="4.93" y1="19.07" x2="9.17" y2="14.83"></line></svg>
-                  <span style={{marginLeft: '10px'}}>Tickets</span>
-                  </Link>
-                  : "" }
+                  
 
                   {pagesAccess[5] && pagesAccess[5].name === "Template Page" && pagesAccess[5] && pagesAccess[5].isChecked ?
                   <Link to='/templates' className={location.pathname === '/templates' ? 'sidebar_link_active' : 'sidebar_link'}>

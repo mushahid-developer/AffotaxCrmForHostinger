@@ -221,6 +221,13 @@
 
     var today = new Date();
 
+    
+  if(filteredArray){
+    if(filteredArray != undefined){
+        filteredArray = await filteredArray.filter(obj => obj.job_name && obj.job_name !== 'Billing');
+      }
+  }
+
     if(filteredArray){
       for(var arr of filteredArray){
         var deadline = new Date(arr.job_deadline)
@@ -388,7 +395,6 @@
       billingOverDue
   }));
 
-  console.log(departmentFvalue, statusFvalue)
 
     if(filteredArray != undefined){
       filteredArray = await filteredArray.filter(obj => obj.client_id && obj.client_id.isActive === true);
