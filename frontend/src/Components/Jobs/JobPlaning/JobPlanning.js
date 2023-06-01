@@ -77,11 +77,11 @@
               );
         if(response.status === 200)
         {  
-          setPreData(response.data.map(names => {
+          setPreData(response.data.users.map(names => {
             return { value: names._id, label: names.name };
           }));
 
-          setFPreData(response.data.map(names => {
+          setFPreData(response.data.users.map(names => {
             return { value: names._id, label: names.name };
           }));
 
@@ -998,7 +998,7 @@
         editable: false,
         floatingFilterComponent: 'selectFloatingFilter', 
         floatingFilterComponentParams: { 
-          options: ["Bookkeeping", "Payroll", "Vat Return", "Accounts", "Personal Tax", "Company Sec", "Address", "Billing"],
+          options: ["Bookkeeping", "Payroll", "Vat Return", "Accounts", "Personal Tax", "Company Sec", "Address"],
           onValueChange:(value) => setDepartmentFvalue(value),
           value: departmentFvalue,
           suppressFilterButton: true, 

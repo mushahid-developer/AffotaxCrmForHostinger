@@ -501,12 +501,7 @@ const Construction = () => {
           editable: false,
           valueGetter: (params) => `Task# ${params.node.rowIndex + 1}`,
         },
-        { 
-          headerName: 'Month', 
-          field: 'hrs', 
-          flex: 2,
-          
-        },
+        
         { headerName: 'Job Holder', field: 'Jobholder_id', flex:2,
         valueGetter: p => {
           return  p.data.Jobholder_id ? p.data.Jobholder_id.name ? p.data.Jobholder_id.name : p.data.Jobholder_id_name :p.data.Jobholder_id_name
@@ -536,6 +531,13 @@ const Construction = () => {
           
               return{color: "#0d6efd"}
           },
+        },
+
+        { 
+          headerName: 'Month', 
+          field: 'hrs', 
+          flex: 2,
+          
         },
         
         

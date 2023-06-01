@@ -77,11 +77,11 @@ export default function Subscription() {
             );
       if(response.status === 200)
       {  
-        setPreData(response.data.map(names => {
+        setPreData(response.data.usersSubs.map(names => {
           return { value: names._id, label: names.name };
         }));
 
-        setFPreData(response.data.map(names => {
+        setFPreData(response.data.usersSubs.map(names => {
           return { value: names._id, label: names.name };
         }));
 
@@ -1161,7 +1161,7 @@ useEffect(()=>{
     {
         headerName: "Fee",
         field:"fee",
-        flex: 2,
+        flex: 1,
         editable: true,
       },
     {
