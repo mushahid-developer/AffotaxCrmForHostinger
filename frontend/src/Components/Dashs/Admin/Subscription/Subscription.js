@@ -120,7 +120,7 @@ const [colVisibility, setColVisibility] = useState({
   jHolder:false,
   job_name:false,
   hours:false,
-  year_end:false,
+  year_end:true,
   job_deadline:false,
   work_deadline:false,
   stat:false,
@@ -1419,6 +1419,7 @@ const onPageSizeChanged = useCallback(() => {
 
 const handleColHideOnStart= ()=>{
   if(gridApi){
+    gridApi.columnApi.setColumnVisible("year_end", false)
     gridApi.columnApi.setColumnVisible("vat_login", false)
     gridApi.columnApi.setColumnVisible("payee_login", false)
     gridApi.columnApi.setColumnVisible("ct_login", false)

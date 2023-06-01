@@ -183,48 +183,31 @@ const Leads = () => {
               );
         if(response.status === 200)
         {  
-          setPreData(response.data.map(names => {
+          setPreData(response.data.users.map(names => {
             return { value: names._id, label: names.name };
           }));
   
           
         }
 
-        try {
-          const response = await axios.get(LeadsGetAllUrl,
+        
+          const resp = await axios.get(LeadsGetAllUrl,
               {
                   headers:{ 'Content-Type': 'application/json' }
               }
           );
-          if(response.status === 200){
-              console.log(response.data)
-              setMainRowData(response.data.leads)
-              setLoader(false)
-          }
-          
-      
-          } catch (err) {
-          Store.addNotification({
-              title: 'Error',
-              message: "Please Try Again",
-              type: "danger",
-              insert: "top",
-              container: "top-center",
-              animationIn: ["animate__animated", "animate__fadeIn"],
-              animationOut: ["animate__animated", "animate__fadeOut"],
-              dismiss: {
-                  duration: 5000,
-                  onScreen: true
-              }
-              });
-      };
-        
+          if(resp.status === 200){
+              console.log(resp.data)
+              setMainRowData(resp.data.leads)
+            }
+            
+          setLoader(false)
     
         } catch (err) {
   
           Store.addNotification({
               title: 'Error',
-              message: "Please Try Again",
+              message: 'Please Try Again',
               type: "danger",
               insert: "top",
               container: "top-center",
