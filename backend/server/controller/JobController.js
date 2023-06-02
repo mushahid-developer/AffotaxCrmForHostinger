@@ -171,6 +171,30 @@ exports.addNewClient = async (req, res) => {
 
   exports.getAllClients = async (req, res) => {
     try {
+
+      const clientsAll = await Clientdb.find();
+      const clientsDepartmentListForCheck = []
+
+      await clientsAll.forEach(async (data)=>{
+        const _iid = data._id;
+        const client_department_list = await Jobsdb.find({client_id: _iid})
+        const departments_list = []
+        
+        await client_department_list.forEach(async (clData) => {
+          const deptname = clData.job_name
+          await departments_list.push(deptname)
+        })
+
+        const clientsWithDepartments = {
+          company_name_t: data.company_name,
+          departments: departments_list
+        }
+
+        await clientsDepartmentListForCheck.push(clientsWithDepartments)
+
+      })
+
+
       const clientsPromise = Clientdb.find().lean().exec();
       const jobsPromise = Jobsdb.aggregate([
         {
@@ -183,18 +207,20 @@ exports.addNewClient = async (req, res) => {
       ]).exec();
       const [clients, jobs] = await Promise.all([clientsPromise, jobsPromise]);
       const jobMap = new Map(jobs.map(({ _id, totalHours, totalFee }) => [_id.toString(), { totalHours, totalFee }]));
-      const finalArr = clients.map(({ _id, book_start_date, company_name, client_name, isActive, source, partner }) => {
+      const finalArr = clients.map(({ _id, book_start_date, company_name, client_name, isActive, source, partner, job_name }) => {
         const { totalHours = 0, totalFee = 0 } = jobMap.get(_id.toString()) || {};
         return {
           _id,
+          job_name,
           book_start_date,
           company_name,
           client_name,
           isActive,
-          total_hours: totalHours,
-          total_fee: totalFee,
+          total_hours: totalHours.toFixed(0),
+          total_fee: totalFee.toFixed(0),
           source,
-          partner
+          partner,
+          deptListToCheck: clientsDepartmentListForCheck
         };
       });
       res.json(finalArr);

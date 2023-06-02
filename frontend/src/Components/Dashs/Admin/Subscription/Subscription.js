@@ -1130,24 +1130,25 @@ useEffect(()=>{
       editable: false,
       valueGetter: p => {
         const deadline = new Date(p.data.job_deadline)
+        console.log(p.data.job_deadline)
         const yearEnd = new Date(p.data.work_deadline)
         var today = new Date();
-        
-        if ((deadline.setHours(0, 0, 0, 0) < today.setHours(0, 0, 0, 0) && (yearEnd.setHours(0, 0, 0, 0) < today.setHours(0, 0, 0, 0)))) {
-          return "Overdue";
-        }
-        else if (deadline.setHours(0, 0, 0, 0) < today.setHours(0, 0, 0, 0))  {
-          return "Overdue";
-        }
-        else if(((yearEnd.setHours(0, 0, 0, 0) <= today.setHours(0, 0, 0, 0)) && !(deadline.setHours(0, 0, 0, 0) <= today.setHours(0, 0, 0, 0))))
-        {
-          return "Due"
-        }
-        else if(( (deadline.setHours(0, 0, 0, 0) === today.setHours(0, 0, 0, 0))))
-        {
-          return "Due"
-        }
 
+        if( !p.data.job_deadline || !p.data.job_deadline )
+        {
+          return " "
+        }
+        else{
+          if(((yearEnd.setHours(0, 0, 0, 0) <= today.setHours(0, 0, 0, 0)) && (deadline.setHours(0, 0, 0, 0) < today.setHours(0, 0, 0, 0))))
+          {
+            return "Overdue"
+          }
+          else if (!(yearEnd.setHours(0, 0, 0, 0) < today.setHours(0, 0, 0, 0) && (deadline.setHours(0, 0, 0, 0) <= today.setHours(0, 0, 0, 0)))) {
+            return "Due";
+          }
+
+        }
+        
       },
       floatingFilterComponent: 'selectFloatingFilter', 
       floatingFilterComponentParams: { 
