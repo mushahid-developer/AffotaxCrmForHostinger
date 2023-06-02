@@ -34,6 +34,8 @@ const Clients = () => {
     const [mainRowData, setMainRowData] = useState([ ]);
     const [rowData, setRowData] = useState([ ]);
 
+    const [feeSum, setFeeSum] = useState(0);
+
     const [activeFilter, setActiveFilter] = useState("Active")
 
     const [partnerFValue, setPartnerFValue] = useState(null)
@@ -96,6 +98,17 @@ const Clients = () => {
           }
           return false;
         });
+      }
+
+      // total_fee
+      if(filteredArray){
+        var summ = 0;
+        filteredArray.forEach((item) => {
+          if(item.total_fee && item.total_fee !== ""){
+            summ = +summ + +item.total_fee
+          }
+        })
+        setFeeSum(summ);
       }
 
       setRowData(filteredArray)
@@ -554,6 +567,12 @@ async function onGridReady(params) {
                 suppressDragLeaveHidesColumns={true}
                 frameworkComponents={frameworkComponents}
             />
+
+                    <div className="fixed-row">
+                      <div className="fixed-row-cell">Total Hours: {feeSum.toFixed(1)}</div>
+                  
+                      {/* Add more cells or custom content as needed */}
+                    </div>
             
           </div>
         </div>
