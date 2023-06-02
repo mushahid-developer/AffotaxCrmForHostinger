@@ -12,6 +12,8 @@ import Loader from '../../../Common/Loader/Loader';
 import DropdownFilter from '../../../Jobs/JobPlaning/DropdownFilter';
 import ReactDatePicker from 'react-datepicker';
 
+import { useSpring, animated } from 'react-spring';
+
 import { saveAs } from 'file-saver';
 import * as XLSX from 'xlsx';
 
@@ -36,6 +38,9 @@ const Clients = () => {
 
     const [partnerFValue, setPartnerFValue] = useState(null)
     const [sourceFValue, setSourceFValue] = useState(null)
+    const [departmentFvalue, setDepartmentFValue] = useState("")
+
+    const [isOpen, setIsOpen] = useState(false);
 
     const [startDate, setStartDate] = useState(null);
     const [endDate, setEndDate] = useState(null);
@@ -45,6 +50,19 @@ const Clients = () => {
     const handleFilters = async ()=>{
       // const roo = mainrowData; 
       var filteredArray = mainRowData
+
+      console.log(filteredArray)
+
+      // Department Filter
+      if(filteredArray != undefined && departmentFvalue != null && departmentFvalue !== ''){
+        // filteredArray = filteredArray.filter(obj => (obj.deptListToCheck.company_name_t === obj.company_name) && (obj.deptListToCheck.departments.includes(departmentFvalue)) );
+
+        filteredArray = filteredArray.filter(obj =>
+          obj.deptListToCheck.some(obj2 =>
+            obj2.company_name_t === obj.company_name && obj2.departments.includes(departmentFvalue)
+          )
+        );
+      }
 
       // JobStatus Filter
       if(filteredArray != undefined && activeFilter != null && activeFilter !== "" && activeFilter === "Active"){
@@ -84,11 +102,26 @@ const Clients = () => {
 
     }
 
+    
+    const handleToggle = () => {
+      setIsOpen(!isOpen);
+  };
+    
+    const dropdownAnimation = useSpring({
+      maxHeight: isOpen ? 'fit-content' : 0,
+      opacity: isOpen ? 1 : 0,
+      position: 'absolute',
+      backgroundColor: 'white',
+      width: '13.5%',
+      boxShadow: 'rgba(0, 0, 0, 0.14) 0px 8px 10px 1px, rgba(0, 0, 0, 0.12) 0px 3px 14px 2px, rgba(0, 0, 0, 0.2) 0px 5px 5px -3px',
+      borderRadius: '0px 0px 9px 9px',
+  });
+
 
     useEffect(()=>{
       setRowData(mainRowData)
       handleFilters()
-    },[mainRowData, activeFilter, sourceFValue, partnerFValue, endDate])
+    },[mainRowData, activeFilter, sourceFValue, partnerFValue, endDate, departmentFvalue])
 
 
     const getData = async ()=>{
@@ -100,7 +133,6 @@ const Clients = () => {
                 }
             );
             if(response.status === 200){
-                console.log(response.data)
                 setMainRowData(response.data)
                 setLoader(false)
             }
@@ -362,16 +394,121 @@ async function onGridReady(params) {
 
           <div className="d-flex">
 
+
+
           <Link onClick={exportToExcel} style={{
-          backgroundColor: 'transparent',
-          color: 'black',
-          borderColor: 'lightgray',
-          alignSelf: 'center',
-        }} className='btn btn-primary'>
+            backgroundColor: 'transparent',
+            color: 'black',
+            borderColor: 'lightgray',
+            alignSelf: 'center',
+          }} className='btn btn-primary mx-1'>
             Excel
           </Link>
 
-          <div style={{width: '260px'}} className='mx-4'>
+          <div className='mx-2' style={{
+              width: '11rem',
+              overflow: 'visible',
+              zIndex: '100',
+              alignSelf: 'center',
+              marginRight: '19px',
+        }}>
+                <div style={{
+                    width: '100%',     
+                    display: 'flex',
+                    alignItems: 'center',
+                    lineHeight: '1.5',
+                    fontSize: '1rem', 
+                    borderBottom: '1px solid #ced4da', 
+                    padding: '8px', 
+                    borderRadius: '0rem',
+                    cursor: 'pointer',
+                }} 
+                onClick={handleToggle}
+                >
+                        <div  style={{width: '100%'}} className='row'>
+                            <div className='col-10'>
+                                {departmentFvalue !== '' ? departmentFvalue : "Departments"}
+                            </div>
+                            <div style={{padding: '0px', textAlign: 'right',}} className='col-2'>
+                                <svg style={{width: '20px', stroke: 'rgb(123, 129, 144)'}} xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" ><path d="M7 10l5 5 5-5" stroke="#7b8190" stroke-width="2" fill="none"></path></svg>
+                            </div>
+                        </div>
+                </div>
+                <animated.div style={dropdownAnimation}>
+                    {isOpen && (
+                    <div >
+                        <div style={{padding: 10}}>
+                        
+                        {/*  */}
+                            <div onClick={()=>{setDepartmentFValue(''); handleToggle() }} style={{cursor: 'pointer'}} className='row recurringTask_task'>
+                                <div className='col-10'>
+                                    <p> All Departments </p>
+                                </div>
+                            </div>
+                           
+                        {/*  */}
+                            <div onClick={()=>{setDepartmentFValue('Bookkeeping'); handleToggle() }} style={{cursor: 'pointer'}} className='row recurringTask_task'>
+                                <div className='col-10'>
+                                    <p> Bookkeeping </p>
+                                </div>
+                            </div>
+                           
+                        {/*  */}
+                            <div onClick={()=>{setDepartmentFValue('Payroll'); handleToggle() }} style={{cursor: 'pointer'}} className='row recurringTask_task'>
+                                <div className='col-10'>
+                                    <p> Payroll </p>
+                                </div>
+                            </div>
+                           
+                        {/*  */}
+                            <div onClick={()=>{setDepartmentFValue('Vat Return'); handleToggle() }} style={{cursor: 'pointer'}} className='row recurringTask_task'>
+                                <div className='col-10'>
+                                    <p> Vat Return </p>
+                                </div>
+                            </div>
+                           
+                        {/*  */}
+                            <div onClick={()=>{setDepartmentFValue('Accounts'); handleToggle() }} style={{cursor: 'pointer'}} className='row recurringTask_task'>
+                                <div className='col-10'>
+                                    <p> Accounts </p>
+                                </div>
+                            </div>
+                           
+                        {/*  */}
+                            <div onClick={()=>{setDepartmentFValue('Personal Tax'); handleToggle() }} style={{cursor: 'pointer'}} className='row recurringTask_task'>
+                                <div className='col-10'>
+                                    <p> Personal Tax </p>
+                                </div>
+                            </div>
+                           
+                        {/*  */}
+                            <div onClick={()=>{setDepartmentFValue('Company Sec'); handleToggle() }} style={{cursor: 'pointer'}} className='row recurringTask_task'>
+                                <div className='col-10'>
+                                    <p> Company Sec </p>
+                                </div>
+                            </div>
+                           
+                        {/*  */}
+                            <div onClick={()=>{setDepartmentFValue('Address'); handleToggle() }} style={{cursor: 'pointer'}} className='row recurringTask_task'>
+                                <div className='col-10'>
+                                    <p> Address </p>
+                                </div>
+                            </div>
+                           
+                        {/*  */}
+                            <div onClick={()=>{setDepartmentFValue('Billing'); handleToggle() }} style={{cursor: 'pointer'}} className='row recurringTask_task'>
+                                <div className='col-10'>
+                                    <p> Billing </p>
+                                </div>
+                            </div>
+                           
+                        </div>
+                    </div>
+                    )}
+                </animated.div>
+            </div>
+
+          <div className='mx-1' style={{width: '260px'}} >
             <ReactDatePicker
             className='form-control text-center'
             placeholderText='Select Date Range'
