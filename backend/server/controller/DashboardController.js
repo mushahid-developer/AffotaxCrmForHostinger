@@ -787,6 +787,78 @@ exports.getDashboardData = async (req, res) => {
 
         // Department Due End
 
+        //Subscription Fee Graph
+
+        const SubscriptionFeeWeekly = await Jobsdb.aggregate([
+          {
+            $match: { job_name: "Billing"}
+          },
+          {
+            $match: { subscription: "Weekly"}
+          },
+          {
+            $group: {
+              _id: null,
+              totalFee: { $sum: { $toDouble: { $ifNull: ['$fee', 0] } } }
+            }
+          }
+        ]);
+
+
+        const SubscriptionFeeMonthly = await Jobsdb.aggregate([
+          {
+            $match: { job_name: "Billing"}
+          },
+          {
+            $match: { subscription: "Monthly"}
+          },
+          {
+            $group: {
+              _id: null,
+              totalFee: { $sum: { $toDouble: { $ifNull: ['$fee', 0] } } }
+            }
+          }
+        ]);
+
+
+        const SubscriptionFeeQuarterly = await Jobsdb.aggregate([
+          {
+            $match: { job_name: "Billing"}
+          },
+          {
+            $match: { subscription: "Quarterly"}
+          },
+          {
+            $group: {
+              _id: null,
+              totalFee: { $sum: { $toDouble: { $ifNull: ['$fee', 0] } } }
+            }
+          }
+        ]);
+
+
+        const SubscriptionFeeAnually = await Jobsdb.aggregate([
+          {
+            $match: { job_name: "Billing" }
+          },
+          {
+            $match: { subscription: "Yearly" }
+          },
+          {
+            $group: {
+              _id: null,
+              totalFee: { $sum: { $toDouble: { $ifNull: ['$fee', 0] } } }
+            }
+          }
+        ]);
+
+        const SubscriptionGraph = {
+          Weekly: SubscriptionFeeWeekly,
+          Monthly: SubscriptionFeeMonthly,
+          Quarterly: SubscriptionFeeQuarterly,
+          Anually: SubscriptionFeeAnually,
+        }
+
 
         // Partners and Sources Grpah Start
 
@@ -958,7 +1030,8 @@ exports.getDashboardData = async (req, res) => {
             Jobsdue,
             PartnersGraph,
             SourcesGraph,
-            ConstructionGraph
+            ConstructionGraph,
+            SubscriptionGraph
         }
         res.json(response);
     } catch (err) {

@@ -66,7 +66,7 @@ export default function Dashboard() {
   useEffect(()=>{
     if(dashboardData){
       setSelectedDate(new Date(`01/01/${dashboardData.clientsCount.selectedYear}`))
-      console.log(dashboardData.ConstructionGraph)
+      console.log(dashboardData)
     }
   }, [dashboardData])
   
@@ -442,6 +442,39 @@ const data9 = {
 };
 
 
+const options10 = {
+  responsive: true,
+  plugins: {
+    datalabels: {
+      display: true,
+      color: "black",
+      formatter: Math.round,
+    },
+    legend: {
+      position: 'top',
+    },
+    title: {
+      display: true,
+      text: 'Subscription Fee Graph',
+    },
+  },
+};
+
+
+
+const data10 = {
+  labels: ['Weekly', 'Monthly', 'Quarterly', 'Anually'],
+  datasets: [
+    {
+      label: `Fee`,
+      data: [`${dashboardData && dashboardData.SubscriptionGraph.Weekly[0] && dashboardData.SubscriptionGraph.Weekly[0].totalFee}`, `${dashboardData && dashboardData.SubscriptionGraph.Monthly[0] && dashboardData.SubscriptionGraph.Monthly[0].totalFee}`, `${dashboardData && dashboardData.SubscriptionGraph.Quarterly[0] && dashboardData.SubscriptionGraph.Quarterly[0].totalFee}`, `${dashboardData && dashboardData.SubscriptionGraph.Anually[0] && dashboardData.SubscriptionGraph.Anually[0].totalFee}`],
+      backgroundColor: '#b5b5b9',
+    },
+    
+  ],
+};
+
+
 
   useEffect(()=>{
     if(dashboardData) {
@@ -653,7 +686,7 @@ if(!loader)
             }
             
             {showHideCharts.departmentsOverDueGraph && 
-              <div className='col-6 mt-4'>
+              <div className='col-4 mt-4'>
                   <div style={{overflow: 'hidden', padding: '10px', backgroundColor: 'white'}}>
                     <Bar options={options4} plugins={[ChartDataLabels]} data={data4} />
                   </div>
@@ -661,9 +694,17 @@ if(!loader)
             }
             
             {showHideCharts.departmentsDueGraph && 
-              <div className='col-6 mt-4'>
+              <div className='col-4 mt-4'>
                   <div style={{overflow: 'hidden', padding: '10px', backgroundColor: 'white' }}>
                     <Bar options={options5} plugins={[ChartDataLabels]} data={data5} />
+                  </div>
+              </div>
+            }
+            
+            {showHideCharts.departmentsDueGraph && 
+              <div className='col-4 mt-4'>
+                  <div style={{overflow: 'hidden', padding: '10px', backgroundColor: 'white' }}>
+                    <Bar options={options10} plugins={[ChartDataLabels]} data={data10} />
                   </div>
               </div>
             }
