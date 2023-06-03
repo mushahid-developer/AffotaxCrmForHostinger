@@ -271,7 +271,7 @@ export default function Templates() {
             suppressInput: true 
           }
       },
-      { headerName: 'Template Name', field: 'name', flex:3 },
+      { headerName: 'Template Name', field: 'name', flex:1 },
       { 
         headerName: 'Description', 
         field: 'description', 
