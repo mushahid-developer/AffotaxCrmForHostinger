@@ -739,21 +739,21 @@ const Leads = () => {
 
                 <div className='col-2'>
                   <p>
-                    <span style={{fontWeight: "700"}}>11.05%</span> Conv.Invitation
+                    <span style={{fontWeight: "700"}}>{ ((+leadsSummary.invitation / (+leadsSummary.invitation + +leadsSummary.website + +leadsSummary.proposal)) * 100).toFixed(1) }%</span> Conv.Invitation
                   </p>
                 </div>
                 
 
                 <div className='col-2'>
                   <p>
-                    <span style={{fontWeight: "700"}}>7%</span> Conv.Proposal
+                    <span style={{fontWeight: "700"}}>{ ((+leadsSummary.proposal / (+leadsSummary.invitation + +leadsSummary.website + +leadsSummary.proposal)) * 100).toFixed(1) }%</span> Conv.Proposal
                   </p>
                 </div>
                 
 
                 <div className='col-2'>
                   <p>
-                    <span style={{fontWeight: "700"}}>9%</span> Conv.Website
+                    <span style={{fontWeight: "700"}}>{ ((+leadsSummary.website / (+leadsSummary.invitation + +leadsSummary.website + +leadsSummary.proposal)) * 100).toFixed(1) }%</span> Conv.Website
                   </p>
                 </div>
                 
