@@ -2,7 +2,7 @@ import React, { useState, useEffect, useMemo, useRef, useCallback } from 'react'
 import { AgGridReact } from 'ag-grid-react'; // the AG Grid React Component
 import 'ag-grid-community/styles/ag-grid.css'; // Core grid CSS, always needed
 import 'ag-grid-community/styles/ag-theme-alpine.css'; // Optional theme CSS
-import { Link } from 'react-router-dom';
+import { Link, useLocation, useNavigate } from 'react-router-dom';
 import { Store } from 'react-notifications-component';
 import Switch from 'react-js-switch';
 
@@ -25,6 +25,12 @@ var ActiveInactiveUrl = axiosURL.ActiveInactiveUrl;
 
 
 const Clients = () => {
+
+  const {state} = useLocation();
+  const location = useLocation();
+  const navigate = useNavigate();
+
+    const [stateVal, setStateVal] = useState(state);
 
     const [gridApi, setGridApi] = useState(null);
 
@@ -52,6 +58,8 @@ const Clients = () => {
     const handleFilters = async ()=>{
       // const roo = mainrowData; 
       var filteredArray = mainRowData
+
+      
 
       console.log(filteredArray)
 
@@ -85,9 +93,24 @@ const Clients = () => {
       if(filteredArray != undefined && partnerFValue != null && partnerFValue !== ""){
         filteredArray = await filteredArray.filter(obj => obj.partner && obj.partner === partnerFValue);
       }
-      
+
+      // Date Filter
+      if(stateVal){
+
+        filteredArray = filteredArray.filter(obj => {
+          if (obj.book_start_date) {
+            const dateObj = new Date(obj.book_start_date);
+            const objMonth = dateObj.toLocaleString('default', { month: 'short' });
+            const objYear = dateObj.getFullYear();
+            console.log(objMonth, objYear)
+            console.log(stateVal.monthName, stateVal.Year.trim())
+            return objMonth === stateVal.monthName && objYear === +stateVal.Year.trim();
+          }
+        });
+      }
+
       //Date Range Filter
-      if(filteredArray != undefined && startDate != null && startDate !== "" && endDate != null && endDate !== ""){
+      else if(filteredArray != undefined && startDate != null && startDate !== "" && endDate != null && endDate !== ""){
         filteredArray = filteredArray.filter(obj => {
           if (obj.book_start_date) {
             const bookStartDate = new Date(obj.book_start_date);
@@ -134,7 +157,7 @@ const Clients = () => {
     useEffect(()=>{
       setRowData(mainRowData)
       handleFilters()
-    },[mainRowData, activeFilter, sourceFValue, partnerFValue, endDate, departmentFvalue])
+    },[mainRowData, activeFilter, sourceFValue, partnerFValue, endDate, departmentFvalue, stateVal])
 
 
     const getData = async ()=>{
@@ -390,6 +413,23 @@ async function onGridReady(params) {
                 <option value="200">200</option>
               </select>
             </div>
+
+            {stateVal && 
+            <div  className='table-show-hide mx-2'>
+              <button type="button" onClick={()=>{navigate(location.pathname); setStateVal(null)}} 
+              className=' btn' 
+              style={{
+                  padding: '3px',
+                  backgroundColor: 'rgb(255, 255, 255)',
+                  border: '1px solid rgb(242, 244, 246)',
+                  color: 'rgb(89, 89, 89)',
+              }}>
+                  <svg xmlns="http://www.w3.org/2000/svg" width="30px" height="30px" viewBox="0 0 24 24" stroke='rgb(89, 89, 89)' fill="rgb(89, 89, 89)">
+                      <path d="M16 8L8 16M8.00001 8L16 16" stroke="#000000" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/>
+                  </svg>
+              </button>
+            </div>
+            }
 
 
             <div>

@@ -72,6 +72,19 @@ export default function Dashboard() {
   
 const options = {
   responsive: true,
+  onClick: (event, elements) => {
+    if (elements.length > 0) {
+      const elementIndex = elements[0].index;
+      const clickedOn = elements[0].element.$context['dataset'].names[elementIndex]
+      const year = elements[0].element.$context['dataset'].label
+
+      const dataToSend = {
+        monthName : clickedOn,
+        Year: year
+      }
+      navigate('/clients', { state: dataToSend });
+    }
+  },
   plugins: {
     datalabels: {
       display: true,
@@ -99,6 +112,7 @@ const data = {
         dashboardData ? dashboardData.clientsCount.janP: 0, dashboardData ? dashboardData.clientsCount.febP: 0, dashboardData ? dashboardData.clientsCount.marchP: 0, dashboardData ? dashboardData.clientsCount.aprP: 0, dashboardData ? dashboardData.clientsCount.mayP: 0, dashboardData ? dashboardData.clientsCount.juneP: 0, dashboardData ? dashboardData.clientsCount.julyP: 0, dashboardData ? dashboardData.clientsCount.augP: 0, dashboardData ? dashboardData.clientsCount.septP: 0, dashboardData ? dashboardData.clientsCount.octP: 0, dashboardData ? dashboardData.clientsCount.novP: 0, dashboardData ? dashboardData.clientsCount.decP: 0
       ],
       backgroundColor: '#b5b5b9',
+      names: ['Jan', 'Feb', 'Mar', 'April', 'May', 'June', 'July', 'Aug', 'Sept', 'Oct', 'Nov', 'Dec'],
     },
     {
       label: ` ${dashboardData && dashboardData.clientsCount.selectedYear}`,
@@ -106,6 +120,7 @@ const data = {
         dashboardData ? dashboardData.clientsCount.jan: 0, dashboardData ? dashboardData.clientsCount.feb: 0, dashboardData ? dashboardData.clientsCount.march: 0, dashboardData ? dashboardData.clientsCount.apr: 0, dashboardData ? dashboardData.clientsCount.may: 0, dashboardData ? dashboardData.clientsCount.june: 0, dashboardData ? dashboardData.clientsCount.july: 0, dashboardData ? dashboardData.clientsCount.aug: 0, dashboardData ? dashboardData.clientsCount.sept: 0, dashboardData ? dashboardData.clientsCount.oct: 0, dashboardData ? dashboardData.clientsCount.nov: 0, dashboardData ? dashboardData.clientsCount.dec: 0
       ],
       backgroundColor: '#67c160',
+      names: ['Jan', 'Feb', 'March', 'April', 'May', 'June', 'July', 'Aug', 'Sept', 'Oct', 'Nov', 'Dec'],
     },
     
   ],
