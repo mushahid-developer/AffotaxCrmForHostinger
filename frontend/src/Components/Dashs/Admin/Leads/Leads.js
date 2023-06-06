@@ -739,21 +739,21 @@ const Leads = () => {
 
                 <div className='col-2'>
                   <p>
-                    <span style={{fontWeight: "700"}}>{ ((+leadsSummary.invitation / (+leadsSummary.invitation + +leadsSummary.website + +leadsSummary.proposal)) * 100).toFixed(1) }%</span> Conv.Invitation
+                    <span style={{fontWeight: "700"}}>{ ((+leadsSummary.invitation / (+leadsSummary.invitation + +leadsSummary.website + +leadsSummary.proposal)) * 100).toFixed(1) }%</span> { activeFilter === "In-Progress" ? "Invitation" : activeFilter === "Won" ? " Conv.Invitation " : activeFilter === "Lost" && "Lost.Invitation"}
                   </p>
                 </div>
                 
 
                 <div className='col-2'>
                   <p>
-                    <span style={{fontWeight: "700"}}>{ ((+leadsSummary.proposal / (+leadsSummary.invitation + +leadsSummary.website + +leadsSummary.proposal)) * 100).toFixed(1) }%</span> Conv.Proposal
+                    <span style={{fontWeight: "700"}}>{ ((+leadsSummary.proposal / (+leadsSummary.invitation + +leadsSummary.website + +leadsSummary.proposal)) * 100).toFixed(1) }%</span> { activeFilter === "In-Progress" ? "Proposal" : activeFilter === "Won" ? " Conv.Proposal " : activeFilter === "Lost" && "Lost.Proposal"}
                   </p>
                 </div>
                 
 
                 <div className='col-2'>
                   <p>
-                    <span style={{fontWeight: "700"}}>{ ((+leadsSummary.website / (+leadsSummary.invitation + +leadsSummary.website + +leadsSummary.proposal)) * 100).toFixed(1) }%</span> Conv.Website
+                    <span style={{fontWeight: "700"}}>{ ((+leadsSummary.website / (+leadsSummary.invitation + +leadsSummary.website + +leadsSummary.proposal)) * 100).toFixed(1) }%</span> { activeFilter === "In-Progress" ? "Website" : activeFilter === "Won" ? " Conv.Website " : activeFilter === "Lost" && "Lost.Website"}
                   </p>
                 </div>
                 
