@@ -154,7 +154,7 @@ export default function AddClients() {
                 );
           if(response.status === 200)
           {  
-            setPreData(response.data);
+            setPreData(response.data.users);
             setLoader(false)
           }
           
@@ -1519,7 +1519,7 @@ else{
                                     type="text" 
                                     disabled
                                     placeholder="Department" 
-                                    value = "Billing"
+                                    value = "Subscription"
                                      />
                                 </Form.Group>
     
