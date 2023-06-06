@@ -394,7 +394,6 @@ const filter = async ()=>{
     billingOverDue
 }));
 
-console.log(departmentFvalue, statusFvalue)
 
   if(filteredArray != undefined){
     filteredArray = await filteredArray.filter(obj => obj.client_id && obj.client_id.isActive === true);
@@ -417,27 +416,38 @@ console.log(departmentFvalue, statusFvalue)
       if(obj.job_deadline && obj.year_end){
 
         const deadline = new Date(obj.job_deadline)
-        const yearEnd = new Date(obj.year_end)
+        const yearEnd = new Date(obj.work_deadline)
         var today = new Date();
+
+
+        if(((yearEnd.setHours(0, 0, 0, 0) <= today.setHours(0, 0, 0, 0)) && (deadline.setHours(0, 0, 0, 0) < today.setHours(0, 0, 0, 0))))
+          {
+            if(statusFvalue === "Overdue")
+            return obj;
+          }
+          else if (!(yearEnd.setHours(0, 0, 0, 0) < today.setHours(0, 0, 0, 0) && (deadline.setHours(0, 0, 0, 0) <= today.setHours(0, 0, 0, 0)))) {
+            if(statusFvalue === "Due")
+            return obj;
+          }
         
-        if ((deadline.setHours(0, 0, 0, 0) < today.setHours(0, 0, 0, 0) && (yearEnd.setHours(0, 0, 0, 0) < today.setHours(0, 0, 0, 0)))) {
-          if(statusFvalue === "Overdue")
-          return obj;
-        }
-        else if (deadline.setHours(0, 0, 0, 0) < today.setHours(0, 0, 0, 0))  {
-          if(statusFvalue === "Overdue")
-          return obj;
-        }
-        else if(((yearEnd.setHours(0, 0, 0, 0) <= today.setHours(0, 0, 0, 0)) && !(deadline.setHours(0, 0, 0, 0) <= today.setHours(0, 0, 0, 0))))
-        {
-          if(statusFvalue === "Due")
-          return obj;
-        }
-        else if(( (deadline.setHours(0, 0, 0, 0) === today.setHours(0, 0, 0, 0))))
-        {
-          if(statusFvalue === "Due")
-          return obj;
-        }
+        // if ((deadline.setHours(0, 0, 0, 0) < today.setHours(0, 0, 0, 0) && (yearEnd.setHours(0, 0, 0, 0) < today.setHours(0, 0, 0, 0)))) {
+        //   if(statusFvalue === "Overdue")
+        //   return obj;
+        // }
+        // else if (deadline.setHours(0, 0, 0, 0) < today.setHours(0, 0, 0, 0))  {
+        //   if(statusFvalue === "Overdue")
+        //   return obj;
+        // }
+        // else if(((yearEnd.setHours(0, 0, 0, 0) <= today.setHours(0, 0, 0, 0)) && !(deadline.setHours(0, 0, 0, 0) <= today.setHours(0, 0, 0, 0))))
+        // {
+        //   if(statusFvalue === "Due")
+        //   return obj;
+        // }
+        // else if(( (deadline.setHours(0, 0, 0, 0) === today.setHours(0, 0, 0, 0))))
+        // {
+        //   if(statusFvalue === "Due")
+        //   return obj;
+        // }
       }
     });
     
@@ -1130,7 +1140,6 @@ useEffect(()=>{
       editable: false,
       valueGetter: p => {
         const deadline = new Date(p.data.job_deadline)
-        console.log(p.data.job_deadline)
         const yearEnd = new Date(p.data.work_deadline)
         var today = new Date();
 
