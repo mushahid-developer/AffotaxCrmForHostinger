@@ -420,34 +420,16 @@ const filter = async ()=>{
         var today = new Date();
 
 
-        if(((yearEnd.setHours(0, 0, 0, 0) <= today.setHours(0, 0, 0, 0)) && (deadline.setHours(0, 0, 0, 0) < today.setHours(0, 0, 0, 0))))
+        if(((yearEnd.setHours(0, 0, 0, 0) < today.setHours(0, 0, 0, 0)) && (deadline.setHours(0, 0, 0, 0) < today.setHours(0, 0, 0, 0))))
           {
             if(statusFvalue === "Overdue")
             return obj;
           }
-          else if (!(yearEnd.setHours(0, 0, 0, 0) < today.setHours(0, 0, 0, 0) && (deadline.setHours(0, 0, 0, 0) <= today.setHours(0, 0, 0, 0)))) {
+          else if (!(yearEnd.setHours(0, 0, 0, 0) < today.setHours(0, 0, 0, 0) && (deadline.setHours(0, 0, 0, 0) < today.setHours(0, 0, 0, 0)))) {
             if(statusFvalue === "Due")
             return obj;
           }
         
-        // if ((deadline.setHours(0, 0, 0, 0) < today.setHours(0, 0, 0, 0) && (yearEnd.setHours(0, 0, 0, 0) < today.setHours(0, 0, 0, 0)))) {
-        //   if(statusFvalue === "Overdue")
-        //   return obj;
-        // }
-        // else if (deadline.setHours(0, 0, 0, 0) < today.setHours(0, 0, 0, 0))  {
-        //   if(statusFvalue === "Overdue")
-        //   return obj;
-        // }
-        // else if(((yearEnd.setHours(0, 0, 0, 0) <= today.setHours(0, 0, 0, 0)) && !(deadline.setHours(0, 0, 0, 0) <= today.setHours(0, 0, 0, 0))))
-        // {
-        //   if(statusFvalue === "Due")
-        //   return obj;
-        // }
-        // else if(( (deadline.setHours(0, 0, 0, 0) === today.setHours(0, 0, 0, 0))))
-        // {
-        //   if(statusFvalue === "Due")
-        //   return obj;
-        // }
       }
     });
     
@@ -1148,11 +1130,11 @@ useEffect(()=>{
           return " "
         }
         else{
-          if(((yearEnd.setHours(0, 0, 0, 0) <= today.setHours(0, 0, 0, 0)) && (deadline.setHours(0, 0, 0, 0) < today.setHours(0, 0, 0, 0))))
+          if(((yearEnd.setHours(0, 0, 0, 0) < today.setHours(0, 0, 0, 0)) && (deadline.setHours(0, 0, 0, 0) < today.setHours(0, 0, 0, 0))))
           {
             return "Overdue"
           }
-          else if (!(yearEnd.setHours(0, 0, 0, 0) < today.setHours(0, 0, 0, 0) && (deadline.setHours(0, 0, 0, 0) <= today.setHours(0, 0, 0, 0)))) {
+          else if (!(yearEnd.setHours(0, 0, 0, 0) < today.setHours(0, 0, 0, 0) && (deadline.setHours(0, 0, 0, 0) < today.setHours(0, 0, 0, 0)))) {
             return "Due";
           }
 

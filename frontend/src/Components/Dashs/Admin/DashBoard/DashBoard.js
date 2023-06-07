@@ -120,7 +120,7 @@ const data = {
         dashboardData ? dashboardData.clientsCount.jan: 0, dashboardData ? dashboardData.clientsCount.feb: 0, dashboardData ? dashboardData.clientsCount.march: 0, dashboardData ? dashboardData.clientsCount.apr: 0, dashboardData ? dashboardData.clientsCount.may: 0, dashboardData ? dashboardData.clientsCount.june: 0, dashboardData ? dashboardData.clientsCount.july: 0, dashboardData ? dashboardData.clientsCount.aug: 0, dashboardData ? dashboardData.clientsCount.sept: 0, dashboardData ? dashboardData.clientsCount.oct: 0, dashboardData ? dashboardData.clientsCount.nov: 0, dashboardData ? dashboardData.clientsCount.dec: 0
       ],
       backgroundColor: '#67c160',
-      names: ['Jan', 'Feb', 'March', 'April', 'May', 'June', 'July', 'Aug', 'Sept', 'Oct', 'Nov', 'Dec'],
+      names: ['Jan', 'Feb', 'Mar', 'Apr', 'May', 'Jun', 'Jul', 'Aug', 'Sept', 'Oct', 'Nov', 'Dec'],
     },
     
   ],
