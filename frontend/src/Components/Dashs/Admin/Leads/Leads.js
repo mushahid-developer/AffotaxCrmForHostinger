@@ -785,7 +785,6 @@ const Leads = () => {
                 paginationPageSize = {25}
                 suppressDragLeaveHidesColumns={true}
                 editType={'fullRow'}
-                // onCellValueChanged={onCellValueChanged}
                 onRowValueChanged={onRowValueChanged}
                 frameworkComponents={frameworkComponents}
             />

@@ -12,6 +12,7 @@ const QuickNotesController = require('../controller/QuickNotesController')
 const SalesController = require('../controller/SalesController')
 const ConstructionController = require('../controller/ConstructionController')
 const TemplateController = require('../controller/TemplateController')
+const GoalsController = require('../controller/GoalsController')
 
 const authMiddleware = require('../middlewares/authMiddleware');
 const { addOneChartOfAccounts, getAllChartOfAccounts } = require('../controller/ChartOfAccountsController');
@@ -135,5 +136,9 @@ route.post('/template/edit/one/:id', TemplateController.EditOneTemplate)
 route.get('/template/delete/one/:id', TemplateController.DeleteOneTemplate)
 route.get('/template/copy/one/:id', TemplateController.CopyOneTemplate)
 
+//Goals
+route.post('/goals/add/one', GoalsController.addGoal)
+route.get('/goals/get/all', GoalsController.getAllGoal)
+route.post('/goals/edit/one/:id', GoalsController.editGoal)
 
 module.exports = route

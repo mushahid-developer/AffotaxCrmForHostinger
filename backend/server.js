@@ -3,10 +3,7 @@ const express = require("express");
 const dotenv = require('dotenv');
 const morgan = require('morgan');
 const bodyParser = require('body-parser');
-const path = require("path");
-
-var cors = require('cors');
-
+var cors = require('cors')
 
 // Import MongoDb Connection file
 const connectDB = require('./server/database/connection');
@@ -17,17 +14,14 @@ require('./server/controller/RecurringTaskPing');
 // initialization App
 const app = express();
 
-//Setting Evn File Path
-const envPath = path.resolve(__dirname, '../config.env');
-
 // Setting Port Number
-dotenv.config({ path: envPath });
+dotenv.config({path:'config.env'});
 const PORT = process.env.PORT || 5000;
 
 // Mongo DB Connection
 connectDB();
 
-// Json Parsing
+// // Json Parsing
 app.use(bodyParser.json());
 
 // Cors
@@ -39,11 +33,21 @@ app.use(morgan('tiny'));
 // Load Routes
 app.use('/api', require('./server/routes/routes'));
 
-const dirnamee = path.resolve();
-app.use(express.static(path.join(dirnamee, "../frontend/build")));
-app.get("*", (req, res) =>
-  res.sendFile(path.join(dirnamee, "../frontend/build/index.html"))
-);
+if ( process.env.NODE_ENV == "production"){
+    app.use(express.static("client/build"));
+    const path = require("path");
+    app.get("*", (req, res) => {
+        res.sendFile(path.resolve(__dirname, 'client', 'build', 'index.html'));
+    })
+}
+
+
+app.get('*', function (req, res) {
+    res.send("404 Not Found");
+});
+
+
+
 
 
 

@@ -425,7 +425,7 @@ const filter = async ()=>{
             if(statusFvalue === "Overdue")
             return obj;
           }
-          else if (!(yearEnd.setHours(0, 0, 0, 0) < today.setHours(0, 0, 0, 0) && (deadline.setHours(0, 0, 0, 0) < today.setHours(0, 0, 0, 0)))) {
+          else if (!(yearEnd.setHours(0, 0, 0, 0) > today.setHours(0, 0, 0, 0) && (deadline.setHours(0, 0, 0, 0) > today.setHours(0, 0, 0, 0)))) {
             if(statusFvalue === "Due")
             return obj;
           }
@@ -1134,8 +1134,10 @@ useEffect(()=>{
           {
             return "Overdue"
           }
-          else if (!(yearEnd.setHours(0, 0, 0, 0) < today.setHours(0, 0, 0, 0) && (deadline.setHours(0, 0, 0, 0) < today.setHours(0, 0, 0, 0)))) {
+          else if (!(yearEnd.setHours(0, 0, 0, 0) > today.setHours(0, 0, 0, 0) && (deadline.setHours(0, 0, 0, 0) > today.setHours(0, 0, 0, 0)))) {
             return "Due";
+          } else {
+            return "";
           }
 
         }

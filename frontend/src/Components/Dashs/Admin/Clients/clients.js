@@ -116,7 +116,6 @@ const Clients = () => {
             const bookStartDate = new Date(obj.book_start_date);
             const startDateObj = new Date(startDate);
             const endDateObj = new Date(endDate);
-            console.log(bookStartDate, startDateObj, endDateObj)
             return bookStartDate >= startDateObj && bookStartDate <= endDateObj;
           }
           return false;

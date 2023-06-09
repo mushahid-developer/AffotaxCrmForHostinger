@@ -26,6 +26,7 @@ import PublicDash from "../Dashs/Admin/DashBoard/PublicDash";
 import Construction from "../Dashs/Admin/Construction/Construction";
 import Templates from "../Dashs/Admin/Templates/Templates";
 import Subscription from "../Dashs/Admin/Subscription/Subscription";
+import Goals from "../Dashs/Admin/Goals/Goals";
 
 export default function AdminRoutes(props) {
 
@@ -76,6 +77,7 @@ export default function AdminRoutes(props) {
                   <Route path="/hr/attendance" element = {<Attendance />}></Route>
                   <Route path="/construction" element = {<Construction />}></Route>
                   <Route path="/templates" element = {<Templates />}></Route>
+                  <Route path="/goals" element = {<Goals />}></Route>
                 </Routes>
                 </div>
               </div>
