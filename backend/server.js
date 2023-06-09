@@ -22,7 +22,7 @@ app.use('/api', require('./server/routes/routes'));
 
     app.use(express.static("../frontend/build"));
     app.get("*", (req, res) => {
-        res.sendFile('../frontend', 'build', 'index.html');
+        res.sendFile('../frontend/build/index.html');
     })
 
 app.get('*', function (req, res) {
