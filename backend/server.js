@@ -20,10 +20,9 @@ app.use(cors());
 app.use(morgan('tiny'));
 app.use('/api', require('./server/routes/routes'));
 
-const __dirrname = path.resolve();
-app.use(express.static(path.join(__dirrname, "../frontend/build")));
+app.use(express.static(path.join(__dirname, "../frontend/build")));
 app.get("*", (req, res) =>
-  res.sendFile(path.join(__dirrname, "../frontend/build/index.html"))
+  res.sendFile(path.join(__dirname, "../frontend/build/index.html"))
 );
 
 app.get('*', function (req, res) {
