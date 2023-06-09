@@ -1,7 +1,7 @@
 //BaseUrl
 export const BaseUrl = 'https://crm.affotax.com/api/'; // Live
 // export const BaseUrl = 'http://192.168.10.16:7878/api/'; // Local
-// 192.168.10.16
+// 192.168.10.16 
 
 //Auth / Users
 export const Login = 'login';
