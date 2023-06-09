@@ -20,13 +20,11 @@ app.use(cors());
 app.use(morgan('tiny'));
 app.use('/api', require('./server/routes/routes'));
 
-if ( process.env.NODE_ENV == "production"){
     app.use(express.static("../frontend/build"));
     const path = require("path");
     app.get("*", (req, res) => {
         res.sendFile(path.resolve(__dirname, '../frontend', 'build', 'index.html'));
     })
-}
 
 app.get('*', function (req, res) {
   res.send("404 Not Found");
