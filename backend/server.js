@@ -20,9 +20,10 @@ app.use(cors());
 app.use(morgan('tiny'));
 app.use('/api', require('./server/routes/routes'));
 
-app.get("*", (req, res) => {
-    res.sendFile(path.join(__dirname, "../frontend/build/index.html"));
-  });
+pp.use(express.static(path.join(__dirname, "../frontend/build")));
+app.get("*", (req, res) =>
+  res.sendFile(path.join(__dirname, "../frontend/build/index.html"))
+);
 
 app.get('*', function (req, res) {
   res.send("404 Not Found");
