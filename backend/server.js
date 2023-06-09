@@ -35,7 +35,7 @@ app.use('/api', require('./server/routes/routes'));
 
 
 app.get("*", (req, res) => {
-    res.sendFile(path.join(__dirname, "client/build", "index.html"));
+    res.sendFile(path.join(__dirname, "../frontend/build", "index.html"));
   });
   
 
