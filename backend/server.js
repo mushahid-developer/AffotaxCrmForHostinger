@@ -15,7 +15,7 @@ require('./server/controller/RecurringTaskPing');
 const app = express();
 
 // Setting Port Number
-dotenv.config('../config.env');
+dotenv.config({path:'../config.env'});
 const PORT = process.env.PORT || 5000;
 
 // Mongo DB Connection
@@ -35,7 +35,7 @@ app.use('/api', require('./server/routes/routes'));
 
 
 app.get("*", (req, res) => {
-    res.sendFile(path.join("../frontend/build", "index.html"));
+    res.sendFile(path.join(__dirname, "../frontend/build", "index.html"));
   });
   
 
