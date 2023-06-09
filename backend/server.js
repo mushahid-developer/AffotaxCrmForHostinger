@@ -21,8 +21,8 @@ app.use(morgan('tiny'));
 app.use('/api', require('./server/routes/routes'));
 
 app.get("*", (req, res) => {
-  res.sendFile( {path: "../frontend/build/index.html"});
-});
+    res.sendFile(path.join(__dirname, "../frontend/build/index.html"));
+  });
 
 app.get('*', function (req, res) {
   res.send("404 Not Found");
