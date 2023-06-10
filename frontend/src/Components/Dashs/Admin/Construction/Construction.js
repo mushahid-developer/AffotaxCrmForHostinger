@@ -11,6 +11,7 @@ import { Button, Form, Modal } from 'react-bootstrap';
 import { Link } from 'react-router-dom';
 import DropdownFilter from '../../../Jobs/JobPlaning/DropdownFilter';
 import SelectUnSelectFilter from '../../../Jobs/JobPlaning/SelectUnSelectFilter';
+import DropdownFilterWithDate from '../../../Jobs/JobPlaning/DropDownFilterWithDate';
 
 import { saveAs } from 'file-saver';
 import * as XLSX from 'xlsx';
@@ -55,6 +56,14 @@ const Construction = () => {
     const [jHolderFvalue, setJHolderFvalue] = useState(null);
     const [ManagerFvalue, setManagerFvalue] = useState(null);
     const [filterFvalue, setFilterFvalue] = useState('Open');
+
+    const [jobDateFvalueDate, setJobDateFvalueDate] = useState('');
+    const [jobDateFvalue, setJobDateFvalue] = useState('');
+    const [deadlineFvalueDate, setDeadlineFvalueDate] = useState('');
+    const [deadlineFvalue, setDeadlineFvalue] = useState('');
+    const [startDateFvalueDate, setStartDateFvalueDate] = useState('');
+    const [startDateFvalue, setStartDateFvalue] = useState('');
+
 
     const [usersForFilter, setUsersForFilter] = useState([]);
 
@@ -268,6 +277,358 @@ const Construction = () => {
         filteredArray = filteredArray.filter(obj => obj.Manager && obj.Manager.name === ManagerFvalue);
       }
 
+    //Job Date Filter
+    if(jobDateFvalue){
+
+      // Year End Expired Filter
+      if(filteredArray != undefined && jobDateFvalue != null && jobDateFvalue !== "" && jobDateFvalue === "Expired"){
+        filteredArray = await filteredArray.filter(obj => {
+          // obj.manager_id && obj.manager_id.name === cManagerFvalue
+          const today = new Date()
+          const deadline = new Date(obj.JobDate)
+          if(obj.JobDate && obj.JobDate !== 'Invalid Date'){
+            if(!(deadline.setHours(0, 0, 0, 0) >= today.setHours(0, 0, 0, 0))){
+              return obj;
+            }
+          }
+        });
+      }
+
+      // Year End Today Filter
+      if(filteredArray != undefined && jobDateFvalue != null && jobDateFvalue !== "" && jobDateFvalue === "Today"){
+        filteredArray = await filteredArray.filter(obj => {
+          // obj.manager_id && obj.manager_id.name === cManagerFvalue
+          const today = new Date()
+          const deadline = new Date(obj.JobDate)
+          if(obj.JobDate && obj.JobDate !== 'Invalid Date'){
+            if((deadline.setHours(0, 0, 0, 0) === today.setHours(0, 0, 0, 0))){
+              return obj;
+            }
+          }
+        });
+      }
+
+      // Year End Tomorrow Filter
+      if(filteredArray != undefined && jobDateFvalue != null && jobDateFvalue !== "" && jobDateFvalue === "Tomorrow"){
+        filteredArray = await filteredArray.filter(obj => {
+          // obj.manager_id && obj.manager_id.name === cManagerFvalue
+          const today = new Date()
+          const tomorrow = new Date(today);
+          tomorrow.setDate(tomorrow.getDate() + 1);
+          const deadline = new Date(obj.JobDate)
+          if(obj.JobDate && obj.JobDate !== 'Invalid Date'){
+            if((deadline.setHours(0, 0, 0, 0) === tomorrow.setHours(0, 0, 0, 0))){
+              return obj;
+            }
+          }
+        });
+      }
+
+
+      // Year End 7 days Filter
+      if(filteredArray != undefined && jobDateFvalue != null && jobDateFvalue !== "" && jobDateFvalue === "In 7 days"){
+        filteredArray = await filteredArray.filter(obj => {
+          // obj.manager_id && obj.manager_id.name === cManagerFvalue
+          const today = new Date()
+          const deadline = new Date(obj.JobDate)
+          const deadlineNextSevenDays = new Date(today.getTime() + (7 * 24 * 60 * 60 * 1000))
+          if(obj.JobDate && obj.JobDate !== 'Invalid Date'){
+            if((deadline >= today.setHours(0, 0, 0, 0)) && (deadline <= deadlineNextSevenDays.setHours(0, 0, 0, 0))){
+              return obj;
+            }
+          }
+        });
+      }
+
+      // Year End 15 days Filter
+      if(filteredArray != undefined && jobDateFvalue != null && jobDateFvalue !== "" && jobDateFvalue === "In 15 days"){
+        filteredArray = await filteredArray.filter(obj => {
+          // obj.manager_id && obj.manager_id.name === cManagerFvalue
+          const today = new Date()
+          const deadline = new Date(obj.JobDate)
+          const deadlineNextSevenDays = new Date(today.getTime() + (15 * 24 * 60 * 60 * 1000))
+          if(obj.JobDate && obj.JobDate !== 'Invalid Date'){
+            if((deadline >= today.setHours(0, 0, 0, 0)) && (deadline <= deadlineNextSevenDays.setHours(0, 0, 0, 0))){
+              return obj;
+            }
+          }
+        });
+      }
+      
+      // Year End Month Wise Filter
+      if(filteredArray != undefined && jobDateFvalue != null && jobDateFvalue !== "" && jobDateFvalue === "Month Wise"){
+        filteredArray = await filteredArray.filter(obj => {
+          // obj.manager_id && obj.manager_id.name === cManagerFvalue
+          // const today = new Date()
+          var today = new Date(jobDateFvalueDate)
+          const deadline = new Date(obj.JobDate)
+          if (obj.JobDate && obj.JobDate !== 'Invalid Date') {
+            const todayMonth = today.getMonth();
+            const todayYear = today.getFullYear();
+            const deadlineMonth = deadline.getMonth();
+            const deadlineYear = deadline.getFullYear();
+          
+            if ((deadlineYear === todayYear && deadlineMonth === todayMonth)) {
+              return obj;
+            }
+          }
+        });
+      }
+      
+      //Year End Custom Filter
+      if(filteredArray != undefined && jobDateFvalue != null && jobDateFvalue !== "" && jobDateFvalue === "Custom"){
+        filteredArray = await filteredArray.filter(obj => {
+          var cellDate = obj.JobDate !== "" && new Date(obj.JobDate);
+          var filterDate = new Date(jobDateFvalueDate)
+          if(cellDate && cellDate !== 'Invalid Date' && filterDate !== 'Invalid Date'){
+            // compare dates
+            if (cellDate.setHours(0, 0, 0, 0) <= filterDate.setHours(0, 0, 0, 0)) {
+              return 1; //exclude
+            } else if (cellDate.setHours(0, 0, 0, 0) > filterDate.setHours(0, 0, 0, 0)) {
+              return 0; //include 
+            } else {
+              return 1; //-1 include as exact match
+            }
+          }
+        });
+      }
+    }
+
+    //Deadline Filter
+    if(deadlineFvalue){
+
+      // Year End Expired Filter
+      if(filteredArray != undefined && deadlineFvalue != null && deadlineFvalue !== "" && deadlineFvalue === "Expired"){
+        filteredArray = await filteredArray.filter(obj => {
+          // obj.manager_id && obj.manager_id.name === cManagerFvalue
+          const today = new Date()
+          const deadline = new Date(obj.completationDate)
+          if(obj.completationDate && obj.completationDate !== 'Invalid Date'){
+            if(!(deadline.setHours(0, 0, 0, 0) >= today.setHours(0, 0, 0, 0))){
+              return obj;
+            }
+          }
+        });
+      }
+
+      // Year End Today Filter
+      if(filteredArray != undefined && deadlineFvalue != null && deadlineFvalue !== "" && deadlineFvalue === "Today"){
+        filteredArray = await filteredArray.filter(obj => {
+          // obj.manager_id && obj.manager_id.name === cManagerFvalue
+          const today = new Date()
+          const deadline = new Date(obj.completationDate)
+          if(obj.completationDate && obj.completationDate !== 'Invalid Date'){
+            if((deadline.setHours(0, 0, 0, 0) === today.setHours(0, 0, 0, 0))){
+              return obj;
+            }
+          }
+        });
+      }
+
+      // Year End Tomorrow Filter
+      if(filteredArray != undefined && deadlineFvalue != null && deadlineFvalue !== "" && deadlineFvalue === "Tomorrow"){
+        filteredArray = await filteredArray.filter(obj => {
+          // obj.manager_id && obj.manager_id.name === cManagerFvalue
+          const today = new Date()
+          const tomorrow = new Date(today);
+          tomorrow.setDate(tomorrow.getDate() + 1);
+          const deadline = new Date(obj.completationDate)
+          if(obj.completationDate && obj.completationDate !== 'Invalid Date'){
+            if((deadline.setHours(0, 0, 0, 0) === tomorrow.setHours(0, 0, 0, 0))){
+              return obj;
+            }
+          }
+        });
+      }
+
+
+      // Year End 7 days Filter
+      if(filteredArray != undefined && deadlineFvalue != null && deadlineFvalue !== "" && deadlineFvalue === "In 7 days"){
+        filteredArray = await filteredArray.filter(obj => {
+          // obj.manager_id && obj.manager_id.name === cManagerFvalue
+          const today = new Date()
+          const deadline = new Date(obj.completationDate)
+          const deadlineNextSevenDays = new Date(today.getTime() + (7 * 24 * 60 * 60 * 1000))
+          if(obj.completationDate && obj.completationDate !== 'Invalid Date'){
+            if((deadline >= today.setHours(0, 0, 0, 0)) && (deadline <= deadlineNextSevenDays.setHours(0, 0, 0, 0))){
+              return obj;
+            }
+          }
+        });
+      }
+
+      // Year End 15 days Filter
+      if(filteredArray != undefined && deadlineFvalue != null && deadlineFvalue !== "" && deadlineFvalue === "In 15 days"){
+        filteredArray = await filteredArray.filter(obj => {
+          // obj.manager_id && obj.manager_id.name === cManagerFvalue
+          const today = new Date()
+          const deadline = new Date(obj.completationDate)
+          const deadlineNextSevenDays = new Date(today.getTime() + (15 * 24 * 60 * 60 * 1000))
+          if(obj.completationDate && obj.completationDate !== 'Invalid Date'){
+            if((deadline >= today.setHours(0, 0, 0, 0)) && (deadline <= deadlineNextSevenDays.setHours(0, 0, 0, 0))){
+              return obj;
+            }
+          }
+        });
+      }
+      
+      // Year End Month Wise Filter
+      if(filteredArray != undefined && deadlineFvalue != null && deadlineFvalue !== "" && deadlineFvalue === "Month Wise"){
+        filteredArray = await filteredArray.filter(obj => {
+          // obj.manager_id && obj.manager_id.name === cManagerFvalue
+          // const today = new Date()
+          var today = new Date(deadlineFvalueDate)
+          const deadline = new Date(obj.completationDate)
+          if (obj.completationDate && obj.completationDate !== 'Invalid Date') {
+            const todayMonth = today.getMonth();
+            const todayYear = today.getFullYear();
+            const deadlineMonth = deadline.getMonth();
+            const deadlineYear = deadline.getFullYear();
+          
+            if ((deadlineYear === todayYear && deadlineMonth === todayMonth)) {
+              return obj;
+            }
+          }
+        });
+      }
+      
+      //Year End Custom Filter
+      if(filteredArray != undefined && deadlineFvalue != null && deadlineFvalue !== "" && deadlineFvalue === "Custom"){
+        filteredArray = await filteredArray.filter(obj => {
+          var cellDate = obj.completationDate !== "" && new Date(obj.completationDate);
+          var filterDate = new Date(deadlineFvalueDate)
+          if(cellDate && cellDate !== 'Invalid Date' && filterDate !== 'Invalid Date'){
+            // compare dates
+            if (cellDate.setHours(0, 0, 0, 0) <= filterDate.setHours(0, 0, 0, 0)) {
+              return 1; //exclude
+            } else if (cellDate.setHours(0, 0, 0, 0) > filterDate.setHours(0, 0, 0, 0)) {
+              return 0; //include 
+            } else {
+              return 1; //-1 include as exact match
+            }
+          }
+        });
+      }
+    }
+
+    //StartDate Filter
+    if(startDateFvalue){
+
+      // Year End Expired Filter
+      if(filteredArray != undefined && startDateFvalue != null && startDateFvalue !== "" && startDateFvalue === "Expired"){
+        filteredArray = await filteredArray.filter(obj => {
+          // obj.manager_id && obj.manager_id.name === cManagerFvalue
+          const today = new Date()
+          const deadline = new Date(obj.startDate)
+          if(obj.startDate && obj.startDate !== 'Invalid Date'){
+            if(!(deadline.setHours(0, 0, 0, 0) >= today.setHours(0, 0, 0, 0))){
+              return obj;
+            }
+          }
+        });
+      }
+
+      // Year End Today Filter
+      if(filteredArray != undefined && startDateFvalue != null && startDateFvalue !== "" && startDateFvalue === "Today"){
+        filteredArray = await filteredArray.filter(obj => {
+          // obj.manager_id && obj.manager_id.name === cManagerFvalue
+          const today = new Date()
+          const deadline = new Date(obj.startDate)
+          if(obj.startDate && obj.startDate !== 'Invalid Date'){
+            if((deadline.setHours(0, 0, 0, 0) === today.setHours(0, 0, 0, 0))){
+              return obj;
+            }
+          }
+        });
+      }
+
+      // Year End Tomorrow Filter
+      if(filteredArray != undefined && startDateFvalue != null && startDateFvalue !== "" && startDateFvalue === "Tomorrow"){
+        filteredArray = await filteredArray.filter(obj => {
+          // obj.manager_id && obj.manager_id.name === cManagerFvalue
+          const today = new Date()
+          const tomorrow = new Date(today);
+          tomorrow.setDate(tomorrow.getDate() + 1);
+          const deadline = new Date(obj.startDate)
+          if(obj.startDate && obj.startDate !== 'Invalid Date'){
+            if((deadline.setHours(0, 0, 0, 0) === tomorrow.setHours(0, 0, 0, 0))){
+              return obj;
+            }
+          }
+        });
+      }
+
+
+      // Year End 7 days Filter
+      if(filteredArray != undefined && startDateFvalue != null && startDateFvalue !== "" && startDateFvalue === "In 7 days"){
+        filteredArray = await filteredArray.filter(obj => {
+          // obj.manager_id && obj.manager_id.name === cManagerFvalue
+          const today = new Date()
+          const deadline = new Date(obj.startDate)
+          const deadlineNextSevenDays = new Date(today.getTime() + (7 * 24 * 60 * 60 * 1000))
+          if(obj.startDate && obj.startDate !== 'Invalid Date'){
+            if((deadline >= today.setHours(0, 0, 0, 0)) && (deadline <= deadlineNextSevenDays.setHours(0, 0, 0, 0))){
+              return obj;
+            }
+          }
+        });
+      }
+
+      // Year End 15 days Filter
+      if(filteredArray != undefined && startDateFvalue != null && startDateFvalue !== "" && startDateFvalue === "In 15 days"){
+        filteredArray = await filteredArray.filter(obj => {
+          // obj.manager_id && obj.manager_id.name === cManagerFvalue
+          const today = new Date()
+          const deadline = new Date(obj.startDate)
+          const deadlineNextSevenDays = new Date(today.getTime() + (15 * 24 * 60 * 60 * 1000))
+          if(obj.startDate && obj.startDate !== 'Invalid Date'){
+            if((deadline >= today.setHours(0, 0, 0, 0)) && (deadline <= deadlineNextSevenDays.setHours(0, 0, 0, 0))){
+              return obj;
+            }
+          }
+        });
+      }
+      
+      // Year End Month Wise Filter
+      if(filteredArray != undefined && startDateFvalue != null && startDateFvalue !== "" && startDateFvalue === "Month Wise"){
+        filteredArray = await filteredArray.filter(obj => {
+          // obj.manager_id && obj.manager_id.name === cManagerFvalue
+          // const today = new Date()
+          var today = new Date(startDateFvalueDate)
+          const deadline = new Date(obj.startDate)
+          if (obj.startDate && obj.startDate !== 'Invalid Date') {
+            const todayMonth = today.getMonth();
+            const todayYear = today.getFullYear();
+            const deadlineMonth = deadline.getMonth();
+            const deadlineYear = deadline.getFullYear();
+          
+            if ((deadlineYear === todayYear && deadlineMonth === todayMonth)) {
+              return obj;
+            }
+          }
+        });
+      }
+      
+      //Year End Custom Filter
+      if(filteredArray != undefined && startDateFvalue != null && startDateFvalue !== "" && startDateFvalue === "Custom"){
+        filteredArray = await filteredArray.filter(obj => {
+          var cellDate = obj.startDate !== "" && new Date(obj.startDate);
+          var filterDate = new Date(startDateFvalueDate)
+          if(cellDate && cellDate !== 'Invalid Date' && filterDate !== 'Invalid Date'){
+            // compare dates
+            if (cellDate.setHours(0, 0, 0, 0) <= filterDate.setHours(0, 0, 0, 0)) {
+              return 1; //exclude
+            } else if (cellDate.setHours(0, 0, 0, 0) > filterDate.setHours(0, 0, 0, 0)) {
+              return 0; //include 
+            } else {
+              return 1; //-1 include as exact match
+            }
+          }
+        });
+      }
+    }
+
+
       if(filteredArray){
         var summ = 0;
         filteredArray.forEach((item) => {
@@ -285,7 +646,7 @@ const Construction = () => {
     useEffect(()=>{
       // setRowData(mainRowData)
       filter()
-    }, [mainRowData, statusFvalue, projectFvalue, jHolderFvalue, ManagerFvalue, filterFvalue])
+    }, [mainRowData, statusFvalue, projectFvalue, jHolderFvalue, ManagerFvalue, filterFvalue, jobDateFvalue, jobDateFvalueDate, deadlineFvalue, deadlineFvalueDate, startDateFvalue, startDateFvalueDate])
 
     var ii = 1;
 
@@ -502,7 +863,7 @@ const Construction = () => {
           valueGetter: (params) => `Task# ${params.node.rowIndex + 1}`,
         },
         
-        { headerName: 'Job Holder', field: 'Jobholder_id', flex:2,
+        { headerName: 'Job Holder', field: 'Jobholder_id', flex:2.4,
         valueGetter: p => {
           return  p.data.Jobholder_id ? p.data.Jobholder_id.name ? p.data.Jobholder_id.name : p.data.Jobholder_id_name :p.data.Jobholder_id_name
         },
@@ -544,7 +905,7 @@ const Construction = () => {
         { 
           headerName: 'Start Date', 
           field: 'startDate', 
-          flex:2.2, 
+          flex:2.5, 
           valueGetter: p => {
             if(p.data.startDate && p.data.startDate !== "Invalid Date")
             {
@@ -558,8 +919,18 @@ const Construction = () => {
                 return ""
             }    
           },
+          floatingFilterComponent: 'selectFloatingFilterWthDate', 
+          floatingFilterComponentParams: { 
+            options: ["Expired", "Today", "Tomorrow", "In 7 days", "In 15 days", "Month Wise", "Custom"],
+            onValueChange:(value) => setStartDateFvalue(value),
+            value: startDateFvalue,
+            onDateValueChange:(value) => setStartDateFvalueDate(value),
+            dateValue: startDateFvalueDate,
+            suppressFilterButton: true, 
+            suppressInput: true 
+          },
         },
-        { headerName: 'Deadline', field: 'completationDate', flex:2.2,
+        { headerName: 'Deadline', field: 'completationDate', flex:2.5,
           valueGetter: p => {
             if(p.data.completationDate && p.data.completationDate !== "Invalid Date")
             {
@@ -583,6 +954,16 @@ const Construction = () => {
               return{color: "black"}
             }
           },
+          floatingFilterComponent: 'selectFloatingFilterWthDate', 
+          floatingFilterComponentParams: { 
+            options: ["Expired", "Today", "Tomorrow", "In 7 days", "In 15 days", "Month Wise", "Custom"],
+            onValueChange:(value) => setDeadlineFvalue(value),
+            value: deadlineFvalue,
+            onDateValueChange:(value) => setDeadlineFvalueDate(value),
+            dateValue: deadlineFvalueDate,
+            suppressFilterButton: true, 
+            suppressInput: true 
+          },
         },
         { headerName: 'Deadline-Actual', field: 'completationDateActual', flex:2.2,
           valueGetter: p => {
@@ -599,7 +980,7 @@ const Construction = () => {
             }    
           },
         },
-        { headerName: 'Job Date', field: 'JobDate', flex:2.2,
+        { headerName: 'Job Date', field: 'JobDate', flex:2.5,
           valueGetter: p => {
             if(p.data.JobDate && p.data.JobDate !== "Invalid Date")
             {
@@ -612,6 +993,16 @@ const Construction = () => {
               else{
                 return ""
             }    
+          },
+          floatingFilterComponent: 'selectFloatingFilterWthDate', 
+          floatingFilterComponentParams: { 
+            options: ["Expired", "Today", "Tomorrow", "In 7 days", "In 15 days", "Month Wise", "Custom"],
+            onValueChange:(value) => setJobDateFvalue(value),
+            value: jobDateFvalue,
+            onDateValueChange:(value) => setJobDateFvalueDate(value),
+            dateValue: jobDateFvalueDate,
+            suppressFilterButton: true, 
+            suppressInput: true 
           },
         },
         { 
@@ -669,7 +1060,7 @@ const Construction = () => {
         { headerName: 'Budget-Actual', field: 'budgetActual', flex:4,},
         { 
           headerName: 'Status', 
-          field: 'status', flex:2,
+          field: 'status', flex:2.2,
           cellEditor: 'agSelectCellEditor',
           cellEditorParams: { values: ["Select", 'To do', 'Progress', 'Review', 'Completed'] },
           floatingFilterComponent: 'SelectUnSelectFilter', 
@@ -744,7 +1135,8 @@ const Construction = () => {
 
       const frameworkComponents = {
         selectFloatingFilter: DropdownFilter,
-        SelectUnSelectFilter: SelectUnSelectFilter
+        SelectUnSelectFilter: SelectUnSelectFilter,
+        selectFloatingFilterWthDate: DropdownFilterWithDate,
       };
 
       async function onGridReady(params) {

@@ -38,7 +38,7 @@ exports.getAllTemplates = async (req, res) => {
         const users_all = await Userdb.find({ isActive: true }).populate('role_id');
         const TemplateCategories = await TemplatesCategoriesdb.find();
 
-        const users = users_all.filter((user) => user.role_id && user.role_id.pages[5] && user.role_id.pages[5].isChecked)
+        const users = users_all.filter((user) => user.role_id.pages[5] && user.role_id.pages[5].isChecked)
 
         res.status(200).json({
             Templates: Templates,
