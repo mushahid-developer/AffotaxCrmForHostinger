@@ -857,7 +857,6 @@ const Construction = () => {
         {
           headerName: "Task#",
           field: "Task_No",
-          filter: false,
           flex: 1.5,
           editable: false,
           valueGetter: (params) => `Task# ${params.node.rowIndex + 1}`,
