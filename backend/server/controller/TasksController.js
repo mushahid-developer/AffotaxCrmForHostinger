@@ -40,7 +40,15 @@ exports.getAllProjects = async (req, res) => {
         const users_all = await Userdb.find({ isActive: true }).populate('role_id');
         const projectNames = await ProjectNameDb.find();
 
-        const users = users_all.filter((user) => user.role_id && user.role_id.pages[10] && user.role_id.pages[10].isChecked)
+        // const users = users_all.filter((user) => user.role_id && user.role_id.pages[10] && user.role_id.pages[10].isChecked)
+
+        const users = users_all.filter((user) =>  user.role_id && 
+        (
+            user.role_id.pages.map(
+                page => page.name === 'Tasks Page' && page.isChecked
+            ) 
+            
+        ))
 
         const curUser = req.user.name
 
