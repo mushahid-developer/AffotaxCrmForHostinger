@@ -71,6 +71,7 @@ route.get('/leads/copy/one/:id', LeadController.CopyOneLead)
 //Roles
 route.get('/roles/predata/get', RolesController.getRolesPreData)
 route.post('/roles/add', RolesController.addNewRole)
+route.get('/roles/delete/one/:id', RolesController.deleteOneRole)
 route.post('/roles/permissoins/save', RolesController.addPermissions)
 route.get('/roles/users/get', RolesController.getUserRoles)
 route.post('/roles/users/assign/role', RolesController.assignRoleToUser)

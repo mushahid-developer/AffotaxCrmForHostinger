@@ -167,29 +167,32 @@ export default function Roles() {
 
   const handleDeleteRole = async (e, id)=>{
     e.preventDefault();
-    try{
-      await axios.get(`${axiosURL.deleteOneRoleUrl}/${id}`,
-        {
-        headers:{ 'Content-Type': 'application/json' }
-        }
-        );
-        
-        setReRender(!reRender)
-      } catch (err) {
-        Store.addNotification({
-          title: "Error",
-          message: "Please Try Again",
-          type: "danger",
-          insert: "top",
-          container: "top-center",
-          animationIn: ["animate__animated", "animate__fadeIn"],
-          animationOut: ["animate__animated", "animate__fadeOut"],
-          dismiss: {
-            duration: 5000,
-            onScreen: true,
-          },
-        });
+    const confirmed = window.confirm('Are you sure you want to delete this user?');
+    if (confirmed) {
+      try{
+        await axios.get(`${axiosURL.deleteOneRoleUrl}/${id}`,
+          {
+          headers:{ 'Content-Type': 'application/json' }
+          }
+          );
+          
+          setReRender(!reRender)
+        } catch (err) {
+          Store.addNotification({
+            title: "Error",
+            message: "Please Try Again",
+            type: "danger",
+            insert: "top",
+            container: "top-center",
+            animationIn: ["animate__animated", "animate__fadeIn"],
+            animationOut: ["animate__animated", "animate__fadeOut"],
+            dismiss: {
+              duration: 5000,
+              onScreen: true,
+            },
+          });
       }
+    }
   }
 
   //
