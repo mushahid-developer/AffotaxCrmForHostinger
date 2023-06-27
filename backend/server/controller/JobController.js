@@ -16,13 +16,13 @@ exports.addNewClientPreData = async (req, res) => {
   }
   
 
-  const users = users_all.filter((user) => {
+  const usersSubs = users_all.filter((user) => {
     return user.role_id && user.role_id.pages.some((page) => {
       return page.name === 'Subscription Page' && page.isChecked;
     });
   });
 
-  const usersSubs = users_all.filter((user) => {
+  const users = users_all.filter((user) => {
     return user.role_id && user.role_id.pages.some((page) => {
       return page.name === 'Jobs Page' && page.isChecked;
     });
