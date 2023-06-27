@@ -16,21 +16,18 @@ exports.addNewClientPreData = async (req, res) => {
   }
   
 
-  const users = users_all.filter((user) =>  user.role_id && 
-        (
-            user.role_id.pages.map(
-                page => page.name === 'Subscription Page' && page.isChecked
-            ) 
-            
-        ))
+  const users = users_all.filter((user) => {
+    return user.role_id && user.role_id.pages.some((page) => {
+      return page.name === 'Subscription Page' && page.isChecked;
+    });
+  });
 
-  const usersSubs = users_all.filter((user) =>  user.role_id && 
-        (
-            user.role_id.pages.map(
-                page => page.name === 'Jobs Page' && page.isChecked
-            ) 
-            
-        ))
+  const usersSubs = users_all.filter((user) => {
+    return user.role_id && user.role_id.pages.some((page) => {
+      return page.name === 'Jobs Page' && page.isChecked;
+    });
+  });
+
 
 
   // const users = users_all.filter((user) => user.role_id && user.role_id.pages[9] && user.role_id.pages[9].isChecked)

@@ -47,13 +47,12 @@ exports.getAllConstruction = async (req, res) => {
         const users_all = await Userdb.find({ isActive: true }).populate('role_id');
         const HouseNo = await HosueNoDb.find();
 
-        const users = users_all.filter((user) =>  user.role_id && 
-        (
-            user.role_id.pages.map(
-                page => page.name === 'Construction Page' && page.isChecked
-            ) 
-            
-        ))
+
+        const users = users_all.filter((user) => {
+            return user.role_id && user.role_id.pages.some((page) => {
+              return page.name === 'Construction Page' && page.isChecked;
+            });
+          });
 
         res.status(200).json({
             Construction: Construction,
