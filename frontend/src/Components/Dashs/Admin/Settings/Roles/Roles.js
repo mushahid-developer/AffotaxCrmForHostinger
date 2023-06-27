@@ -165,6 +165,33 @@ export default function Roles() {
     }
   };
 
+  const handleDeleteRole = async (e, id)=>{
+    e.preventDefault();
+    try{
+      await axios.get(`${axiosURL.deleteOneRoleUrl}/${id}`,
+        {
+        headers:{ 'Content-Type': 'application/json' }
+        }
+        );
+        
+        setReRender(!reRender)
+      } catch (err) {
+        Store.addNotification({
+          title: "Error",
+          message: "Please Try Again",
+          type: "danger",
+          insert: "top",
+          container: "top-center",
+          animationIn: ["animate__animated", "animate__fadeIn"],
+          animationOut: ["animate__animated", "animate__fadeOut"],
+          dismiss: {
+            duration: 5000,
+            onScreen: true,
+          },
+        });
+      }
+  }
+
   //
 
   useEffect(() => {
@@ -195,54 +222,56 @@ export default function Roles() {
               {predata &&
                 predata.roles.map((roles, ind) => {
                   return (
-                    <Link onClick={()=>{hendleSelectedRolePermissions(roles._id)}} key={ind}>
-                        <div
-                            style={{
-                                alignItems: "center",
-                                justifyContent: "space-between",
-                                padding: "10px",
-                            }}
-                            className="d-flex"
-                            >
-                            <p>{roles.name}</p>
-                            <div>
-                                <a className="btn btn-default2">
-                                <svg
-                                    xmlns="http://www.w3.org/2000/svg"
-                                    width="16"
-                                    height="16"
-                                    viewBox="0 0 24 24"
-                                    fill="none"
-                                    stroke="currentColor"
-                                    strokeWidth="2"
-                                    strokeLinecap="round"
-                                    strokeLinejoin="round"
-                                    className="feather feather-edit icon-16"
-                                >
-                                    <path d="M11 4H4a2 2 0 0 0-2 2v14a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2v-7"></path>
-                                    <path d="M18.5 2.5a2.121 2.121 0 0 1 3 3L12 15l-4 1 1-4 9.5-9.5z"></path>
-                                </svg>
-                                </a>
-                                <a className="btn btn-default2">
-                                <svg
-                                    xmlns="http://www.w3.org/2000/svg"
-                                    width="16"
-                                    height="16"
-                                    viewBox="0 0 24 24"
-                                    fill="none"
-                                    stroke="currentColor"
-                                    strokeWidth="2"
-                                    strokeLinecap="round"
-                                    strokeLinejoin="round"
-                                    className="feather feather-x icon-16"
-                                >
-                                    <line x1="18" y1="6" x2="6" y2="18"></line>
-                                    <line x1="6" y1="6" x2="18" y2="18"></line>
-                                </svg>
-                                </a>
-                            </div>
-                        </div>
-                    </Link>
+                    <>
+                      <Link onClick={()=>{hendleSelectedRolePermissions(roles._id)}} key={ind}>
+                          <div
+                              style={{
+                                  alignItems: "center",
+                                  justifyContent: "space-between",
+                                  padding: "10px",
+                              }}
+                              className="d-flex"
+                              >
+                              <p>{roles.name}</p>
+                              <div>
+                                  {/* <a className="btn btn-default2">
+                                  <svg
+                                      xmlns="http://www.w3.org/2000/svg"
+                                      width="16"
+                                      height="16"
+                                      viewBox="0 0 24 24"
+                                      fill="none"
+                                      stroke="currentColor"
+                                      strokeWidth="2"
+                                      strokeLinecap="round"
+                                      strokeLinejoin="round"
+                                      className="feather feather-edit icon-16"
+                                  >
+                                      <path d="M11 4H4a2 2 0 0 0-2 2v14a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2v-7"></path>
+                                      <path d="M18.5 2.5a2.121 2.121 0 0 1 3 3L12 15l-4 1 1-4 9.5-9.5z"></path>
+                                  </svg>
+                                  </a> */}
+                                  <a onClick={(e)=>{handleDeleteRole(e, roles._id)}} style={{border: 'none',}} className="btn btn-default2">
+                                  <svg
+                                      xmlns="http://www.w3.org/2000/svg"
+                                      width="16"
+                                      height="16"
+                                      viewBox="0 0 24 24"
+                                      fill="none"
+                                      stroke="currentColor"
+                                      strokeWidth="2"
+                                      strokeLinecap="round"
+                                      strokeLinejoin="round"
+                                      className="feather feather-x icon-16"
+                                  >
+                                      <line x1="18" y1="6" x2="6" y2="18"></line>
+                                      <line x1="6" y1="6" x2="18" y2="18"></line>
+                                  </svg>
+                                  </a>
+                              </div>
+                          </div>
+                      </Link>
+                    </>
                   );
                 })}
             </div>

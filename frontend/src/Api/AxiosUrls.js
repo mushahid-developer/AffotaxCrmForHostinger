@@ -1,6 +1,6 @@
 //BaseUrl
-export const BaseUrl = 'https://crm.affotax.com/api/'; // Live
-// export const BaseUrl = 'http://192.168.10.16:7878/api/'; // Local
+// export const BaseUrl = 'https://crm.affotax.com/api/'; // Live
+export const BaseUrl = 'http://192.168.10.16:7878/api/'; // Local
 // 192.168.10.16
 
 //Auth / Users
@@ -53,6 +53,7 @@ export const CopyLeadUrl = 'leads/copy/one';
 //Roles
 export const rolesPredataUrl = 'roles/predata/get';
 export const AddRoleUrl = 'roles/add';
+export const deleteOneRoleUrl = 'roles/delete/one';
 export const savePermissionsUrl = 'roles/permissoins/save';
 export const getUserRolesUrl = 'roles/users/get';
 export const assignRoleToUserUrl = 'roles/users/assign/role';
