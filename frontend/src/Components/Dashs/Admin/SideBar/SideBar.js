@@ -43,12 +43,11 @@ export default function SideBar(props) {
                   })}
                   
                   {pagesAccess && pagesAccess.map(page => {
-                    if(page.name === "Leads Page" && page.isChecked){
+                    if(page.name === "Tasks Page" && page.isChecked){
                       return(
-                        <Link 
-                        to='/leads' className={location.pathname === '/leads' ? 'sidebar_link_active' : 'sidebar_link'}>
-                        <svg style={{heigh: '20px', width: '20px'}} xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" className="feather feather-layers icon"><polygon points="12 2 2 7 12 12 22 7 12 2"></polygon><polyline points="2 17 12 22 22 17"></polyline><polyline points="2 12 12 17 22 12"></polyline></svg>
-                        <span style={{marginLeft: '10px'}}>Leads</span>
+                        <Link to='/tasks' className={location.pathname === '/tasks' ? 'sidebar_link_active' : 'sidebar_link'}>
+                        <svg style={{heigh: '20px', width: '20px'}} xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="feather feather-check-circle icon"><path d="M22 11.08V12a10 10 0 1 1-5.93-9.14"></path><polyline points="22 4 12 14.01 9 11.01"></polyline></svg>
+                        <span style={{marginLeft: '10px'}}>Tasks</span>
                         </Link>
                       )
                     }
@@ -77,11 +76,12 @@ export default function SideBar(props) {
                   })}
 
                   {pagesAccess && pagesAccess.map(page => {
-                    if(page.name === "Tasks Page" && page.isChecked){
+                    if(page.name === "Leads Page" && page.isChecked){
                       return(
-                        <Link to='/tasks' className={location.pathname === '/tasks' ? 'sidebar_link_active' : 'sidebar_link'}>
-                        <svg style={{heigh: '20px', width: '20px'}} xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="feather feather-check-circle icon"><path d="M22 11.08V12a10 10 0 1 1-5.93-9.14"></path><polyline points="22 4 12 14.01 9 11.01"></polyline></svg>
-                        <span style={{marginLeft: '10px'}}>Tasks</span>
+                        <Link 
+                        to='/leads' className={location.pathname === '/leads' ? 'sidebar_link_active' : 'sidebar_link'}>
+                        <svg style={{heigh: '20px', width: '20px'}} xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" className="feather feather-layers icon"><polygon points="12 2 2 7 12 12 22 7 12 2"></polygon><polyline points="2 17 12 22 22 17"></polyline><polyline points="2 12 12 17 22 12"></polyline></svg>
+                        <span style={{marginLeft: '10px'}}>Leads</span>
                         </Link>
                       )
                     }
