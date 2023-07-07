@@ -619,3 +619,7 @@ transition: width .3s ease-in-out;
   display: flex !important;
   align-items: center !important;
 }
+
+.ql-container {
+  height: 300px !important;
+}

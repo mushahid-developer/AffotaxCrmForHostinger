@@ -1,3 +1,4 @@
+import { useEffect, useState } from "react";
 import {
     BrowserRouter as Router,
     Routes,
@@ -27,6 +28,13 @@ import Construction from "../Dashs/Admin/Construction/Construction";
 import Templates from "../Dashs/Admin/Templates/Templates";
 import Subscription from "../Dashs/Admin/Subscription/Subscription";
 import Goals from "../Dashs/Admin/Goals/Goals";
+import Tickets from "../Dashs/Admin/Tickets/Tickets";
+import DetailedMail from "../Dashs/Admin/Tickets/DetailedMail";
+
+import axios from '../../Api/Axios';
+import * as axiosURL from '../../Api/AxiosUrls';
+import secureLocalStorage from "react-secure-storage";
+var getAllTickets = axiosURL.getAllTickets;
 
 export default function AdminRoutes(props) {
 
@@ -37,6 +45,54 @@ export default function AdminRoutes(props) {
   const setRecurringNoteIsOpen = props.setRecurringNoteIsOpen
   const roleName = props.roleName
   const setToken = props.setToken
+
+
+  const [ticketsData, setTicketsData] = useState([]);
+  const [reFetchTickets, setReFetchTickets] = useState(false);
+  const [unreadCounter, setUnreadCounter] = useState(0);
+
+  
+
+  useEffect(() => {
+    const fetchData = async () => {
+      try {
+        for (const page of pagesAccess) {
+          if (page.name === "Tickets Page" && page.isChecked) {
+            setTicketsData("Loading");
+            const token = secureLocalStorage.getItem('token') 
+            const response = await axios.get(getAllTickets, {
+              headers:{ 
+                'Content-Type': 'application/json',
+                'Authorization': 'Bearer ' + token
+              }
+            });
+  
+            if (response.status === 200) {
+              console.log(response.data);
+              setTicketsData(response.data);
+              setUnreadCounter(response.data.Emails.unreadCount);
+            } else {
+              setTicketsData("Error");
+            }
+          }
+        }
+      } catch (error) {
+        console.error(error);
+        setTicketsData("Error");
+      }
+    };
+  
+    fetchData(); // Run immediately
+  
+    const interval = setInterval(fetchData, 60 * 1000); // Run every 5 minutes (300 seconds)
+  
+    return () => {
+      clearInterval(interval);
+    };
+
+  }, [pagesAccess, reFetchTickets])
+
+
   return (
     <>
     <Router>
@@ -51,7 +107,7 @@ export default function AdminRoutes(props) {
             </div>
             <div className="Layout_bottom_screen">
               <div className="layout_sidebar">
-                <SideBar setToken={setToken} pagesAccess={pagesAccess} />
+                <SideBar setToken={setToken} pagesAccess={pagesAccess} unreadCounter={unreadCounter} />
               </div>
               <div className="layout_main_screen">
                 <div className="layout_main_screen_content">
@@ -78,6 +134,8 @@ export default function AdminRoutes(props) {
                   <Route path="/construction" element = {<Construction />}></Route>
                   <Route path="/templates" element = {<Templates />}></Route>
                   <Route path="/goals" element = {<Goals />}></Route>
+                  <Route path="/tickets" element = {<Tickets ticketsData = {ticketsData} setReFetchTickets = {setReFetchTickets} />}></Route>
+                  <Route path="/tickets/mail" element = {<DetailedMail setReFetchTickets = {setReFetchTickets}/>}></Route>
                 </Routes>
                 </div>
               </div>

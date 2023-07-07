@@ -124,3 +124,9 @@ export const copyTemplateUrl = 'template/copy/one';
 export const GoalsAddOneUrl = 'goals/add/one';
 export const GoalsGetAllUrl = 'goals/get/all';
 export const GoalsEditOneUrl = 'goals/edit/one';
+
+//Tickets
+export const getAllTickets = 'tickets/email/get/all';
+export const markMailAsRead = 'tickets/email/markasread';
+export const createNewTicket = 'tickets/create/new';
+export const replyToTicket = 'tickets/thread/reply';

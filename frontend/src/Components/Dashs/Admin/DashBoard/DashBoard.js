@@ -260,11 +260,11 @@ const options5 = {
       const elementIndex = elements[0].index;
       const clickedOn = elements[0].element.$context['dataset'].names[elementIndex]
 
-      console.log('Clicked on', clickedOn)
       const dataToSend = {
         departmentName : clickedOn,
         filterType: "Due"
       }
+      
       navigate('/clients/job-planning', { state: dataToSend });
     }
   },

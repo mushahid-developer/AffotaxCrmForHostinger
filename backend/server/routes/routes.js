@@ -13,6 +13,8 @@ const SalesController = require('../controller/SalesController')
 const ConstructionController = require('../controller/ConstructionController')
 const TemplateController = require('../controller/TemplateController')
 const GoalsController = require('../controller/GoalsController')
+const TicketsController = require('../controller/TicketsController')
+
 
 const authMiddleware = require('../middlewares/authMiddleware');
 const { addOneChartOfAccounts, getAllChartOfAccounts } = require('../controller/ChartOfAccountsController');
@@ -141,5 +143,11 @@ route.get('/template/copy/one/:id', TemplateController.CopyOneTemplate)
 route.post('/goals/add/one', GoalsController.addGoal)
 route.get('/goals/get/all', GoalsController.getAllGoal)
 route.post('/goals/edit/one/:id', GoalsController.editGoal)
+
+// Tickets
+route.get('/tickets/email/get/all', authMiddleware, TicketsController.getEmails)
+route.get('/tickets/email/markasread/:id', TicketsController.markAsRead)
+route.post('/tickets/create/new', authMiddleware, TicketsController.createNewTicket)
+route.post('/tickets/thread/reply', authMiddleware, TicketsController.replyToTicket)
 
 module.exports = route
