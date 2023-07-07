@@ -3,14 +3,13 @@ import { AgGridReact } from 'ag-grid-react'; // the AG Grid React Component
 import 'ag-grid-community/styles/ag-grid.css'; // Core grid CSS, always needed
 import 'ag-grid-community/styles/ag-theme-alpine.css'; // Optional theme CSS
 import { useNavigate } from 'react-router-dom';
-import { Store } from 'react-notifications-component';
 
-import ReactQuill from 'react-quill';
+import ReactQuill, { Quill } from 'react-quill';
 import 'react-quill/dist/quill.snow.css';
 
 import axios from '../../../../Api/Axios';
 import * as axiosURL from '../../../../Api/AxiosUrls';
-import Loader from '../../../Common/Loader/Loader';
+import loaderr from "../../../../Assets/svgs/loader.svg"
 import DropdownFilter from '../../../Jobs/JobPlaning/DropdownFilter';
 import { Button, Form, Modal } from 'react-bootstrap';
 import secureLocalStorage from 'react-secure-storage';
@@ -21,9 +20,9 @@ var createNewTicket = axiosURL.createNewTicket;
 export default function Tickets(props) {
   
     const navigate = useNavigate();
-
-    const ticketsData = props.ticketsData;
-    const setReFetchTickets = props.setReFetchTickets;
+    
+    const ticketsData = useMemo(() => props.ticketsData, [props.ticketsData]);
+    const setReFetchTickets = useMemo(() => props.setReFetchTickets, [props.setReFetchTickets]);
   
       const [gridApi, setGridApi] = useState(null);
       const [newTicketFormData, setNewTicketFormData] = useState({
@@ -44,8 +43,8 @@ export default function Tickets(props) {
       const [mainRowData, setMainRowData] = useState([ ]);
       const [rowData, setRowData] = useState([ ]);
   
-  
-      const [jHolderFvalue, setJHolderFvalue] = useState(null)
+      const [jHolderFvalue, setJHolderFvalue] = useState('')
+      const [statusFvalue, setStatusFvalue] = useState('')
   
       const [showNewTicketModal, setShowNewTicketModal] = useState(false);
   
@@ -58,8 +57,12 @@ export default function Tickets(props) {
         // if(filteredArray !== undefined && jHolderFvalue !== null && jHolderFvalue !== ""){
         //   filteredArray = filteredArray.filter(obj => obj.ticketInfo.user_id && obj.ticketInfo.user_id.name === jHolderFvalue);
         // }
-        console.log(filteredArray)
 
+        
+        if(filteredArray !== undefined && statusFvalue !== null && statusFvalue !== ""){
+          filteredArray = filteredArray.filter(obj => obj.readStatus && obj.readStatus === statusFvalue);
+        }
+        
         setRowData(filteredArray)
   
       }
@@ -68,7 +71,7 @@ export default function Tickets(props) {
       useEffect(()=>{
         setRowData(mainRowData)
         handleFilters()
-      },[mainRowData])
+      },[mainRowData, statusFvalue])
 
   
   
@@ -150,13 +153,36 @@ export default function Tickets(props) {
                   </a>
           },
           { headerName: 'Recipients', field: 'recipients', flex:2 },
-          { headerName: 'Status', field: 'readStatus', flex:0.6 },
+          { 
+            headerName: 'Status', 
+            field: 'readStatus', 
+            flex:0.6,
+
+            floatingFilterComponent: 'selectFloatingFilter', 
+              floatingFilterComponentParams: { 
+                options: ['Unread', 'Read', 'Sent'],
+                onValueChange:(value) => setStatusFvalue(value),
+                value: statusFvalue,
+                suppressFilterButton: true, 
+                suppressInput: true 
+              }
+          },
           { 
             headerName: 'Date', 
             field: 'formattedDate', 
             flex:1,
             valueGetter: (params)=>{
-              return( `${params.data.formattedDate} ${params.data.formattedTime}`)
+              if(params.data.formattedDate && params.data.formattedDate !== "Invalid Date")
+            {
+              const deadline = new Date(params.data.formattedDate)
+              let ye = new Intl.DateTimeFormat('en', { year: 'numeric' }).format(deadline);
+              let mo = new Intl.DateTimeFormat('en', { month: 'short' }).format(deadline);
+              let da = new Intl.DateTimeFormat('en', { day: '2-digit' }).format(deadline);
+              return(`${da}-${mo}-${ye} ${params.data.formattedTime}`);
+              }
+              else{
+                return ""
+            }
             } ,
           },
           // {
@@ -195,8 +221,32 @@ export default function Tickets(props) {
   async function onGridReady(params) {
     setGridApi(params);
   }
+
+  const customKeyboardBindings = {
+    handleEnter: (range, context) => {
+      // Insert a line break instead of a paragraph break
+      const newLineChar = '\n';
+      const delta = new Quill
+        .Delta()
+        .retain(range.index)
+        .delete(range.length)
+        .insert(newLineChar);
+  
+      // Apply the new delta to the editor
+      context.quill.updateContents(delta, 'user');
+  
+      // Move the cursor to the appropriate position
+      context.quill.setSelection(range.index + newLineChar.length, 'silent');
+  
+      // Prevent the default Enter key behavior
+      return { break: true };
+    }
+  };
   
   const modules = {
+    keyboard: {
+      bindings: customKeyboardBindings
+    },  
     toolbar: [
       [{ 'header': [1, 2, false] }],
       ['bold', 'italic', 'underline', 'strike', 'blockquote'],
@@ -222,7 +272,6 @@ export default function Tickets(props) {
     if(value !== ""){
       var client = clients.filter((cli) => cli._id === value )
       var email =  client[0] ? client[0].email : "";
-      console.log(email)
       setSelectedClient(email)
     }
   }
@@ -298,19 +347,12 @@ export default function Tickets(props) {
 
   
   
-      if(loader)
-      {
-        return(<Loader/>)
-      }
-      else{
   
         
   
       return (
-          <>
-  
-  
-              <div style={{
+            <>
+                 <div style={{
           border: 'none'
           }}
           className="mt-3 card" >
@@ -349,7 +391,8 @@ export default function Tickets(props) {
             </div>
   
             <div className="d-flex">
-              
+
+            {loader && <img style={{height: '40px', paddingLeft: '15px'}} src={loaderr} alt="" /> }
               <Button className='mx-4' onClick={()=>{setShowNewTicketModal(!showNewTicketModal)}}>
                 New Ticket
               </Button>
@@ -388,6 +431,9 @@ export default function Tickets(props) {
             </div>
           </div>
       </div>
+  
+  
+             
 
       
       <Modal size="lg" show={showNewTicketModal} centered onHide={()=>{setShowNewTicketModal(!showNewTicketModal)}}>
@@ -502,4 +548,4 @@ export default function Tickets(props) {
           </>
       );
   }
-  }
+  

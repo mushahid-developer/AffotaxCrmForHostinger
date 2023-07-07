@@ -2,7 +2,7 @@ import React, { useState } from 'react'
 import { useLocation, useNavigate } from 'react-router-dom';
 import HTMLRenderer from './HtmlRenderer';
 import { Button } from 'react-bootstrap';
-import ReactQuill from 'react-quill';
+import ReactQuill, { Quill } from 'react-quill';
 
 import axios from '../../../../Api/Axios';
 import * as axiosURL from '../../../../Api/AxiosUrls';
@@ -22,7 +22,32 @@ export default function DetailedMail(props) {
     const [sendingMail, setSendingMail] = useState(false)
     const [replyFormData, setReplyFormData] = useState('')
 
+    
+    const customKeyboardBindings = {
+        handleEnter: (range, context) => {
+        // Insert a line break instead of a paragraph break
+        const newLineChar = '\n';
+        const delta = new Quill
+            .Delta()
+            .retain(range.index)
+            .delete(range.length)
+            .insert(newLineChar);
+    
+        // Apply the new delta to the editor
+        context.quill.updateContents(delta, 'user');
+    
+        // Move the cursor to the appropriate position
+        context.quill.setSelection(range.index + newLineChar.length, 'silent');
+    
+        // Prevent the default Enter key behavior
+        return { break: true };
+        }
+    };
+    
     const modules = {
+        keyboard: {
+        bindings: customKeyboardBindings
+        },  
         toolbar: [
           [{ 'header': [1, 2, false] }],
           ['bold', 'italic', 'underline', 'strike', 'blockquote'],
@@ -69,7 +94,6 @@ export default function DetailedMail(props) {
       var emailSendTo = mailData.recipients[0];
 
 
-    console.log(mailData)
     
 
 
@@ -106,7 +130,6 @@ export default function DetailedMail(props) {
                 
             } catch (error) {
                 setSendingMail(false)
-                console.log(error)
                 //
             }
 
@@ -283,7 +306,7 @@ className="mt-3 card" >
                 maxWidth: '90%'
             }} className='card'>
                 {/* <HTMLRenderer htmlContent={message.payload.body.data.slice(1)} /> */}
-                <HTMLRenderer htmlContent={removeQuotedText(message.payload.body.data.slice(0))} />
+                <HTMLRenderer htmlContent={removeQuotedText(message.payload.body.data.slice(1))} />
                     {message.payload.body.messageAttachments.lenght !== 0 && 
                         <>
                             <hr/>
