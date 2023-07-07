@@ -10,6 +10,19 @@ exports.getEmails = async (req, res) => {
         const userId = req.user._id
         const Clients = await Clientdb.find();
 
+        Clients.sort((a, b) => {
+            const companyNameA = a.company_name.toLowerCase();
+            const companyNameB = b.company_name.toLowerCase();
+          
+            if (companyNameA < companyNameB) {
+              return -1;
+            } else if (companyNameA > companyNameB) {
+              return 1;
+            } else {
+              return 0;
+            }
+          });
+
         const User = await Userdb.findById(userId).populate('role_id');
 
         var Tickets = [];
