@@ -127,14 +127,14 @@ export default function Tickets(props) {
               editable: false,
               valueGetter: (params) => params.data.ticketInfo.user_id.name,
 
-              floatingFilterComponent: 'selectFloatingFilter', 
-              floatingFilterComponentParams: { 
-                options: users && users.map(option => option.name),
-                onValueChange:(value) => setJHolderFvalue(value),
-                value: jHolderFvalue,
-                suppressFilterButton: true, 
-                suppressInput: true 
-              }
+              // floatingFilterComponent: 'selectFloatingFilter', 
+              // floatingFilterComponentParams: { 
+              //   options: users && users.map(option => option.name),
+              //   onValueChange:(value) => setJHolderFvalue(value),
+              //   value: jHolderFvalue,
+              //   suppressFilterButton: true, 
+              //   suppressInput: true 
+              // }
           },
           
           { 
@@ -284,7 +284,7 @@ export default function Tickets(props) {
   }
 
   const fixMailMessage = ()=>{
-    const modifiedContent = newTicketFormData.message.replace(/<div><br><\/div>/g, '<br>');
+    const modifiedContent = newTicketFormData.message.replace(/<p><br><\/p>/g, '<br>');
 
         const name = "message";
         const value = modifiedContent;

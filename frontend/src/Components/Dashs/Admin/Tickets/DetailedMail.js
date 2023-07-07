@@ -71,7 +71,7 @@ export default function DetailedMail(props) {
 
 
       const fixMailMessage = ()=>{
-        const modifiedContent = replyFormData.replace(/<div><br><\/div>/g, '<br>');
+        const modifiedContent = replyFormData.replace(/<p><br><\/p>/g, '<br>');
         setReplyFormData(modifiedContent)
       }
 
