@@ -222,31 +222,9 @@ export default function Tickets(props) {
     setGridApi(params);
   }
 
-  const customKeyboardBindings = {
-    handleEnter: (range, context) => {
-      // Insert a line break instead of a paragraph break
-      const newLineChar = '\n';
-      const delta = new Quill
-        .Delta()
-        .retain(range.index)
-        .delete(range.length)
-        .insert(newLineChar);
-  
-      // Apply the new delta to the editor
-      context.quill.updateContents(delta, 'user');
-  
-      // Move the cursor to the appropriate position
-      context.quill.setSelection(range.index + newLineChar.length, 'silent');
-  
-      // Prevent the default Enter key behavior
-      return { break: true };
-    }
-  };
   
   const modules = {
-    keyboard: {
-      bindings: customKeyboardBindings
-    },  
+    
     toolbar: [
       [{ 'header': [1, 2, false] }],
       ['bold', 'italic', 'underline', 'strike', 'blockquote'],
@@ -305,6 +283,18 @@ export default function Tickets(props) {
 
   }
 
+  const fixMailMessage = ()=>{
+    const modifiedContent = newTicketFormData.message.replace(/<div><br><\/div>/g, '<br>');
+
+        const name = "message";
+        const value = modifiedContent;
+
+        setNewTicketFormData(prevState => ({
+          ...prevState,
+          [name]: value
+        }));
+  }
+
   const handleNewTicketSubmitForm = async (e)=>{
     e.preventDefault();
     
@@ -315,6 +305,9 @@ export default function Tickets(props) {
 
       try {
         setMailIsSending(true)
+
+        fixMailMessage();
+
         const token = secureLocalStorage.getItem('token') 
         await axios.post(`${createNewTicket}`, 
         {

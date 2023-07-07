@@ -23,31 +23,7 @@ export default function DetailedMail(props) {
     const [replyFormData, setReplyFormData] = useState('')
 
     
-    const customKeyboardBindings = {
-        handleEnter: (range, context) => {
-        // Insert a line break instead of a paragraph break
-        const newLineChar = '\n';
-        const delta = new Quill
-            .Delta()
-            .retain(range.index)
-            .delete(range.length)
-            .insert(newLineChar);
-    
-        // Apply the new delta to the editor
-        context.quill.updateContents(delta, 'user');
-    
-        // Move the cursor to the appropriate position
-        context.quill.setSelection(range.index + newLineChar.length, 'silent');
-    
-        // Prevent the default Enter key behavior
-        return { break: true };
-        }
-    };
-    
     const modules = {
-        keyboard: {
-        bindings: customKeyboardBindings
-        },  
         toolbar: [
           [{ 'header': [1, 2, false] }],
           ['bold', 'italic', 'underline', 'strike', 'blockquote'],
@@ -94,7 +70,10 @@ export default function DetailedMail(props) {
       var emailSendTo = mailData.recipients[0];
 
 
-    
+      const fixMailMessage = ()=>{
+        const modifiedContent = replyFormData.replace(/<div><br><\/div>/g, '<br>');
+        setReplyFormData(modifiedContent)
+      }
 
 
     const handleReplyFromSubmit = async ()=>{
@@ -105,6 +84,7 @@ export default function DetailedMail(props) {
 
             try {
                 setSendingMail(true);
+                fixMailMessage();
                 const token = secureLocalStorage.getItem('token') 
                 await axios.post(`${replyToTicket}`, 
                 {
