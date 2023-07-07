@@ -134,6 +134,8 @@ h6{
 .layout_main_screen_content{
   padding: 5px 25px 25px 25px;
   min-height: 100%;
+  overflow-x: scroll;
+  height: 78vh;
 }
 
 

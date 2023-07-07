@@ -1,4 +1,4 @@
-import React, { useState, useEffect, useMemo, useRef, useCallback } from 'react';
+import React, { useState, useEffect, useMemo, useRef, useCallback, useContext } from 'react';
 import { AgGridReact } from 'ag-grid-react'; // the AG Grid React Component
 import 'ag-grid-community/styles/ag-grid.css'; // Core grid CSS, always needed
 import 'ag-grid-community/styles/ag-theme-alpine.css'; // Optional theme CSS
@@ -13,16 +13,16 @@ import loaderr from "../../../../Assets/svgs/loader.svg"
 import DropdownFilter from '../../../Jobs/JobPlaning/DropdownFilter';
 import { Button, Form, Modal } from 'react-bootstrap';
 import secureLocalStorage from 'react-secure-storage';
+import TicketsContext from './TicketsContext';
 
 var markMailAsRead = axiosURL.markMailAsRead;
 var createNewTicket = axiosURL.createNewTicket;
 
-export default function Tickets(props) {
+export default function Tickets() {
   
+  const contextValue = useContext(TicketsContext);
+
     const navigate = useNavigate();
-    
-    const ticketsData = useMemo(() => props.ticketsData, [props.ticketsData]);
-    const setReFetchTickets = useMemo(() => props.setReFetchTickets, [props.setReFetchTickets]);
   
       const [gridApi, setGridApi] = useState(null);
       const [newTicketFormData, setNewTicketFormData] = useState({
@@ -31,7 +31,7 @@ export default function Tickets(props) {
         message: '',
       });
       const [clients, setClients] = useState();
-      const [users, setUsers] = useState([]);
+      const [users, setUsers] = useState(contextValue.ticketsData.UsersList);
       const [selectedClient, setSelectedClient] = useState("");
       const [trySubmit, setTrySubmit] = useState(false);
       const [mailIsSending, setMailIsSending] = useState(false);
@@ -54,9 +54,9 @@ export default function Tickets(props) {
         // const roo = mainrowData; 
         var filteredArray = mainRowData
         
-        // if(filteredArray !== undefined && jHolderFvalue !== null && jHolderFvalue !== ""){
-        //   filteredArray = filteredArray.filter(obj => obj.ticketInfo.user_id && obj.ticketInfo.user_id.name === jHolderFvalue);
-        // }
+        if(filteredArray !== undefined && jHolderFvalue !== null && jHolderFvalue !== ""){
+          filteredArray = filteredArray.filter(obj => obj.ticketInfo.user_id && obj.ticketInfo.user_id.name === jHolderFvalue);
+        }
 
         
         if(filteredArray !== undefined && statusFvalue !== null && statusFvalue !== ""){
@@ -71,31 +71,45 @@ export default function Tickets(props) {
       useEffect(()=>{
         setRowData(mainRowData)
         handleFilters()
-      },[mainRowData, statusFvalue])
+      },[mainRowData, statusFvalue, jHolderFvalue])
 
+      
+      
   
-  
+      
+      useEffect(() => {
+        const interval = setInterval(() => {
+          // Perform your action here
+          console.log('Action performed every 5 seconds');
+        }, 5000);
+
+        return () => {
+          clearInterval(interval);
+        };
+      }, []);
+
       useEffect(() => {
 
-          if(ticketsData === 'Loading'){
-            setLoader(true)
-          }else if(ticketsData === "Error"){
+
+          if(contextValue.ticketsData === 'Loading'){
+            // Do Nothing
+          }else if(contextValue.ticketsData === "Error"){
             // Do Nothing
           }else{
             setLoader(false)
-            setMainRowData(ticketsData.Emails ? ticketsData.Emails.detailedThreads : []);
-            setClients(ticketsData.Clients);
-            setUsers(ticketsData.UsersList);
+            setMainRowData(contextValue.ticketsData.Emails ? contextValue.ticketsData.Emails.detailedThreads : []);
+            setClients(contextValue.ticketsData.Clients);
+            setUsers(contextValue.ticketsData.UsersList);
           }
           
-      }, [ticketsData, reRender]);
+      }, [reRender, contextValue.ticketsData]);
 
         const toDetailedMail=(dataToSend, id)=>{
 
           axios.get(`${markMailAsRead}/${id}`, {
             headers:{ 'Content-Type': 'application/json' }
           })
-
+          contextValue.setReFetchTickets(prev => !prev);
           navigate('/tickets/mail', { state: dataToSend });
         }
       
@@ -111,30 +125,33 @@ export default function Tickets(props) {
           },
           {
               headerName: "Company Name",
+              field: "a",
               flex: 1,
               editable: false,
               valueGetter: (params) => params.data.ticketInfo.client_id.company_name ,
           },
           {
               headerName: "Client Name",
+              field: "b",
               flex: 1,
               editable: false,
               valueGetter: (params) => params.data.ticketInfo.client_id.client_name,
           },
           {
               headerName: "Job Holder",
+              field: "c",
               flex: 1,
               editable: false,
               valueGetter: (params) => params.data.ticketInfo.user_id.name,
 
-              // floatingFilterComponent: 'selectFloatingFilter', 
-              // floatingFilterComponentParams: { 
-              //   options: users && users.map(option => option.name),
-              //   onValueChange:(value) => setJHolderFvalue(value),
-              //   value: jHolderFvalue,
-              //   suppressFilterButton: true, 
-              //   suppressInput: true 
-              // }
+              floatingFilterComponent: 'selectFloatingFilter', 
+              floatingFilterComponentParams: { 
+                options: users && users.map(option => option.name),
+                onValueChange:(value) => setJHolderFvalue(value),
+                value: jHolderFvalue,
+                suppressFilterButton: true, 
+                suppressInput: true 
+              }
           },
           
           { 
@@ -328,7 +345,7 @@ export default function Tickets(props) {
         setSelectedClient("");
         setMailIsSending(false);
         setShowNewTicketModal(false);
-        setReFetchTickets(prev => !prev);
+        contextValue.setReFetchTickets(prev => !prev);
 
       } catch (error) {
         // do nothing

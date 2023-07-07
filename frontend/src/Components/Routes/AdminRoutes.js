@@ -34,6 +34,7 @@ import DetailedMail from "../Dashs/Admin/Tickets/DetailedMail";
 import axios from '../../Api/Axios';
 import * as axiosURL from '../../Api/AxiosUrls';
 import secureLocalStorage from "react-secure-storage";
+import TicketsContext from "../Dashs/Admin/Tickets/TicketsContext";
 var getAllTickets = axiosURL.getAllTickets;
 
 export default function AdminRoutes(props) {
@@ -50,6 +51,11 @@ export default function AdminRoutes(props) {
   const [ticketsData, setTicketsData] = useState([]);
   const [reFetchTickets, setReFetchTickets] = useState(false);
   const [unreadCounter, setUnreadCounter] = useState(0);
+
+  var finalTicketData = {
+    ticketsData,
+    setReFetchTickets: setReFetchTickets
+  }
 
   
 
@@ -74,6 +80,12 @@ export default function AdminRoutes(props) {
             } else {
               setTicketsData("Error");
             }
+
+            finalTicketData = {
+              ticketsData,
+              setReFetchTickets: setReFetchTickets
+            }
+            
           }
         }
       } catch (error) {
@@ -134,7 +146,11 @@ export default function AdminRoutes(props) {
                   <Route path="/construction" element = {<Construction />}></Route>
                   <Route path="/templates" element = {<Templates />}></Route>
                   <Route path="/goals" element = {<Goals />}></Route>
-                  <Route path="/tickets" element = {<Tickets ticketsData = {ticketsData} setReFetchTickets = {setReFetchTickets} />}></Route>
+                  <Route path="/tickets" element = {
+                    <TicketsContext.Provider value = {finalTicketData}>
+                      <Tickets  setReFetchTickets = {setReFetchTickets} />
+                    </TicketsContext.Provider>
+                  }></Route>
                   <Route path="/tickets/mail" element = {<DetailedMail setReFetchTickets = {setReFetchTickets}/>}></Route>
                 </Routes>
                 </div>
