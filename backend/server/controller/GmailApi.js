@@ -93,10 +93,9 @@ class GmailApi {
                     }
                   };
 
-                // if (message.payload.body && message.payload.body.data) {
-                //     encodedHtml = message.payload.body.data;
-                // } else
-                 if (message.payload.parts && message.payload.parts.length > 0) {
+                if (message.payload.body && message.payload.body.data) {
+                    encodedHtml = message.payload.body.data;
+                } else if (message.payload.parts && message.payload.parts.length > 0) {
                     processParts(message.payload.parts);
                 }
                 
