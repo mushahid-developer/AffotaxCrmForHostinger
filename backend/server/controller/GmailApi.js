@@ -108,6 +108,10 @@ class GmailApi {
 
                     decodedMessage = decodedMessage.replace(/[^\x20-\x7E]+/g, '');
 
+                    // Remove the reply section using regular expressions
+                    const regex = /On .+, .* wrote:(.*\n)*>/;
+                    decodedMessage = decodedMessage.replace(regex, '');
+
                     var sentByMe = false;
                     var fromHeader = message.payload.headers.find(header => header.name === 'From');
                     if (fromHeader && fromHeader.value && (fromHeader.value === 'info@affotax.com' || fromHeader.value === 'Affotax Team <info@affotax.com>' || fromHeader.value === 'Affotax <info@affotax.com>')) {
