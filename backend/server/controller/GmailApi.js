@@ -104,6 +104,8 @@ class GmailApi {
 
                     var decodedMessage = Buffer.from(encodedHtml, "base64").toString("utf-8");
 
+                    decodedMessage = decodedMessage.split('\n\n')[0];
+
                     decodedMessage = decodedMessage.replace(/[^\x20-\x7E]+/g, '');
 
                     var sentByMe = false;
