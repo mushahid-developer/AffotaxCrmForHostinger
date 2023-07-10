@@ -2,7 +2,7 @@ import React, { useState, useEffect, useMemo, useRef, useCallback, useContext } 
 import { AgGridReact } from 'ag-grid-react'; // the AG Grid React Component
 import 'ag-grid-community/styles/ag-grid.css'; // Core grid CSS, always needed
 import 'ag-grid-community/styles/ag-theme-alpine.css'; // Optional theme CSS
-import { useNavigate } from 'react-router-dom';
+import { Link, useNavigate } from 'react-router-dom';
 
 import ReactQuill, { Quill } from 'react-quill';
 import 'react-quill/dist/quill.snow.css';
@@ -17,6 +17,8 @@ import TicketsContext from './TicketsContext';
 
 var markMailAsRead = axiosURL.markMailAsRead;
 var createNewTicket = axiosURL.createNewTicket;
+var markMailAsDeleted = axiosURL.markMailAsDeleted;
+var markMailAsCompleted = axiosURL.markMailAsCompleted;
 
 export default function Tickets() {
   
@@ -45,6 +47,7 @@ export default function Tickets() {
   
       const [jHolderFvalue, setJHolderFvalue] = useState('')
       const [statusFvalue, setStatusFvalue] = useState('')
+      const [activeFilter, setActiveFilter] = useState('Active')
   
       const [showNewTicketModal, setShowNewTicketModal] = useState(false);
   
@@ -53,6 +56,17 @@ export default function Tickets() {
       const handleFilters = async ()=>{
         // const roo = mainrowData; 
         var filteredArray = mainRowData
+
+        console.log(filteredArray)
+        
+        if(filteredArray !== undefined && activeFilter !== null && activeFilter !== ""){
+          if(activeFilter === 'Active'){
+            filteredArray = filteredArray.filter(obj => obj.ticketInfo.isOpen);
+          }
+          else if(activeFilter === 'Inactive'){
+            filteredArray = filteredArray.filter(obj => !(obj.ticketInfo.isOpen));
+          }
+        }
         
         if(filteredArray !== undefined && jHolderFvalue !== null && jHolderFvalue !== ""){
           filteredArray = filteredArray.filter(obj => obj.ticketInfo.user_id && obj.ticketInfo.user_id.name === jHolderFvalue);
@@ -66,12 +80,41 @@ export default function Tickets() {
         setRowData(filteredArray)
   
       }
+
+      const handleActionButtons = (e, action, Id)=>{
+        e.preventDefault();
+        var data = mainRowData;
+        if(action === "Complete"){
+
+          axios.get(`${markMailAsCompleted}/${Id}`, {
+            headers:{ 'Content-Type': 'application/json' }
+          })
+
+          data = data.map(obj => {
+            if (obj.ticketInfo._id === Id) {
+              obj.ticketInfo.isOpen = false;
+            }
+            return obj;
+          });
+
+        } else if(action === "Delete"){
+          const confirmed = window.confirm('Are you sure you want to delete this item?');
+          if (confirmed) {
+            axios.get(`${markMailAsDeleted}/${Id}`, {
+              headers:{ 'Content-Type': 'application/json' }
+            })
+            data = data.filter(obj => obj.ticketInfo._id !== Id);
+          }
+        }
+        setMainRowData(data)
+        contextValue.setReFetchTickets(prev => !prev);
+      }
   
       
       useEffect(()=>{
         setRowData(mainRowData)
         handleFilters()
-      },[mainRowData, statusFvalue, jHolderFvalue])
+      },[mainRowData, statusFvalue, jHolderFvalue, activeFilter])
 
       
       
@@ -80,7 +123,6 @@ export default function Tickets() {
       useEffect(() => {
         const interval = setInterval(() => {
           // Perform your action here
-          console.log('Action performed every 5 seconds');
         }, 5000);
 
         return () => {
@@ -202,19 +244,32 @@ export default function Tickets() {
             }
             } ,
           },
-          // {
-          //     headerName: 'Action', 
-          //     field: 'price',
-          //     floatingFilter: false,
-          //     flex:2,
-          //     cellRendererFramework: (params)=>
-          //     <>
-          //         <div>
-          //             <Link to={'/client/' + params.data._id} className='btn btn-xs  btn-primary mx-1 '> Edit</Link>    
-          //             <Link onClick={()=>{handleActionButtons('Delete', params.data._id)}} className='btn btn-xs  btn-danger mx-1'> delete</Link>
-          //         </div> 
-          //     </>
-          // }
+          {
+              headerName: 'Action', 
+              field: 'price',
+              floatingFilter: false,
+              flex:2,
+              cellRendererFramework: (params)=>
+              <>
+                  <div>
+                    {params.data.ticketInfo.isOpen && 
+                      <Link 
+                        onClick={(e)=>{handleActionButtons(e, 'Complete', params.data.ticketInfo._id)}}
+                        className='mx-1' > 
+                          <svg xmlns="http://www.w3.org/2000/svg" width="20px" height="20px" viewBox="0 0 24 24">
+                              <title/><g id="Complete"><g id="tick"><polyline fill="none" points="3.7 14.3 9.6 19 20.3 5" stroke="#000000" stroke-linecap="round" stroke-linejoin="round" stroke-width="2"/></g></g>
+                            </svg>
+                      </Link>
+                    }
+                    <Link onClick={(e)=>{handleActionButtons(e, 'Delete', params.data.ticketInfo._id)}} className='mx-1'>
+                      <svg xmlns="http://www.w3.org/2000/svg" width="20px" height="20px" viewBox="0 0 24 24" fill="none">
+                        <path d="M19 5L4.99998 19M5.00001 5L19 19" stroke="#000000" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/>
+                      </svg>
+                    </Link>    
+                      
+                  </div> 
+              </>
+          }
         ];
   
         const defaultColDef = useMemo( ()=> ({
@@ -387,16 +442,16 @@ export default function Tickets() {
               </div>
   
 
-              {/* <div>
+              <div>
                   <select name='mon_week' onChange={(e)=>{setActiveFilter(e.target.value)}} defaultValue={activeFilter} style={{width: '110px'}} className='form-control mx-2'>
                       <option value = "Active">
-                          Active
+                          On Going
                       </option>
                       <option value = "Inactive">
-                          Inactive
+                          Completed
                       </option>
                   </select>
-              </div> */}
+              </div>
   
             </div>
   

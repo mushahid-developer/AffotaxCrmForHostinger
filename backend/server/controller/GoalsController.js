@@ -196,3 +196,23 @@ exports.getAllGoal = async (req, res) => {
         res.status(400).json({message: "Failed"})
     }
 }
+
+exports.DeleteGoal = async (req, res) => {
+    
+    try{
+        const goalId = req.params.id;
+        await Goalsdb.findByIdAndDelete(goalId);
+            
+          res.json({
+            message: "Success",
+            data: "Goal Deleted Successfully"
+        })
+
+    } catch(err) {
+        res.status(500).json({
+            message: "Fail",
+            data: err.message
+        })
+    }
+
+}

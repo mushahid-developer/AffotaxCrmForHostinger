@@ -115,7 +115,7 @@ export default function DetailedMail(props) {
 
         }
     }
-
+console.log(mailData)
   return (
     <>
         <>
@@ -254,7 +254,7 @@ className="mt-3 card" >
                     maxWidth: '90%'
                 }} className='card'>
                     {/* <HTMLRenderer htmlContent={message.payload.body.data.slice(1)} /> */}
-                    <HTMLRenderer htmlContent={removeQuotedText(message.payload.body.data.charAt(0) === "e" ? message.payload.body.data.slice(0) : message.payload.body.data)} />
+                    <HTMLRenderer htmlContent={removeQuotedText(message.payload.body.data.charAt(0) === "��e" ? message.payload.body.data.slice(3) : message.payload.body.data)} />
 
                     {message.payload.body.messageAttachments.lenght !== 0 && 
                         <>
@@ -277,6 +277,7 @@ className="mt-3 card" >
         )
     }
     else{
+        console.log(message)
         return(
             <div style={{
                 border: 'none',
@@ -286,7 +287,7 @@ className="mt-3 card" >
                 maxWidth: '90%'
             }} className='card'>
                 {/* <HTMLRenderer htmlContent={message.payload.body.data.slice(1)} /> */}
-                <HTMLRenderer htmlContent={removeQuotedText(message.payload.body.data.slice(1))} />
+                <HTMLRenderer htmlContent={removeQuotedText(message.payload.body.data.charAt(0) === "�"  ? message.payload.body.data.slice(3) : message.payload.body.data)} />
                     {message.payload.body.messageAttachments.lenght !== 0 && 
                         <>
                             <hr/>
@@ -311,3 +312,4 @@ className="mt-3 card" >
     </>
   )
 }
+

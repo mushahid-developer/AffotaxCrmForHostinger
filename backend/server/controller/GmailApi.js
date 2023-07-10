@@ -83,9 +83,7 @@ class GmailApi {
 
                 var processParts = (parts) => {
                     for (var part of parts) {
-                      if (part.mimeType === 'text/plain' && part.body && part.body.data) {
-                        encodedText += part.body.data;
-                      } else if (part.mimeType === 'text/html' && part.body && part.body.data) {
+                     if (part.mimeType === 'text/html' && part.body && part.body.data) {
                         encodedHtml += part.body.data;
                       } else if (part.parts) {
                         processParts(part.parts);
@@ -93,24 +91,29 @@ class GmailApi {
                     }
                   };
 
+                  var decodedMessage = "";
+
                 if (message.payload.body && message.payload.body.data) {
-                    encodedHtml = message.payload.body.data;
+                    encodedText = message.payload.body.data;
+                    decodedMessage = Buffer.from(encodedText, "base64").toString();
+
+                    const onIndex = decodedMessage.indexOf('On');
+                    if (onIndex !== -1) {
+                        decodedMessage = decodedMessage.substring(0, onIndex);
+                    }
+                    decodedMessage = decodedMessage.replace(/(\r\n|\r|\n)/g, '<br/>')
+                    
                 } else if (message.payload.parts && message.payload.parts.length > 0) {
-                    processParts(message.payload.parts);
+                    await processParts(message.payload.parts);
+                    decodedMessage = Buffer.from(encodedHtml, "base64").toString();
+                    decodedMessage = decodedMessage.replace(/<p class=MsoNormal><o:p>&nbsp;<\/o:p><\/p><div style='border:none;border-top:solid #E1E1E1 1.0pt;padding:3.0pt 0cm 0cm 0cm'>[\s\S]*?<\/div><p class=MsoNormal>[\s\S]*?<o:p><\/o:p><\/p><\/div>/gs, '');
                 }
                 
 
-                if (encodedHtml) {
-
-                    var decodedMessage = Buffer.from(encodedHtml, "base64").toString("utf-8");
+                if (decodedMessage) {
 
                     decodedMessage = decodedMessage.split('\n\n')[0];
 
-                    decodedMessage = decodedMessage.replace(/[^\x20-\x7E]+/g, '');
-
-                    // Remove the reply section using regular expressions
-                    const regex = /On .+, .* wrote:(.*\n)*>/;
-                    decodedMessage = decodedMessage.replace(regex, '');
 
                     var sentByMe = false;
                     var fromHeader = message.payload.headers.find(header => header.name === 'From');
@@ -355,3 +358,10 @@ class GmailApi {
 }
 
 module.exports = new GmailApi();
+
+
+
+
+// <p class=MsoNormal><o:p>&nbsp;</o:p></p><div style='border:none;border-top:solid #E1E1E1 1.0pt;padding:3.0pt 0cm 0cm 0cm'><p class=MsoNormal><b>From:</b> Affotax &lt;info@affotax.com&gt; <br><b>Sent:</b> Friday, July 7, 2023 8:04 PM<br><b>To:</b> rashid@affotax.com<br><b>Subject:</b> Bank Statements Request<o:p></o:p></p></div><p class=MsoNormal><o:p>&nbsp;</o:p></p><p>Hi Jon<o:p></o:p></p><p>please can you send us your bank statemnets?<o:p></o:p></p><p>do you have invoices as well?<o:p></o:p></p><p>Thanks<o:p></o:p></p></div></body></html>
+
+// (/<p class=MsoNormal><o:p>&nbsp;<\/o:p><\/p><div style='border:none;border-top:solid #E1E1E1 1.0pt;padding:3.0pt 0cm 0cm 0cm'>[\s\S]*?<\/div><p class=MsoNormal>[\s\S]*?<o:p><\/o:p><\/p><\/div>/gs, '');

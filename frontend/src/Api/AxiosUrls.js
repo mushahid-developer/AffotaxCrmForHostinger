@@ -1,6 +1,6 @@
 //BaseUrl
 export const BaseUrl = 'https://crm.affotax.com/api/'; // Live
-// export const BaseUrl = 'http://192.168.10.16:7878/api/'; // Local
+// export const BaseUrl = 'http://localhost:7878/api/'; // Local
 // 192.168.10.16
 
 //Auth / Users
@@ -124,9 +124,12 @@ export const copyTemplateUrl = 'template/copy/one';
 export const GoalsAddOneUrl = 'goals/add/one';
 export const GoalsGetAllUrl = 'goals/get/all';
 export const GoalsEditOneUrl = 'goals/edit/one';
+export const GoalsDeleteOneUrl = 'goals/delete/one';
 
 //Tickets
 export const getAllTickets = 'tickets/email/get/all';
 export const markMailAsRead = 'tickets/email/markasread';
 export const createNewTicket = 'tickets/create/new';
 export const replyToTicket = 'tickets/thread/reply';
+export const markMailAsCompleted = 'tickets/thread/complete';
+export const markMailAsDeleted = 'tickets/thread/delete';

@@ -493,7 +493,7 @@ transition: width .3s ease-in-out;
 }
 
 .miniNoteOpenMain{
- width: 84vw !important; 
+ width: 92vw !important; 
 }
 
 .MiniNote{
@@ -505,7 +505,7 @@ transition: width .3s ease-in-out;
 }
 
 .miniNoteOpenMiniNote{
-  width: 16vw;
+  width: 8vw;
 }
 
 /* Mini Note Ends */

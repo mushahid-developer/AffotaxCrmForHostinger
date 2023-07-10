@@ -132,7 +132,7 @@ export default function AdminRoutes(props) {
                   <Route path="/hr/employees" element = {<Employees />}></Route>
                   <Route path="/hr/employees/add" element = {<AddEmployee />}></Route>
                   <Route path="/hr/employees/edit/:id" element = {<EditEmployee />}></Route>
-                  <Route path="/clients" element = {<Clients />}></Route>
+                  <Route path="/clients" element = {<Clients roleName={roleName}/>}></Route>
                   <Route path="/client/:id" element = {<EditClient />}></Route>
                   <Route path="/timesheet" element = {<Timesheet roleName={roleName} />}></Route>
                   <Route path="/leads" element = {<Leads />}></Route>

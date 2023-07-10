@@ -143,11 +143,14 @@ route.get('/template/copy/one/:id', TemplateController.CopyOneTemplate)
 route.post('/goals/add/one', GoalsController.addGoal)
 route.get('/goals/get/all', GoalsController.getAllGoal)
 route.post('/goals/edit/one/:id', GoalsController.editGoal)
+route.get('/goals/delete/one/:id', GoalsController.DeleteGoal)
 
 // Tickets
 route.get('/tickets/email/get/all', authMiddleware, TicketsController.getEmails)
 route.get('/tickets/email/markasread/:id', TicketsController.markAsRead)
 route.post('/tickets/create/new', authMiddleware, TicketsController.createNewTicket)
 route.post('/tickets/thread/reply', authMiddleware, TicketsController.replyToTicket)
+route.get('/tickets/thread/complete/:id', TicketsController.markAsCompleted)
+route.get('/tickets/thread/delete/:id', TicketsController.DeleteTicket)
 
 module.exports = route

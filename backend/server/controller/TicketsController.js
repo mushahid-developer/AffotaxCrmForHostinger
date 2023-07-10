@@ -162,3 +162,49 @@ exports.replyToTicket = async (req, res) => {
     }
 
 }
+
+exports.markAsCompleted = async (req, res) => {
+    
+    try{
+
+        const tickedId = req.params.id;
+        
+        await Ticketsdb.findByIdAndUpdate(tickedId, {
+            isOpen: false
+        });
+            
+          res.json({
+            message: "Success",
+            data: "Mail Completed Successfully"
+        })
+
+    } catch(err) {
+        res.status(500).json({
+            message: "Fail",
+            data: err.message
+        })
+    }
+
+}
+
+exports.DeleteTicket = async (req, res) => {
+    
+    try{
+
+        const tickedId = req.params.id;
+        
+        await Ticketsdb.findByIdAndDelete(tickedId);
+            
+          res.json({
+            message: "Success",
+            data: "Mail Deleted Successfully"
+        })
+
+    } catch(err) {
+        res.status(500).json({
+            message: "Fail",
+            data: err.message
+        })
+    }
+
+}

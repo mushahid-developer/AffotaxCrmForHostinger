@@ -10,7 +10,7 @@ const SeederDatabaseConfigObjectOptions = {
 };
 
 const config = {
-  database: "mongodb+srv://developeraffotax:BEwjlTn0Z07sk6Co@affotaxcrm.vir9dqy.mongodb.net/CRM-Local?retryWrites=true&w=majority",
+  database: "mongodb+srv://developeraffotax:BEwjlTn0Z07sk6Co@affotaxcrm.vir9dqy.mongodb.net/CRM?retryWrites=true&w=majority",
 };
 
 // path: path.resolve('./data.json')
