@@ -98,7 +98,7 @@ function App() {
       return (
         <>
           <div style={{display: 'flex',}}>
-            <div className={` MainMiniNote ${miniNoteIsOpen && "miniNoteOpenMain"}`} >
+            <div className={` MainMiniNote ${miniNoteIsOpen && "miniNoteOpenMain"} ${recurringNoteIsOpen && "recurringNoteOpenMain"}`} >
               <AdminRoutes 
                 roleName={roleName} 
                 pagesAccess={pagesAccess} 
@@ -112,7 +112,7 @@ function App() {
             <div className={`MiniNote ${miniNoteIsOpen && "miniNoteOpenMiniNote"}`}>
               <MiniNotes setMiniNoteIsOpen={setMiniNoteIsOpen} miniNoteIsOpen={miniNoteIsOpen} />
             </div>
-            <div className={`MiniNote ${recurringNoteIsOpen && "miniNoteOpenMiniNote"}`}>
+            <div className={`recurringNote ${recurringNoteIsOpen && "recurringNoteOpenMiniNote"}`}>
               <RecurringNotes setRecurringNoteIsOpen={setRecurringNoteIsOpen} recurringNoteIsOpen={recurringNoteIsOpen} />
             </div>
           </div>

@@ -510,6 +510,31 @@ transition: width .3s ease-in-out;
 
 /* Mini Note Ends */
 
+/* Recurring Note */
+.MainRecurringNote{
+ width: 100vw;
+ overflow: hidden;
+transition: width .3s ease-in-out;
+}
+
+.recurringNoteOpenMain{
+ width: 84vw !important; 
+}
+
+.recurringNote{
+  height: 100vh;
+  width: 0vw;
+  overflow: hidden;
+  box-shadow: 0px 4px 5px 0px rgba(0,0,0,.14), 0px 1px 10px 0px rgba(0,0,0,.12), 0px 2px 4px -1px rgba(0,0,0,.2);
+  transition: width .3s ease-in-out;
+}
+
+.recurringNoteOpenMiniNote{
+  width: 16vw;
+}
+
+/* Recurring Note Ends */
+
 /* JOb Planning */
 .departmentSummary {
   height: 0;
