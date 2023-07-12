@@ -11,6 +11,7 @@ import axios from '../../../../Api/Axios';
 import * as axiosURL from '../../../../Api/AxiosUrls';
 import loaderr from "../../../../Assets/svgs/loader.svg"
 import DropdownFilter from '../../../Jobs/JobPlaning/DropdownFilter';
+import DropdownFilterWithDate from '../../../Jobs/JobPlaning/DropDownFilterWithDate';
 import { Button, Form, Modal } from 'react-bootstrap';
 import secureLocalStorage from 'react-secure-storage';
 import TicketsContext from './TicketsContext';
@@ -20,7 +21,9 @@ var createNewTicket = axiosURL.createNewTicket;
 var markMailAsDeleted = axiosURL.markMailAsDeleted;
 var markMailAsCompleted = axiosURL.markMailAsCompleted;
 
-export default function Tickets() {
+export default function Tickets(props) {
+
+  const roleName= props.roleName
   
   const contextValue = useContext(TicketsContext);
 
@@ -31,9 +34,11 @@ export default function Tickets() {
         clientId: '',
         subject: '',
         message: '',
+        templateId: ''
       });
       const [clients, setClients] = useState();
       const [users, setUsers] = useState(contextValue.ticketsData.UsersList);
+      const [templatesList, setTemplatesList] = useState([]);
       const [selectedClient, setSelectedClient] = useState("");
       const [trySubmit, setTrySubmit] = useState(false);
       const [mailIsSending, setMailIsSending] = useState(false);
@@ -48,6 +53,8 @@ export default function Tickets() {
       const [jHolderFvalue, setJHolderFvalue] = useState('')
       const [statusFvalue, setStatusFvalue] = useState('')
       const [activeFilter, setActiveFilter] = useState('Active')
+      const [startDateFvalueDate, setStartDateFvalueDate] = useState('');
+      const [startDateFvalue, setStartDateFvalue] = useState('');
   
       const [showNewTicketModal, setShowNewTicketModal] = useState(false);
   
@@ -76,6 +83,126 @@ export default function Tickets() {
         if(filteredArray !== undefined && statusFvalue !== null && statusFvalue !== ""){
           filteredArray = filteredArray.filter(obj => obj.readStatus && obj.readStatus === statusFvalue);
         }
+
+        
+        //Date
+        if(startDateFvalue){
+
+          //Job Date Expired Filter
+          if(filteredArray != undefined && startDateFvalue != null && startDateFvalue !== "" && startDateFvalue === "Expired"){
+            filteredArray = await filteredArray.filter(obj => {
+              // obj.manager_id && obj.manager_id.name === cManagerFvalue
+              const today = new Date()
+              const deadline = new Date(obj.formattedDate)
+              if(obj.formattedDate && obj.formattedDate !== 'Invalid Date'){
+                if(!(deadline.setHours(0, 0, 0, 0) >= today.setHours(0, 0, 0, 0))){
+                  return obj;
+                }
+              }
+            });
+          }
+
+          //Job Date Today Filter
+          if(filteredArray != undefined && startDateFvalue != null && startDateFvalue !== "" && startDateFvalue === "Today"){
+            filteredArray = await filteredArray.filter(obj => {
+              // obj.manager_id && obj.manager_id.name === cManagerFvalue
+              const today = new Date()
+              const deadline = new Date(obj.formattedDate)
+              if(obj.formattedDate && obj.formattedDate !== 'Invalid Date'){
+                if((deadline.setHours(0, 0, 0, 0) === today.setHours(0, 0, 0, 0))){
+                  return obj;
+                }
+              }
+            });
+          }
+
+          //Job Date Tomorrow Filter
+          if(filteredArray != undefined && startDateFvalue != null && startDateFvalue !== "" && startDateFvalue === "Tomorrow"){
+            filteredArray = await filteredArray.filter(obj => {
+              // obj.manager_id && obj.manager_id.name === cManagerFvalue
+              const today = new Date()
+              const tomorrow = new Date(today);
+              tomorrow.setDate(tomorrow.getDate() + 1);
+              const deadline = new Date(obj.formattedDate)
+              if(obj.formattedDate && obj.formattedDate !== 'Invalid Date'){
+                if((deadline.setHours(0, 0, 0, 0) === tomorrow.setHours(0, 0, 0, 0))){
+                  return obj;
+                }
+              }
+            });
+          }
+
+
+          //Job Date 7 days Filter
+          if(filteredArray != undefined && startDateFvalue != null && startDateFvalue !== "" && startDateFvalue === "In 7 days"){
+            filteredArray = await filteredArray.filter(obj => {
+              // obj.manager_id && obj.manager_id.name === cManagerFvalue
+              const today = new Date()
+              const deadline = new Date(obj.formattedDate)
+              const deadlineNextSevenDays = new Date(today.getTime() + (7 * 24 * 60 * 60 * 1000))
+              if(obj.formattedDate && obj.formattedDate !== 'Invalid Date'){
+                if((deadline >= today.setHours(0, 0, 0, 0)) && (deadline <= deadlineNextSevenDays.setHours(0, 0, 0, 0))){
+                  return obj;
+                }
+              }
+            });
+          }
+
+          //Job Date 15 days Filter
+          if(filteredArray != undefined && startDateFvalue != null && startDateFvalue !== "" && startDateFvalue === "In 15 days"){
+            filteredArray = await filteredArray.filter(obj => {
+              // obj.manager_id && obj.manager_id.name === cManagerFvalue
+              const today = new Date()
+              const deadline = new Date(obj.formattedDate)
+              const deadlineNextSevenDays = new Date(today.getTime() + (15 * 24 * 60 * 60 * 1000))
+              if(obj.formattedDate && obj.formattedDate !== 'Invalid Date'){
+                if((deadline >= today.setHours(0, 0, 0, 0)) && (deadline <= deadlineNextSevenDays.setHours(0, 0, 0, 0))){
+                  return obj;
+                }
+              }
+            });
+          }
+
+          //Job Date Month Wise Filter
+          if(filteredArray != undefined && startDateFvalue != null && startDateFvalue !== "" && startDateFvalue === "Month Wise"){
+            filteredArray = await filteredArray.filter(obj => {
+              // obj.manager_id && obj.manager_id.name === cManagerFvalue
+              // const today = new Date()
+              var today = new Date(startDateFvalueDate)
+              const deadline = new Date(obj.formattedDate)
+              if (obj.formattedDate && obj.formattedDate !== 'Invalid Date') {
+                const todayMonth = today.getMonth();
+                const todayYear = today.getFullYear();
+                const deadlineMonth = deadline.getMonth();
+                const deadlineYear = deadline.getFullYear();
+              
+                if ((deadlineYear === todayYear && deadlineMonth === todayMonth)) {
+                  return obj;
+                }
+              }
+            });
+          }
+          
+          //Job Date Custom Filter
+          if(filteredArray != undefined && startDateFvalue != null && startDateFvalue !== "" && startDateFvalue === "Custom"){
+            filteredArray = await filteredArray.filter(obj => {
+              var cellDate = obj.formattedDate !== "" && new Date(obj.formattedDate);
+              var filterDate = new Date(startDateFvalueDate)
+              if(cellDate && cellDate !== 'Invalid Date' && filterDate !== 'Invalid Date'){
+                // compare dates
+                if (cellDate.setHours(0, 0, 0, 0) <= filterDate.setHours(0, 0, 0, 0)) {
+                  return 1; //exclude
+                } else if (cellDate.setHours(0, 0, 0, 0) > filterDate.setHours(0, 0, 0, 0)) {
+                  return 0; //include 
+                } else {
+                  return 1; //-1 include as exact match
+                }
+              }
+            });
+          }
+        }
+
+        
         
         setRowData(filteredArray)
   
@@ -114,7 +241,7 @@ export default function Tickets() {
       useEffect(()=>{
         setRowData(mainRowData)
         handleFilters()
-      },[mainRowData, statusFvalue, jHolderFvalue, activeFilter])
+      },[mainRowData, statusFvalue, jHolderFvalue, activeFilter, startDateFvalueDate, startDateFvalue])
 
       
       
@@ -142,6 +269,7 @@ export default function Tickets() {
             setMainRowData(contextValue.ticketsData.Emails ? contextValue.ticketsData.Emails.detailedThreads : []);
             setClients(contextValue.ticketsData.Clients);
             setUsers(contextValue.ticketsData.UsersList);
+            setTemplatesList(contextValue.ticketsData.templatesList);
           }
           
       }, [reRender, contextValue.ticketsData]);
@@ -242,7 +370,17 @@ export default function Tickets() {
               else{
                 return ""
             }
-            } ,
+            },
+            floatingFilterComponent: 'selectFloatingFilterWthDate', 
+            floatingFilterComponentParams: { 
+              options: ["Expired", "Today", "Tomorrow", "In 7 days", "In 15 days", "Month Wise", "Custom"],
+              onValueChange:(value) => setStartDateFvalue(value),
+              value: startDateFvalue,
+              onDateValueChange:(value) => setStartDateFvalueDate(value),
+              dateValue: startDateFvalueDate,
+              suppressFilterButton: true, 
+              suppressInput: true 
+            },
           },
           {
               headerName: 'Action', 
@@ -288,6 +426,7 @@ export default function Tickets() {
          
   const frameworkComponents = {
     selectFloatingFilter: DropdownFilter,
+    selectFloatingFilterWthDate: DropdownFilterWithDate,
   };
   
   async function onGridReady(params) {
@@ -352,6 +491,30 @@ export default function Tickets() {
         [name]: value
     }));
 
+
+  }
+
+  const handleTemplateSelect = (e) => {
+    e.preventDefault();
+
+    const {name, value} = e.target;
+
+    if(value === ""){
+      setNewTicketFormData(prevState => ({
+        ...prevState,
+        message: "",
+        [name]: ""
+      }));
+    } else {
+          const templateData = templatesList.find(template => template._id === value);
+          const htmlString = templateData.template.replace(/\n/g, '<br>');
+          setNewTicketFormData(prevState => ({
+            ...prevState,
+            message: htmlString,
+            [name]: value
+          }));
+
+    }
 
   }
 
@@ -511,6 +674,7 @@ export default function Tickets() {
           <Form 
             onSubmit={handleNewTicketSubmitForm}
           >
+
               <Form.Group className='mt-2'>
       
                 <Form.Select 
@@ -528,25 +692,29 @@ export default function Tickets() {
 
               { trySubmit && !newTicketFormData.clientId ? 
               
-                <div className='mt-2'>
-                  <p style = {{
-                    color: 'red',
-                  }}>
-                  Client Is Required
-                  </p>
-                </div>
+              <div className='mt-2'>
+                <p style = {{
+                  color: 'red',
+                }}>
+                Client Is Required
+                </p>
+              </div>
 
-                : trySubmit && newTicketFormData.clientId && !selectedClient &&
+              : trySubmit && newTicketFormData.clientId && !selectedClient &&
+            
+              <div className='mt-2'>
+                <p style = {{
+                  color: 'red',
+                }}>
+                  This client Does Not have Email in system
+                </p>
+              </div>
+
+            }
+
+
+
               
-                <div className='mt-2'>
-                  <p style = {{
-                    color: 'red',
-                  }}>
-                    This client Does Not have Email in system
-                  </p>
-                </div>
-
-              }
 
 
               <Form.Group className='mt-2'>
@@ -570,6 +738,25 @@ export default function Tickets() {
               </div>
 
             }
+
+            {roleName === "Admin" && 
+            
+              <Form.Group className='mt-2'>
+                    
+                <Form.Select 
+                name='templateId'
+                onChange={handleTemplateSelect}
+                value = {newTicketFormData.templateId}
+                >
+                    <option value="">Select Template</option>
+                    {templatesList && templatesList.map((template, index)=>
+                        <option key={index} value={template._id}>{template.name} - {template.description}</option>
+                    )}
+                </Form.Select>
+
+              </Form.Group>
+            }
+            
 
               <div>
                 <Form.Group className=' mt-2'>

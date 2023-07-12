@@ -1,4 +1,5 @@
 const Clientdb = require('../model/Client/client');
+const Templatesdb = require('../model/Templates/Templates');
 const Ticketsdb = require('../model/Tickets/Tickets');
 const Userdb = require('../model/Users/Users');
 var gmail = require('./GmailApi')
@@ -51,10 +52,13 @@ exports.getEmails = async (req, res) => {
             return email;
           });
 
+          const templatesList = await Templatesdb.find(); 
+
 
         const resp = {
             Emails,
             UsersList,
+            templatesList,
             Clients
         }
             

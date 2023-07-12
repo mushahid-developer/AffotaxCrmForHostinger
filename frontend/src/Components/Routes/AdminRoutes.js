@@ -148,7 +148,7 @@ export default function AdminRoutes(props) {
                   <Route path="/goals" element = {<Goals />}></Route>
                   <Route path="/tickets" element = {
                     <TicketsContext.Provider value = {finalTicketData}>
-                      <Tickets  setReFetchTickets = {setReFetchTickets} />
+                      <Tickets  setReFetchTickets = {setReFetchTickets} roleName={roleName} />
                     </TicketsContext.Provider>
                   }></Route>
                   <Route path="/tickets/mail" element = {<DetailedMail setReFetchTickets = {setReFetchTickets}/>}></Route>
