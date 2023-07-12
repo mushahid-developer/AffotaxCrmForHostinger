@@ -252,20 +252,7 @@ const Clients = (props) => {
             suppressInput: true 
           } 
         },
-        roleName === ('Admin') &&
-        { 
-          headerName: 'Source', 
-          field: 'source', 
-          flex:1,
-          floatingFilterComponent: 'selectFloatingFilter', 
-          floatingFilterComponentParams: { 
-            options: ['FIV', 'UPW', 'PPH', 'Website', 'Referal', 'Partner'],
-            onValueChange:(value) => setSourceFValue(value),
-            value: sourceFValue,
-            suppressFilterButton: true, 
-            suppressInput: true 
-          } 
-        },
+        
         // { headerName: 'Status', field: 'isActive', flex:1 },
         { headerName: 'Status', 
         field: 'isActive', 
@@ -291,6 +278,25 @@ const Clients = (props) => {
             </>
         }
       ];
+
+      
+  if(roleName === "Admin"){
+    const obj = { 
+      headerName: 'Source', 
+      field: 'source', 
+      flex:1,
+      floatingFilterComponent: 'selectFloatingFilter', 
+      floatingFilterComponentParams: { 
+        options: ['FIV', 'UPW', 'PPH', 'Website', 'Referal', 'Partner'],
+        onValueChange:(value) => setSourceFValue(value),
+        value: sourceFValue,
+        suppressFilterButton: true, 
+        suppressInput: true 
+      } 
+    }
+
+     columnDefs.splice(7, 0, obj);
+   }
 
       const defaultColDef = useMemo( ()=> ({
         sortable: true,

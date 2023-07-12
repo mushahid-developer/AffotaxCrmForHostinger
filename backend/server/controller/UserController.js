@@ -24,7 +24,6 @@ exports.createUser = async (req, res) => {
         await bcrypt
         .genSalt(saltRounds)
         .then(salt => {
-            console.log('Salt: ', salt)
             return bcrypt.hash(password, salt)
         })
         .then(hash => {
@@ -48,9 +47,10 @@ exports.createUser = async (req, res) => {
         })
       )
     } catch (err) {
+      console.log(err.message)
       res.status(401).json({
         message: "User not successful created",
-        error: err,
+        error: err.message,
       })
     }
 }

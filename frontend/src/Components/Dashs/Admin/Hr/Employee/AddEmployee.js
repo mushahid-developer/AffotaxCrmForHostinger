@@ -1,7 +1,7 @@
 import { useState, useEffect, useRef } from 'react'
 import {Button, Col, Form, InputGroup, Row} from 'react-bootstrap';
 import { Store } from 'react-notifications-component';
-import { Navigate } from 'react-router-dom';
+import { useNavigate } from 'react-router-dom';
 
 import axios from '../../../../../Api/Axios';
 import * as axiosURL from '../../../../../Api/AxiosUrls';
@@ -25,6 +25,8 @@ const AddEmployee = () => {
         address: '',
     })
 
+    const navigate = useNavigate();
+
     const handleFormChange = (e)=>{
         setValidated(false);
         e.preventDefault();
@@ -36,15 +38,15 @@ const AddEmployee = () => {
     }
 
     const handleSubmit = async (event) => {
-        event.preventDefault()
+        event.preventDefault();
         const form = event.currentTarget;
         if (form.checkValidity() === false) {
             event.stopPropagation();
             setValidated(true);
             return;
         }
-        setLoader(true)
         try {
+            setLoader(true)
             const response = await axios.post(addEmployeeUrl,
                 {
                     data:formData 
@@ -53,32 +55,16 @@ const AddEmployee = () => {
                     headers:{ 'Content-Type': 'application/json' }
                 }
             );
-          if(response.status === 200 && response.data.message === "User successfully created")
-          {  
-            Store.addNotification({
-                title: 'Success',
-                message: "Data added Successfully",
-                type: "success",
-                insert: "top",
-                container: "top-center",
-                animationIn: ["animate__animated", "animate__fadeIn"],
-                animationOut: ["animate__animated", "animate__fadeOut"],
-                dismiss: {
-                  duration: 5000,
-                  onScreen: true
-                }
-              });
-                setLoader(false)
-                Navigate("/hr/employees");
-            }
 
-            else if(response.status === 200){
-                console.log(response.data)
-                setLoader(false)
+          if(response.status === 200 && response.data.message === "User successfully created"){
+                navigate('/hr/employees');
             }
             
-        
-            } catch (err) {
+            else if(response.status === 200){
+            }
+            
+            setLoader(false)
+        } catch (err) {
             Store.addNotification({
                 title: 'Error',
                 message: "Please Try Again",
@@ -91,8 +77,8 @@ const AddEmployee = () => {
                     duration: 5000,
                     onScreen: true
                 }
-                });
-        };
+            });
+        }
 
     };
 

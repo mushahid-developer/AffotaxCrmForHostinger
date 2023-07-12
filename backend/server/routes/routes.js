@@ -152,5 +152,6 @@ route.post('/tickets/create/new', authMiddleware, TicketsController.createNewTic
 route.post('/tickets/thread/reply', authMiddleware, TicketsController.replyToTicket)
 route.get('/tickets/thread/complete/:id', TicketsController.markAsCompleted)
 route.get('/tickets/thread/delete/:id', TicketsController.DeleteTicket)
+route.get('/tickets/thread/attachment/download/:id/:mid', TicketsController.DownloadAttachment)
 
 module.exports = route

@@ -139,6 +139,7 @@ export default function DetailedMail(props) {
             });
 
             const jsonData = response.data;
+            console.log(jsonData)
 
             const encodedData = jsonData.data;
             const decodedData = Buffer.from(encodedData, 'base64');
@@ -159,6 +160,7 @@ export default function DetailedMail(props) {
             URL.revokeObjectURL(url);
 
         } catch (err){
+            console.log(err.message)
         }
 
         setDownloadingAttachment('')
@@ -347,6 +349,7 @@ className="mt-3 card" >
                             <hr/>
 
                             {message.payload.body.messageAttachments.map((attachment)=>{
+                                console.log(attachment)
                                 return(
                                     <Link className={`${downloadingAttachment === attachment.attachmentId && "disabled-router-link" }`} onClick={(e)=>{handleDownloadAttachment(e, attachment.attachmentId, attachment.attachmentMessageId, attachment.attachmentFileName)}}>
                                         {attachment.attachmentFileName}
