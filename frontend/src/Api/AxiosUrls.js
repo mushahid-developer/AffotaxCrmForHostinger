@@ -133,3 +133,4 @@ export const createNewTicket = 'tickets/create/new';
 export const replyToTicket = 'tickets/thread/reply';
 export const markMailAsCompleted = 'tickets/thread/complete';
 export const markMailAsDeleted = 'tickets/thread/delete';
+export const downloadAttachment = 'tickets/thread/attachment/download';

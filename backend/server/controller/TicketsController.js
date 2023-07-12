@@ -208,3 +208,23 @@ exports.DeleteTicket = async (req, res) => {
     }
 
 }
+
+exports.DownloadAttachment = async (req, res) => {
+    
+    try{
+
+        const attachmentId = req.params.id;
+        const messageId = req.params.mid;
+        
+        const resp = await gmail.getAttachment(attachmentId, messageId);
+    
+        // Send the attachment data in the response
+        res.send(resp);
+            
+
+    } catch(err) {
+        console.error('Error downloading attachment:', err);
+        res.status(500).send('Error downloading attachment.');
+    }
+
+}

@@ -1,14 +1,18 @@
 import React, { useState } from 'react'
-import { useLocation, useNavigate } from 'react-router-dom';
+import { Link, useLocation, useNavigate } from 'react-router-dom';
 import HTMLRenderer from './HtmlRenderer';
 import { Button } from 'react-bootstrap';
-import ReactQuill, { Quill } from 'react-quill';
+import ReactQuill from 'react-quill';
+import { Buffer } from 'buffer';
+import loaderr from "../../../../Assets/svgs/loader.svg"
+
+import secureLocalStorage from 'react-secure-storage';
 
 import axios from '../../../../Api/Axios';
 import * as axiosURL from '../../../../Api/AxiosUrls';
-import secureLocalStorage from 'react-secure-storage';
-var replyToTicket = axiosURL.replyToTicket;
 
+var replyToTicket = axiosURL.replyToTicket;
+var downloadAttachment = axiosURL.downloadAttachment;
 
 export default function DetailedMail(props) {
 
@@ -21,6 +25,7 @@ export default function DetailedMail(props) {
     const [replyFieldEmpty, setReplyFieldEmpty] = useState(false)
     const [sendingMail, setSendingMail] = useState(false)
     const [replyFormData, setReplyFormData] = useState('')
+    const [downloadingAttachment, setDownloadingAttachment] = useState('')
 
     
     const modules = {
@@ -115,7 +120,51 @@ export default function DetailedMail(props) {
 
         }
     }
-console.log(mailData)
+
+    const handleDownloadAttachment = async (e, attachmentId, messageId, fileName)=>{
+
+        e.preventDefault();
+        setDownloadingAttachment(attachmentId)
+
+        try{
+            
+            const token = secureLocalStorage.getItem('token') 
+            const response = await axios.get(`${downloadAttachment}/${attachmentId}/${messageId}`, 
+            {
+                headers:{ 
+                    'Content-Type': 'application/json',
+                    'Authorization': 'Bearer ' + token
+                },
+                responseType: 'json',
+            });
+
+            const jsonData = response.data;
+
+            const encodedData = jsonData.data;
+            const decodedData = Buffer.from(encodedData, 'base64');
+            const byteArray = new Uint8Array(decodedData.buffer);
+            
+            const blob = new Blob([byteArray], { type: 'application/octet-stream' });
+            const url = URL.createObjectURL(blob);
+
+            // Create a link element and set its attributes
+            const link = document.createElement('a');
+            link.href = url;
+            link.download = fileName; // Specify the desired filename
+
+            // Simulate a click event on the link to trigger the download
+            link.click();
+
+            // Clean up the URL object
+            URL.revokeObjectURL(url);
+
+        } catch (err){
+        }
+
+        setDownloadingAttachment('')
+
+    }
+
   return (
     <>
         <>
@@ -254,17 +303,23 @@ className="mt-3 card" >
                     maxWidth: '90%'
                 }} className='card'>
                     {/* <HTMLRenderer htmlContent={message.payload.body.data.slice(1)} /> */}
-                    <HTMLRenderer htmlContent={removeQuotedText(message.payload.body.data.charAt(0) === "��e" ? message.payload.body.data.slice(3) : message.payload.body.data)} />
+                    <HTMLRenderer htmlContent={removeQuotedText(message.payload.body.data.charAt(0) === "�" ? message.payload.body.data.slice(3) : message.payload.body.data)} />
 
-                    {message.payload.body.messageAttachments.lenght !== 0 && 
+
+                    {message.payload.body.messageAttachments.length !== 0 && 
                         <>
                             <hr/>
 
                             {message.payload.body.messageAttachments.map((attachment)=>{
                                 return(
-                                    <p>
+                                    <Link className={`${downloadingAttachment === attachment.attachmentId && "disabled-router-link" }`} onClick={(e)=>{handleDownloadAttachment(e, attachment.attachmentId, attachment.attachmentMessageId, attachment.attachmentFileName)}}>
                                         {attachment.attachmentFileName}
-                                    </p>
+                                        {downloadingAttachment && downloadingAttachment === attachment.attachmentId && 
+                                            <span>
+                                                <img style={{height: '20px', paddingLeft: '10px'}} src={loaderr} alt="" />
+                                            </span>
+                                        }
+                                    </Link>
                                 )
                             })}
                         </>
@@ -277,7 +332,6 @@ className="mt-3 card" >
         )
     }
     else{
-        console.log(message)
         return(
             <div style={{
                 border: 'none',
@@ -288,15 +342,20 @@ className="mt-3 card" >
             }} className='card'>
                 {/* <HTMLRenderer htmlContent={message.payload.body.data.slice(1)} /> */}
                 <HTMLRenderer htmlContent={removeQuotedText(message.payload.body.data.charAt(0) === "�"  ? message.payload.body.data.slice(3) : message.payload.body.data)} />
-                    {message.payload.body.messageAttachments.lenght !== 0 && 
+                    {message.payload.body.messageAttachments.length !== 0 && 
                         <>
                             <hr/>
 
                             {message.payload.body.messageAttachments.map((attachment)=>{
                                 return(
-                                    <p>
+                                    <Link className={`${downloadingAttachment === attachment.attachmentId && "disabled-router-link" }`} onClick={(e)=>{handleDownloadAttachment(e, attachment.attachmentId, attachment.attachmentMessageId, attachment.attachmentFileName)}}>
                                         {attachment.attachmentFileName}
-                                    </p>
+                                        {downloadingAttachment && downloadingAttachment === attachment.attachmentId && 
+                                            <span>
+                                                <img style={{height: '20px', paddingLeft: '10px'}} src={loaderr} alt="" />
+                                            </span>
+                                        }
+                                    </Link>
                                 )
                             })}
                         </>

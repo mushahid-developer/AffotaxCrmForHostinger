@@ -57,7 +57,6 @@ export default function Tickets() {
         // const roo = mainrowData; 
         var filteredArray = mainRowData
 
-        console.log(filteredArray)
         
         if(filteredArray !== undefined && activeFilter !== null && activeFilter !== ""){
           if(activeFilter === 'Active'){
@@ -445,7 +444,7 @@ export default function Tickets() {
               <div>
                   <select name='mon_week' onChange={(e)=>{setActiveFilter(e.target.value)}} defaultValue={activeFilter} style={{width: '110px'}} className='form-control mx-2'>
                       <option value = "Active">
-                          On Going
+                          Progress
                       </option>
                       <option value = "Inactive">
                           Completed

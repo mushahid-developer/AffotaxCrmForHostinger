@@ -95,25 +95,25 @@ class GmailApi {
 
                 if (message.payload.body && message.payload.body.data) {
                     encodedText = message.payload.body.data;
-                    decodedMessage = Buffer.from(encodedText, "base64").toString();
+                    decodedMessage = Buffer.from(encodedText, "base64").toString('utf-8');
 
-                    const onIndex = decodedMessage.indexOf('On');
+                    const onIndex = decodedMessage.indexOf('On ');
                     if (onIndex !== -1) {
                         decodedMessage = decodedMessage.substring(0, onIndex);
                     }
                     decodedMessage = decodedMessage.replace(/(\r\n|\r|\n)/g, '<br/>')
-                    
+
                 } else if (message.payload.parts && message.payload.parts.length > 0) {
                     await processParts(message.payload.parts);
-                    decodedMessage = Buffer.from(encodedHtml, "base64").toString();
+                    decodedMessage = Buffer.from(encodedHtml, "base64").toString('utf-8');
                     decodedMessage = decodedMessage.replace(/<p class=MsoNormal><o:p>&nbsp;<\/o:p><\/p><div style='border:none;border-top:solid #E1E1E1 1.0pt;padding:3.0pt 0cm 0cm 0cm'>[\s\S]*?<\/div><p class=MsoNormal>[\s\S]*?<o:p><\/o:p><\/p><\/div>/gs, '');
+                    
                 }
                 
-
+                
                 if (decodedMessage) {
-
+                    
                     decodedMessage = decodedMessage.split('\n\n')[0];
-
 
                     var sentByMe = false;
                     var fromHeader = message.payload.headers.find(header => header.name === 'From');
@@ -174,33 +174,63 @@ class GmailApi {
             if (error.response && error.response.status === 404) {
                 // Mail not found, skip this thread ID
                 return null;
-              } else {
+            } else {
                 throw new Error(error.message);
-              }
-            throw new Error(error.message);
+            }
         }
     }
 
     
     // Method to get attachment data
-    getAttachment = async (attachmentId, messageId, accessToken) => {
+    getAttachment = async (attachmentId, messageId) => {
+        
         try {
-        var config = {
+
+            var accessToken = await this.getAccessToken();
+
+            const url = `https://www.googleapis.com/gmail/v1/users/me/messages/${messageId}/attachments/${attachmentId}`;
+    
+            const config = {
             method: 'get',
-            url: `https://gmail.googleapis.com/gmail/v1/users/me/messages/${messageId}/attachments/${attachmentId}`,
+            url: url,
             headers: {
-            'Authorization': `Bearer ${accessToken}`
+                Authorization: `Bearer ${accessToken}`,
             },
-            responseType: 'arraybuffer'  // Ensure response data is received as ArrayBuffer
-        };
+            responseType: 'arraybuffer',
+            };
     
-        var response = await axios(config);
-        var attachmentData = Buffer.from(response.data, 'base64');  // Convert data to Buffer
+            const response = await axios(config);
+            const attachmentData = response.data;
+
+            // Determine the file format based on the attachment's MIME type
+            const contentType = response.headers['content-type'];
+
+            return attachmentData
+            
     
-        return attachmentData;
+            
         } catch (error) {
-        throw new Error(error.message);
+            throw new Error(error.message);
         }
+        
+        
+        // try {
+        // var config = {
+        //     method: 'get',
+        //     url: `https://gmail.googleapis.com/gmail/v1/users/me/messages/${messageId}/attachments/${attachmentId}`,
+        //     headers: {
+        //     'Authorization': `Bearer ${accessToken}`
+        //     },
+        //     responseType: 'arraybuffer'  // Ensure response data is received as ArrayBuffer
+        // };
+    
+        // var response = await axios(config);
+        // var attachmentData = Buffer.from(response.data, 'base64');  // Convert data to Buffer
+    
+        // return attachmentData;
+        // } catch (error) {
+        // throw new Error(error.message);
+        // }
     }
 
     getAllEmails = async (TicketsList) => {
