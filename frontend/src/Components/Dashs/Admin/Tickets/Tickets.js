@@ -213,6 +213,9 @@ export default function Tickets(props) {
         var data = mainRowData;
         if(action === "Complete"){
 
+          const confirmed = window.confirm('Are you sure you want to mark this item as Completed?');
+          if (confirmed) {
+
           axios.get(`${markMailAsCompleted}/${Id}`, {
             headers:{ 'Content-Type': 'application/json' }
           })
@@ -223,6 +226,7 @@ export default function Tickets(props) {
             }
             return obj;
           });
+        }
 
         } else if(action === "Delete"){
           const confirmed = window.confirm('Are you sure you want to delete this item?');
@@ -792,7 +796,7 @@ export default function Tickets(props) {
         </Modal.Body>
         <Modal.Footer>
           <Button onClick={()=>{setShowNewTicketModal(!showNewTicketModal)}}>Close</Button>
-          <Button onClick={handleNewTicketSubmitForm} disabled={mailIsSending} className='btn btn-success' >{mailIsSending? "Sending..." : "Save"}</Button>
+          <Button onClick={handleNewTicketSubmitForm} disabled={mailIsSending} className='btn btn-success' >{mailIsSending? "Sending..." : "Send"}</Button>
         </Modal.Footer>
       </Modal>
   
