@@ -115,7 +115,6 @@ export default function AdminRoutes(props) {
                 miniNoteIsOpen={miniNoteIsOpen} 
                 setRecurringNoteIsOpen={setRecurringNoteIsOpen} 
                 recurringNoteIsOpen={recurringNoteIsOpen}
-                pagesAccess={pagesAccess}
               />
             </div>
             <div className="Layout_bottom_screen">
@@ -128,7 +127,7 @@ export default function AdminRoutes(props) {
                   <Route path="/" element = {<PublicDash />}></Route>
                   <Route path="/admin/dashboard" element = {<Dashboard />}></Route>
                   <Route path="/clients/add" element = {<AddClients />}></Route>
-                  <Route path="/clients/job-planning" element = {<JobPlanning roleName={roleName} />}></Route>
+                  <Route path="/clients/job-planning" element = {<JobPlanning roleName={roleName} pagesAccess={pagesAccess} />}></Route>
                   <Route path="/subscription" element = {<Subscription />}></Route>
                   <Route path="/hr/employees" element = {<Employees />}></Route>
                   <Route path="/hr/employees/add" element = {<AddEmployee />}></Route>

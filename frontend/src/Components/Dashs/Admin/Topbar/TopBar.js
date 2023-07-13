@@ -1,9 +1,8 @@
 import { useState } from 'react';
 import Timer from './Timer';
 import logo from "../../../../Assets/Images/logo.svg"
-import AddButton from "../../../../Assets/Images/addButton.png"
 import Note from "../../../../Assets/Images/note.svg"
-import { Link, useLocation, useNavigate } from 'react-router-dom';
+import { Link } from 'react-router-dom';
 
 export default function TopBar(props) {
 
@@ -11,9 +10,7 @@ export default function TopBar(props) {
   const setMiniNoteIsOpen = props.setMiniNoteIsOpen;
   const recurringNoteIsOpen = props.recurringNoteIsOpen;
   const setRecurringNoteIsOpen = props.setRecurringNoteIsOpen;
-  const pagesAccess = props.pagesAccess;
-  const location = useLocation();
-  const navigate = useNavigate();
+  
 
   const [user, setUser] = useState("")
 
@@ -39,123 +36,7 @@ export default function TopBar(props) {
           </div>
           <div style={{alignItems: 'center', justifyContent: 'right',}} className="col-4 d-flex">
 
-          <div className=' mx-2'>
-                <div className="dropdown">
-                  <button className="btn p-0" type="button" id="dropdownMenuButton" data-bs-toggle="dropdown" aria-expanded="false">
-                    <img style={{width: "24px"}} src={AddButton} alt="" />
-                  </button>
-                  <div style={{width: 'max-content', padding: '10px'}} className="dropdown-menu">
-                    
-                    <ul style={{all: 'unset'}}>
-                      {pagesAccess && pagesAccess.map(page => {
-                      if(page.name === "Dashboard Page" && page.isChecked){
-                        return(
-                          <li><button onClick={(e)=>{e.preventDefault(); navigate("/admin/dashboard") }} className={`dropdown-item ${location.pathname === '/admin/dashboard'? "active" : ""}`} >Dashboard</button></li>
-                        )}
-                      })}
-                      {pagesAccess && pagesAccess.map(page => {
-                      if(page.name === "Clients Page" && page.isChecked){
-                        return(
-                          <li><button onClick={(e)=>{e.preventDefault(); navigate("/clients") }} className={`dropdown-item ${location.pathname === '/clients'? "active" : ""}`} >Clients</button></li>
-                        )}
-                      })}
-                      {pagesAccess && pagesAccess.map(page => {
-                      if(page.name === "Tasks Page" && page.isChecked){
-                        return(
-                          <li><button onClick={(e)=>{e.preventDefault(); navigate("/tasks") }} className={`dropdown-item ${location.pathname === '/tasks'? "active" : ""}`} >Tasks</button></li>
-                        )}
-                      })}
-                      {pagesAccess && pagesAccess.map(page => {
-                      if(page.name === "Jobs Page" && page.isChecked){
-                        return(
-                          <li><button onClick={(e)=>{e.preventDefault(); navigate("/clients/job-planning") }} className={`dropdown-item ${location.pathname === '/clients/job-planning'? "active" : ""}`} >Jobs</button></li>
-                        )}
-                      })}
-                      {pagesAccess && pagesAccess.map(page => {
-                      if(page.name === "Tickets Page" && page.isChecked){
-                        return(
-                          <li><button onClick={(e)=>{e.preventDefault(); navigate("/tickets") }} className={`dropdown-item ${location.pathname === '/tickets'? "active" : ""}`} >Tickets</button></li>
-                        )}
-                      })}
-                      {pagesAccess && pagesAccess.map(page => {
-                      if(page.name === "Subscription Page" && page.isChecked){
-                        return(
-                          <li><button onClick={(e)=>{e.preventDefault(); navigate("/subscription") }} className={`dropdown-item ${location.pathname === '/subscription'? "active" : ""}`} >Subscription</button></li>
-                        )}
-                      })}
-                      {pagesAccess && pagesAccess.map(page => {
-                      if(page.name === "Leads Page" && page.isChecked){
-                        return(
-                          <li><button onClick={(e)=>{e.preventDefault(); navigate("/leads") }} className={`dropdown-item ${location.pathname === '/leads'? "active" : ""}`} >Leads</button></li>
-                        )}
-                      })}
-                      {pagesAccess && pagesAccess.map(page => {
-                      if(page.name === "Sales Page" && page.isChecked){
-                        return(
-                          <li><button onClick={(e)=>{e.preventDefault(); navigate("/sales") }} className={`dropdown-item ${location.pathname === '/sales'? "active" : ""}`} >Sales</button></li>
-                        )}
-                      })}
-                      {pagesAccess && pagesAccess.map(page => {
-                      if(page.name === "HR Page" && page.isChecked){
-                        return(
-                          <li><button onClick={(e)=>{e.preventDefault(); navigate("/hr/employees") }} className={`dropdown-item ${location.pathname === '/hr/employees'? "active" : ""}`} >Employees</button></li>
-                        )}
-                      })}
-                      {pagesAccess && pagesAccess.map(page => {
-                      if(page.name === "HR Page" && page.isChecked){
-                        return(
-                          <li><button onClick={(e)=>{e.preventDefault(); navigate("/hr/attendance") }} className={`dropdown-item ${location.pathname === '/hr/attendance'? "active" : ""}`} >Attendance</button></li>
-                        )}
-                      })}
-                      {pagesAccess && pagesAccess.map(page => {
-                      if(page.name === "Reports Page" && page.isChecked){
-                        return(
-                          <li><button onClick={(e)=>{e.preventDefault(); navigate("/timesheet") }} className={`dropdown-item ${location.pathname === '/timesheet'? "active" : ""}`} >Timesheet</button></li>
-                        )}
-                      })}
-                      {pagesAccess && pagesAccess.map(page => {
-                      if(page.name === "Template Page" && page.isChecked){
-                        return(
-                          <li><button onClick={(e)=>{e.preventDefault(); navigate("/templates") }} className={`dropdown-item ${location.pathname === '/templates'? "active" : ""}`} >Templates</button></li>
-                        )}
-                      })}
-                      {pagesAccess && pagesAccess.map(page => {
-                      if(page.name === "Construction Page" && page.isChecked){
-                        return(
-                          <li><button onClick={(e)=>{e.preventDefault(); navigate("/construction") }} className={`dropdown-item ${location.pathname === '/construction'? "active" : ""}`} >Construction</button></li>
-                        )}
-                      })}
-                      {pagesAccess && pagesAccess.map(page => {
-                      if(page.name === "Goals Page" && page.isChecked){
-                        return(
-                          <li><button onClick={(e)=>{e.preventDefault(); navigate("/goals") }} className={`dropdown-item ${location.pathname === '/goals'? "active" : ""}`} >Goals</button></li>
-                        )}
-                      })}
-                      {pagesAccess && pagesAccess.map(page => {
-                      if(page.name === "Settings Page" && page.isChecked){
-                        return(
-                          <li><button onClick={(e)=>{e.preventDefault(); navigate("/roles") }} className={`dropdown-item ${location.pathname === '/roles'? "active" : ""}`} >Roles</button></li>
-                        )}
-                      })}
-                      {pagesAccess && pagesAccess.map(page => {
-                      if(page.name === "Settings Page" && page.isChecked){
-                        return(
-                          <li><button onClick={(e)=>{e.preventDefault(); navigate("/roles/user") }} className={`dropdown-item ${location.pathname === '/roles/user'? "active" : ""}`} >User Roles</button></li>
-                        )}
-                      })}
-                      {pagesAccess && pagesAccess.map(page => {
-                      if(page.name === "Settings Page" && page.isChecked){
-                        return(
-                          <li><button onClick={(e)=>{e.preventDefault(); navigate("/finance/charts_of_accounts") }} className={`dropdown-item ${location.pathname === '/finance/charts_of_accounts'? "active" : ""}`} >Chart Of Accounts</button></li>
-                        )}
-                      })}
-                    </ul>
-                      
-                  </div>
-                </div>
-              </div>
-
-            
+              
             <Link onClick={()=>{setMiniNoteIsOpen(!miniNoteIsOpen)}}>
               <img style={{width: "27px", marginRight: "10px"}} src={Note} alt="" />
             </Link>
