@@ -114,7 +114,8 @@ export default function AdminRoutes(props) {
                 setMiniNoteIsOpen={setMiniNoteIsOpen}
                 miniNoteIsOpen={miniNoteIsOpen} 
                 setRecurringNoteIsOpen={setRecurringNoteIsOpen} 
-                recurringNoteIsOpen={recurringNoteIsOpen} 
+                recurringNoteIsOpen={recurringNoteIsOpen}
+                pagesAccess={pagesAccess}
               />
             </div>
             <div className="Layout_bottom_screen">

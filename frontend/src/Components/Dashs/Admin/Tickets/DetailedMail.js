@@ -89,14 +89,16 @@ export default function DetailedMail(props) {
 
             try {
                 setSendingMail(true);
-                fixMailMessage();
+
+                var messageString = replyFormData.replace(/<p>/g, `<p style=" margin: 0px; padding: 0px;">`);
+
                 const token = secureLocalStorage.getItem('token') 
                 await axios.post(`${replyToTicket}`, 
                 {
                 formData: {
                     threadId: mailData.threadId,
                     messageId: mailData.threadData.messages[mailData.threadData.messages.length - 1].id,
-                    message: replyFormData,
+                    message: messageString,
                     emailSendTo: emailSendTo,
                     subjectToReply: subjectToReply
                 }

@@ -24,6 +24,7 @@ var markMailAsCompleted = axiosURL.markMailAsCompleted;
 export default function Tickets(props) {
 
   const roleName= props.roleName
+  const quillRef = useRef(null);
   
   const contextValue = useContext(TicketsContext);
 
@@ -300,7 +301,7 @@ export default function Tickets(props) {
           {
               headerName: "Company Name",
               field: "a",
-              flex: 1,
+              flex: 1.5,
               editable: false,
               valueGetter: (params) => params.data.ticketInfo.client_id.company_name ,
           },
@@ -438,6 +439,32 @@ export default function Tickets(props) {
   }
 
   
+  useEffect(() => {
+    if (quillRef.current) {
+      const quill = quillRef.current.getEditor();
+
+      // Get the container element of the Quill editor
+      const editorContainer = quill.container.parentNode;
+
+      // Add a custom CSS class to the editor container
+      editorContainer.classList.add('custom-editor-container');
+
+      // Extend the existing formats with custom styles
+      const CustomPFormat = {
+        tag: 'p',
+        inline: true,
+        styles: {
+          margin: '0',
+          padding: '0',
+          /* Add any other desired inline styles */
+        },
+      };
+      quill.format['custom-p'] = CustomPFormat;
+    }
+  }, []);
+
+    
+  
   const modules = {
     
     toolbar: [
@@ -447,6 +474,7 @@ export default function Tickets(props) {
       ['link', 'image'],
       ['clean']
     ],
+    
   };
 
   const formats = [
@@ -455,6 +483,9 @@ export default function Tickets(props) {
     'list', 'bullet', 'indent',
     'link', 'image'
   ];
+
+
+
 
   const editorStyle = {
     backgroundColor: 'white',
@@ -479,6 +510,7 @@ export default function Tickets(props) {
     if(field ==="~~~~"){
 
       name = "message";
+      // value = e.replace(/<p>/g, `<p style=" margin: 0px; padding: 0px;">`);
       value = e;
 
     } else {
@@ -494,6 +526,7 @@ export default function Tickets(props) {
         ...prevState,
         [name]: value
     }));
+
 
 
   }
@@ -522,18 +555,6 @@ export default function Tickets(props) {
 
   }
 
-  const fixMailMessage = ()=>{
-    const modifiedContent = newTicketFormData.message.replace(/<p><br><\/p>/g, '<br>');
-
-        const name = "message";
-        const value = modifiedContent;
-
-        setNewTicketFormData(prevState => ({
-          ...prevState,
-          [name]: value
-        }));
-  }
-
   const handleNewTicketSubmitForm = async (e)=>{
     e.preventDefault();
     
@@ -545,12 +566,18 @@ export default function Tickets(props) {
       try {
         setMailIsSending(true)
 
-        fixMailMessage();
+
+        var value = newTicketFormData.message.replace(/<p>/g, `<p style=" margin: 0px; padding: 0px;">`);
+        const formData = {
+          clientId: newTicketFormData.clientId,
+          subject: newTicketFormData.subject,
+          message: value,
+        }
 
         const token = secureLocalStorage.getItem('token') 
         await axios.post(`${createNewTicket}`, 
         {
-          formData: newTicketFormData
+          formData: formData
         },
         {
           headers:{ 
@@ -765,6 +792,7 @@ export default function Tickets(props) {
               <div>
                 <Form.Group className=' mt-2'>
                   <ReactQuill 
+                    ref={quillRef}
                     name="message"
                     theme="snow"
                     modules={modules}

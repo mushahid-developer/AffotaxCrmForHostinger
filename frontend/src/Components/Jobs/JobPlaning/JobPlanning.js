@@ -122,6 +122,7 @@
     job_status:false,
     cManager:false,
     //////////////
+    source:true,
     fee:true,
     subscription:true,
     vat_login:true,
@@ -1465,6 +1466,7 @@
       gridApi.columnApi.setColumnVisible("email", false)
       gridApi.columnApi.setColumnVisible("phone", false)
       gridApi.columnApi.setColumnVisible("country", false)
+      gridApi.columnApi.setColumnVisible("source", false)
     }
     
   }
@@ -1671,6 +1673,9 @@
                         <ul style={{all: 'unset'}}>
                           <li><button onClick={(e)=>{toggleColHandler(e, "comName")}} className={`dropdown-item ${!colVisibility.comName? "" : "active"}`}  >Company Name</button></li>
                           <li><button onClick={(e)=>{toggleColHandler(e, "cliName")}} className={`dropdown-item ${!colVisibility.cliName? "" : "active"}`} >Client Name</button></li>
+                          {roleName === "Admin" && 
+                            <li><button onClick={(e)=>{toggleColHandler(e, "source")}} className={`dropdown-item ${!colVisibility.source? "" : "active"}`} >Source</button></li>
+                          }
                           <li><button onClick={(e)=>{toggleColHandler(e, "jHolder")}} className={`dropdown-item ${!colVisibility.jHolder? "" : "active"}`} >J.Holder</button></li>
                           <li><button onClick={(e)=>{toggleColHandler(e, "job_name")}} className={`dropdown-item ${!colVisibility.job_name? "" : "active"}`} >Department</button></li>
                           <li><button onClick={(e)=>{toggleColHandler(e, "hours")}} className={`dropdown-item ${!colVisibility.hours? "" : "active"}`} >Hours</button></li>
@@ -1680,11 +1685,11 @@
                           <li><button onClick={(e)=>{toggleColHandler(e, "stat")}} className={`dropdown-item ${!colVisibility.stat? "" : "active"}`} >Status</button></li>
                           <li><button onClick={(e)=>{toggleColHandler(e, "notes")}} className={`dropdown-item ${!colVisibility.notes? "" : "active"}`} >Note</button></li>
                           <li><button onClick={(e)=>{toggleColHandler(e, "job_status")}} className={`dropdown-item ${!colVisibility.job_status? "" : "active"}`} >J.Status</button></li>
-                          <li><button onClick={(e)=>{toggleColHandler(e, "cManager")}} className={`dropdown-item ${!colVisibility.cManager? "" : "active"}`} >Lead</button></li>
                         </ul>
                       </div>
                       <div className="col-6">
                         <ul style={{all: 'unset'}}>
+                          <li><button onClick={(e)=>{toggleColHandler(e, "cManager")}} className={`dropdown-item ${!colVisibility.cManager? "" : "active"}`} >Lead</button></li>
                           <li><button onClick={(e)=>{toggleColHandler(e, "fee")}} className={`dropdown-item ${!colVisibility.fee? "" : "active"}`}  >Fee</button></li>
                           <li><button onClick={(e)=>{toggleColHandler(e, "subscription")}} className={`dropdown-item ${!colVisibility.subscription? "" : "active"}`}>Subscription</button></li>
                           <li><button onClick={(e)=>{toggleColHandler(e, "vat_login")}} className={`dropdown-item ${!colVisibility.vat_login? "" : "active"}`} >Vat Login</button></li>
@@ -1703,6 +1708,10 @@
                   </div>
                 </div>
               </div>
+              
+              
+
+              
 
               <div  className='table-show-hide mx-2'>
                 <button type="button" onClick={handleFunClear} 
