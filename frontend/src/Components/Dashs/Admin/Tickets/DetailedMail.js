@@ -10,8 +10,10 @@ import secureLocalStorage from 'react-secure-storage';
 
 import axios from '../../../../Api/Axios';
 import * as axiosURL from '../../../../Api/AxiosUrls';
+import { FileUploader } from 'react-drag-drop-files';
 
 var replyToTicket = axiosURL.replyToTicket;
+var replyToTicketWithAttachments = axiosURL.replyToTicketWithAttachments;
 var downloadAttachment = axiosURL.downloadAttachment;
 
 export default function DetailedMail(props) {
@@ -26,6 +28,8 @@ export default function DetailedMail(props) {
     const [sendingMail, setSendingMail] = useState(false)
     const [replyFormData, setReplyFormData] = useState('')
     const [downloadingAttachment, setDownloadingAttachment] = useState('')
+    const [attachmentFiles, setAttachmentFiles] = useState([])
+    
 
     
     const modules = {
@@ -74,11 +78,12 @@ export default function DetailedMail(props) {
       var subjectToReply = mailData.subject;
       var emailSendTo = mailData.recipients[0];
 
+      const fileTypes = ["JPEG", "PNG", "PDF"];
 
-      const fixMailMessage = ()=>{
-        const modifiedContent = replyFormData.replace(/<p><br><\/p>/g, '<br>');
-        setReplyFormData(modifiedContent)
-      }
+      const handleFilesChange = (file) => {
+        const filesArray = Array.from(file);
+        setAttachmentFiles(filesArray);
+      };
 
 
     const handleReplyFromSubmit = async ()=>{
@@ -91,24 +96,48 @@ export default function DetailedMail(props) {
                 setSendingMail(true);
 
                 var messageString = replyFormData.replace(/<p>/g, `<p style=" margin: 0px; padding: 0px;">`);
-
                 const token = secureLocalStorage.getItem('token') 
-                await axios.post(`${replyToTicket}`, 
-                {
-                formData: {
-                    threadId: mailData.threadId,
-                    messageId: mailData.threadData.messages[mailData.threadData.messages.length - 1].id,
-                    message: messageString,
-                    emailSendTo: emailSendTo,
-                    subjectToReply: subjectToReply
+
+                console.log(attachmentFiles.length)
+
+                if(attachmentFiles.length === 0){
+                    await axios.post(`${replyToTicket}`, 
+                    {
+                    formData: {
+                        threadId: mailData.threadId,
+                        messageId: mailData.threadData.messages[mailData.threadData.messages.length - 1].id,
+                        message: messageString,
+                        emailSendTo: emailSendTo,
+                        subjectToReply: subjectToReply
+                    }
+                    },
+                    {
+                        headers:{ 
+                            'Content-Type': 'application/json',
+                            'Authorization': 'Bearer ' + token
+                          }
+                    });
+                }else{
+                    
+                    const formData = new FormData();
+                    formData.append("threadId", mailData.threadId)
+                    formData.append("messageId", mailData.threadData.messages[mailData.threadData.messages.length - 1].id)
+                    formData.append("message", messageString)
+                    formData.append("emailSendTo", emailSendTo)
+                    formData.append("subjectToReply", subjectToReply)
+
+                    attachmentFiles.forEach((file) => {
+                        formData.append('files', file);
+                    });
+
+                    await axios.post(`${replyToTicketWithAttachments}`, formData,
+                    {
+                        headers:{ 
+                            'Content-Type': 'multipart/form-data',
+                            'Authorization': 'Bearer ' + token
+                          }
+                    });
                 }
-                },
-                {
-                    headers:{ 
-                        'Content-Type': 'application/json',
-                        'Authorization': 'Bearer ' + token
-                      }
-                });
 
                 setSendingMail(false)
                 setReFetchTickets(prev => !prev);
@@ -260,11 +289,11 @@ className="mt-3 card" >
                             </svg>
                         </a>
 
-                        <a style={{cursor: 'pointer'}} onClick={handleReplyFromSubmit} className='mx-2'>
+                        {/* <a style={{cursor: 'pointer'}} onClick={handleReplyFromSubmit} className='mx-2'>
                             <svg xmlns="http://www.w3.org/2000/svg" width="30px" height="30px" viewBox="0 0 24 24">
                                 <title/><g id="Complete"><g id="tick"><polyline fill="none" points="3.7 14.3 9.6 19 20.3 5" stroke="#000000" stroke-linecap="round" stroke-linejoin="round" stroke-width="2"/></g></g>
                             </svg>
-                        </a>
+                        </a> */}
                     </>
 
                     }
@@ -281,6 +310,26 @@ className="mt-3 card" >
                 onChange= {(e)=>{setReplyFieldEmpty(false); setReplyFormData(e)}}
                 value = {replyFormData}
             />
+
+            <div style={{flexDirection: 'row-reverse',}} className='d-flex bg-white p-2'>
+                <button disabled={sendingMail} onClick={handleReplyFromSubmit} className='btn btn-success'>
+                    {sendingMail ? 'Sending' : 'Send'}
+                </button>
+            </div>
+
+            <div style={{
+              textAlign: '-webkit-center',
+              marginTop: '10px',
+            }}>
+              <FileUploader
+                multiple={true}
+                handleChange={handleFilesChange}
+                name="files"
+                types={fileTypes}
+              />
+              {attachmentFiles && attachmentFiles.length > 0 && attachmentFiles.map(file => <p>{file.name}</p>)}
+            </div>
+            <hr />
 
 
         </div>

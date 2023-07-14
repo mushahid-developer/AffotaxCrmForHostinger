@@ -335,6 +335,62 @@ class GmailApi {
         }
 
     }
+
+    sendEmailWithAttachments = async (EmailData) => {
+        
+        try {
+            const accessToken = await this.getAccessToken();
+
+            const emailMessageParts = [];
+
+            emailMessageParts.push('From: Affotax <info@affotax.com>');
+            emailMessageParts.push('To: ' + EmailData.email);
+            emailMessageParts.push('Subject: ' + EmailData.subject);
+            emailMessageParts.push('MIME-Version: 1.0');
+            emailMessageParts.push('Content-Type: multipart/mixed; boundary="boundary_example"');
+            emailMessageParts.push('');
+        
+            emailMessageParts.push('--boundary_example');
+            emailMessageParts.push('Content-Type: text/html; charset="UTF-8"');
+            emailMessageParts.push('Content-Transfer-Encoding: 7bit');
+            emailMessageParts.push('');
+            emailMessageParts.push(EmailData.message);
+            emailMessageParts.push('');
+        
+            for (const attachment of EmailData.attachments) {
+              emailMessageParts.push('--boundary_example');
+              emailMessageParts.push('Content-Type: application/octet-stream');
+              emailMessageParts.push('Content-Disposition: attachment; filename="' + attachment.filename + '"');
+              emailMessageParts.push('Content-Transfer-Encoding: base64');
+              emailMessageParts.push('');
+              emailMessageParts.push(attachment.content);
+              emailMessageParts.push('');
+            }
+        
+            emailMessageParts.push('--boundary_example--');
+        
+            const emailMessage = emailMessageParts.join('\n');
+            const encodedMessage = Buffer.from(emailMessage).toString('base64');
+        
+            const config = {
+              method: 'post',
+              url: 'https://gmail.googleapis.com/gmail/v1/users/me/messages/send',
+              headers: {
+                'Authorization': `Bearer ${accessToken}`,
+                'Content-Type': 'application/json'
+              },
+              data: JSON.stringify({
+                raw: encodedMessage
+              })
+            };
+        
+            const resp = await axios(config);
+            return resp;
+          } catch (error) {
+            throw new Error(error.message);
+          }
+
+    }
     
     
     replyToThread = async (EmailComingData) => {
@@ -359,6 +415,77 @@ class GmailApi {
               ].join('\n');
             
               const encodedMessage = Buffer.from(emailMessage).toString('base64');
+            
+              const config = {
+                method: 'post',
+                url: `https://gmail.googleapis.com/gmail/v1/users/me/messages/send`,
+                headers: {
+                  'Authorization': `Bearer ${accessToken}`,
+                  'Content-Type': 'application/json'
+                },
+                data: JSON.stringify({
+                  raw: encodedMessage,
+                  threadId: threadId
+                })
+              };
+            
+              const resp = await axios(config);
+              return resp;
+           
+            
+        } catch (error) {
+            console.log(error.message);
+            throw new Error(error.message);
+        }
+
+
+
+    }
+    
+    
+    replyToThreadWithAttachment = async (EmailComingData) => {
+        
+        try {
+            const accessToken = await this.getAccessToken();
+            const threadId = EmailComingData.threadId; // Replace with the actual thread ID
+            const messageId = EmailComingData.messageId; // Replace with the actual message Id
+            const replyText = EmailComingData.message;
+            const subjectToReply = EmailComingData.subjectToReply;
+            const emailSendTo = EmailComingData.emailSendTo;
+
+            console.log(EmailComingData.attachments.length)
+
+            const emailMessageParts = [];
+
+            emailMessageParts.push('From: Affotax <info@affotax.com>');
+            emailMessageParts.push('To: ' + emailSendTo);
+            emailMessageParts.push('Subject: ' + subjectToReply);
+            emailMessageParts.push('MIME-Version: 1.0');
+            emailMessageParts.push('Content-Type: multipart/mixed; boundary="boundary_example"');
+            emailMessageParts.push('');
+        
+            emailMessageParts.push('--boundary_example');
+            emailMessageParts.push('Content-Type: text/html; charset="UTF-8"');
+            emailMessageParts.push('Content-Transfer-Encoding: 7bit');
+            emailMessageParts.push('');
+            emailMessageParts.push(replyText);
+            emailMessageParts.push('');
+
+            for (const attachment of EmailComingData.attachments) {
+                emailMessageParts.push('--boundary_example');
+                emailMessageParts.push('Content-Type: application/octet-stream');
+                emailMessageParts.push('Content-Disposition: attachment; filename="' + attachment.filename + '"');
+                emailMessageParts.push('Content-Transfer-Encoding: base64');
+                emailMessageParts.push('');
+                emailMessageParts.push(attachment.content);
+                emailMessageParts.push('');
+            }
+
+            emailMessageParts.push('--boundary_example--');
+
+            const emailMessage = emailMessageParts.join('\n');
+            const encodedMessage = Buffer.from(emailMessage).toString('base64');
+        
             
               const config = {
                 method: 'post',

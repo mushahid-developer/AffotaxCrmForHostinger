@@ -654,3 +654,8 @@ transition: width .3s ease-in-out;
 .disabled-router-link {
   pointer-events: none;
 }
+
+.custom-editor-container .custom-p {
+  margin: 0;
+  padding: 0; 
+}

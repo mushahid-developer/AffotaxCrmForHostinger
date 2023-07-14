@@ -15,11 +15,15 @@ import DropdownFilterWithDate from '../../../Jobs/JobPlaning/DropDownFilterWithD
 import { Button, Form, Modal } from 'react-bootstrap';
 import secureLocalStorage from 'react-secure-storage';
 import TicketsContext from './TicketsContext';
+import { FileUploader } from 'react-drag-drop-files';
+import Loader from '../../../Common/Loader/Loader';
 
 var markMailAsRead = axiosURL.markMailAsRead;
 var createNewTicket = axiosURL.createNewTicket;
+var createNewTicketWithAttachments = axiosURL.createNewTicketWithAttachments;
 var markMailAsDeleted = axiosURL.markMailAsDeleted;
 var markMailAsCompleted = axiosURL.markMailAsCompleted;
+var EditOneTicketUrl = axiosURL.EditOneTicketUrl;
 
 export default function Tickets(props) {
 
@@ -35,10 +39,11 @@ export default function Tickets(props) {
         clientId: '',
         subject: '',
         message: '',
-        templateId: ''
+        templateId: '',
+        files: []
       });
       const [clients, setClients] = useState();
-      const [users, setUsers] = useState(contextValue.ticketsData.UsersList);
+      const [users, setUsers] = useState([]);
       const [templatesList, setTemplatesList] = useState([]);
       const [selectedClient, setSelectedClient] = useState("");
       const [trySubmit, setTrySubmit] = useState(false);
@@ -262,6 +267,8 @@ export default function Tickets(props) {
         };
       }, []);
 
+      useEffect(()=>{ contextValue.setReFetchTickets(prev => !prev); }, [reRender])
+
       useEffect(() => {
 
 
@@ -277,7 +284,7 @@ export default function Tickets(props) {
             setTemplatesList(contextValue.ticketsData.templatesList);
           }
           
-      }, [reRender, contextValue.ticketsData]);
+      }, [contextValue.ticketsData]);
 
         const toDetailedMail=(dataToSend, id)=>{
 
@@ -314,11 +321,14 @@ export default function Tickets(props) {
           },
           {
               headerName: "Job Holder",
-              field: "c",
+              field: "user_id",
               flex: 1,
-              editable: false,
               valueGetter: (params) => params.data.ticketInfo.user_id.name,
-
+              // valueGetter: (params) => params.data.ticketInfo.user_id ? params.data.ticketInfo.user_id.name ? params.data.ticketInfo.user_id.name : params.data.Jobholder_id_name :params.data.Jobholder_id_name,
+              cellEditor: 'agSelectCellEditor',
+              cellEditorParams: {
+                values: users && users.map(option => option.name),
+              },
               floatingFilterComponent: 'selectFloatingFilter', 
               floatingFilterComponentParams: { 
                 options: users && users.map(option => option.name),
@@ -333,6 +343,7 @@ export default function Tickets(props) {
             headerName: 'Subject', 
             field: 'subject', 
             flex:3,
+            editable: false,
             cellRendererFramework: (params)=>
                   <a style={{
                     color: 'blue',
@@ -344,12 +355,12 @@ export default function Tickets(props) {
                     {params.data.subject}
                   </a>
           },
-          { headerName: 'Recipients', field: 'recipients', flex:2 },
+          { headerName: 'Recipients', field: 'recipients', flex:2, editable: false, },
           { 
             headerName: 'Status', 
             field: 'readStatus', 
             flex:0.6,
-
+            editable: false,
             floatingFilterComponent: 'selectFloatingFilter', 
               floatingFilterComponentParams: { 
                 options: ['Unread', 'Read', 'Sent'],
@@ -363,6 +374,7 @@ export default function Tickets(props) {
             headerName: 'Date', 
             field: 'formattedDate', 
             flex:1,
+            editable: false,
             valueGetter: (params)=>{
               if(params.data.formattedDate && params.data.formattedDate !== "Invalid Date")
             {
@@ -392,6 +404,7 @@ export default function Tickets(props) {
               field: 'price',
               floatingFilter: false,
               flex:2,
+              editable: false,
               cellRendererFramework: (params)=>
               <>
                   <div>
@@ -414,12 +427,39 @@ export default function Tickets(props) {
               </>
           }
         ];
+
+        const onCellValueChanged = useCallback((event) => {
+          if(event.colDef.field === "user_id"){
+            const selectedOption = users.find(option => option.name === event.data.user_id);
+            event.data.Jobholder_id = selectedOption ? selectedOption._id : '';
+            event.data.ticketInfo.user_id.name = selectedOption ? selectedOption.name : '';
+            }
+        }, [gridApi]);
+
+        const onRowValueChanged = useCallback(async (event) => {
+          var data = event.data;
+          try{
+            await axios.post(`${EditOneTicketUrl}/${data.ticketInfo._id}`, 
+              {
+                user_id: data.Jobholder_id,
+              },
+              {
+                headers:{ 'Content-Type': 'application/json' }
+              }
+            );
+            setReRender( prev=> !prev)
+          }catch(err){
+            console.log(err)
+          }
+        
+        }, []);
+
   
         const defaultColDef = useMemo( ()=> ({
           sortable: true,
           filter: true,
           floatingFilter: true,
-          editable: false,
+          editable: true,
           resizable: true
          }));
   
@@ -500,6 +540,16 @@ export default function Tickets(props) {
     }
   }
 
+  const fileTypes = ["JPEG", "PNG", "PDF"];
+
+  const handleFilesChange = (file) => {
+    const filesArray = Array.from(file);
+    setNewTicketFormData(prevState => ({
+      ...prevState,
+      files: filesArray
+  }));
+  };
+
   const handleNewTicketDataChange = (e, field)=>{
 
     setTrySubmit(false);
@@ -565,38 +615,63 @@ export default function Tickets(props) {
 
       try {
         setMailIsSending(true)
-
-
         var value = newTicketFormData.message.replace(/<p>/g, `<p style=" margin: 0px; padding: 0px;">`);
-        const formData = {
-          clientId: newTicketFormData.clientId,
-          subject: newTicketFormData.subject,
-          message: value,
+        const token = secureLocalStorage.getItem('token') 
+
+        
+        if(newTicketFormData.files.length === 0){
+          
+          const formData = {
+            clientId: newTicketFormData.clientId,
+            subject: newTicketFormData.subject,
+            message: value
+          }
+          
+          await axios.post(`${createNewTicket}`, 
+          {
+            formData: formData
+          },
+          {
+            headers:{ 
+              'Content-Type': 'application/json',
+              'Authorization': 'Bearer ' + token
+            }
+          });
+          
+        } else{
+          const formData = new FormData();
+          formData.append("clientId", newTicketFormData.clientId)
+          formData.append("subject", newTicketFormData.subject)
+          formData.append("message", value)
+
+          newTicketFormData.files.forEach((file) => {
+            formData.append('files', file);
+          });
+
+          await axios.post(`${createNewTicketWithAttachments}`, 
+          formData,
+          {
+            headers:{ 
+              'Content-Type': 'multipart/form-data',
+              'Authorization': 'Bearer ' + token
+            }
+          });
+
         }
 
-        const token = secureLocalStorage.getItem('token') 
-        await axios.post(`${createNewTicket}`, 
-        {
-          formData: formData
-        },
-        {
-          headers:{ 
-            'Content-Type': 'application/json',
-            'Authorization': 'Bearer ' + token
-          }
-        });
-        
         setNewTicketFormData({
           clientId: '',
           subject: '',
           message: '',
+          files: []
         });
         setSelectedClient("");
         setMailIsSending(false);
         setShowNewTicketModal(false);
         contextValue.setReFetchTickets(prev => !prev);
-
+        
       } catch (error) {
+        setMailIsSending(false);
         // do nothing
       }
 
@@ -605,10 +680,11 @@ export default function Tickets(props) {
   }
 
   
-  
-  
-        
-  
+    if(!users){
+      return(
+        <Loader />
+      )
+    }else{
       return (
             <>
                  <div style={{
@@ -635,7 +711,7 @@ export default function Tickets(props) {
                 </select>
               </div>
   
-
+  
               <div>
                   <select name='mon_week' onChange={(e)=>{setActiveFilter(e.target.value)}} defaultValue={activeFilter} style={{width: '110px'}} className='form-control mx-2'>
                       <option value = "Active">
@@ -650,7 +726,7 @@ export default function Tickets(props) {
             </div>
   
             <div className="d-flex">
-
+  
             {loader && <img style={{height: '40px', paddingLeft: '15px'}} src={loaderr} alt="" /> }
               <Button className='mx-4' onClick={()=>{setShowNewTicketModal(!showNewTicketModal)}}>
                 New Ticket
@@ -684,6 +760,9 @@ export default function Tickets(props) {
                   paginationPageSize = {25}
                   suppressDragLeaveHidesColumns={true}
                   frameworkComponents={frameworkComponents}
+                  onCellValueChanged={onCellValueChanged}
+                  onRowValueChanged={onRowValueChanged}
+                  editType={'fullRow'}
               />
   
               
@@ -693,19 +772,19 @@ export default function Tickets(props) {
   
   
              
-
+  
       
       <Modal size="lg" show={showNewTicketModal} centered onHide={()=>{setShowNewTicketModal(!showNewTicketModal)}}>
         <Modal.Header closeButton>
           <Modal.Title>Create New Ticket</Modal.Title>
         </Modal.Header>
         <Modal.Body className='task_modalbody_bg_color'>
-
+  
           <div>
           <Form 
             onSubmit={handleNewTicketSubmitForm}
           >
-
+  
               <Form.Group className='mt-2'>
       
                 <Form.Select 
@@ -718,9 +797,9 @@ export default function Tickets(props) {
                         <option key={index} value={client._id}>{client.company_name} - {client.client_name}</option>
                     )}
                 </Form.Select>
-
+  
               </Form.Group>
-
+  
               { trySubmit && !newTicketFormData.clientId ? 
               
               <div className='mt-2'>
@@ -730,7 +809,7 @@ export default function Tickets(props) {
                 Client Is Required
                 </p>
               </div>
-
+  
               : trySubmit && newTicketFormData.clientId && !selectedClient &&
             
               <div className='mt-2'>
@@ -740,14 +819,14 @@ export default function Tickets(props) {
                   This client Does Not have Email in system
                 </p>
               </div>
-
+  
             }
-
-
-
+  
+  
+  
               
-
-
+  
+  
               <Form.Group className='mt-2'>
                 <Form.Control
                     name='subject'
@@ -757,7 +836,7 @@ export default function Tickets(props) {
                     value = {newTicketFormData.subject}
                 />
               </Form.Group>
-
+  
               { trySubmit && !newTicketFormData.subject && 
               
               <div className='mt-2'>
@@ -767,9 +846,9 @@ export default function Tickets(props) {
                   Subject is Required
                 </p>
               </div>
-
+  
             }
-
+  
             {roleName === "Admin" && 
             
               <Form.Group className='mt-2'>
@@ -784,11 +863,11 @@ export default function Tickets(props) {
                         <option key={index} value={template._id}>{template.name} - {template.description}</option>
                     )}
                 </Form.Select>
-
+  
               </Form.Group>
             }
             
-
+  
               <div>
                 <Form.Group className=' mt-2'>
                   <ReactQuill 
@@ -803,24 +882,37 @@ export default function Tickets(props) {
                   />
                 </Form.Group>
               </div>
-
+  
               { trySubmit && (!newTicketFormData.message || newTicketFormData.message === "<p><br></p>") && 
               
               <div className='mt-2'>
                 <p style = {{
                   color: 'red',
                 }}>
-                  Subject is Required
+                  Mail Body is Required
                 </p>
               </div>
-
+  
             }
-
-
+  
+            <div style={{
+              textAlign: '-webkit-center',
+              marginTop: '10px',
+            }}>
+              <FileUploader
+                multiple={true}
+                handleChange={handleFilesChange}
+                name="files"
+                types={fileTypes}
+              />
+              {newTicketFormData.files && newTicketFormData.files.length > 0 && newTicketFormData.files.map(file => <p>{file.name}</p>)}
+            </div>
+  
+  
             </Form>
           </div>
-
-
+  
+  
         </Modal.Body>
         <Modal.Footer>
           <Button onClick={()=>{setShowNewTicketModal(!showNewTicketModal)}}>Close</Button>
@@ -831,5 +923,10 @@ export default function Tickets(props) {
   
           </>
       );
+
+    }
+  
+        
+  
   }
   

@@ -13,6 +13,10 @@ var TicketsSchema = new mongoose.Schema({
     mail_thread_id: {
         type: String,
     },
+    notes: {
+        type: String,
+        default: ''
+    },
     isOpen: {
         type: Boolean,
         default: true

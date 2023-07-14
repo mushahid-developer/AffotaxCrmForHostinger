@@ -135,6 +135,117 @@ exports.createNewTicket = async (req, res) => {
 
 }
 
+exports.EditOneTicket = async (req, res) => {
+    
+    try{
+        const tickedId = req.params.id;
+        const userId = req.body.user_id
+
+        await Ticketsdb.findByIdAndUpdate(tickedId, {
+            user_id: userId
+        });
+        
+        res.json({
+            message: "Success",
+            data: "User Changed Successfully"
+        })
+
+    } catch(err) {
+        res.status(500).json({
+            message: "Fail",
+            data: err.message
+        })
+    }
+
+}
+
+exports.createNewTicketWithAttachments = async (req, res) => {
+    
+    try{
+
+        const ClientId = req.body.clientId
+        const client = await Clientdb.findById(ClientId);
+        
+
+        const attachments = req.files.map(file => ({
+            filename: file.originalname,
+            content: file.buffer.toString('base64')
+        }));
+
+        
+        const EmailData = {
+            email: client.email,
+            subject: req.body.subject,
+            message: req.body.message,
+            attachments: attachments
+        }
+    
+        const resp = await gmail.sendEmailWithAttachments(EmailData);
+
+        const userId = req.user._id
+        const ThreadId = resp.data.threadId
+        
+
+        await Ticketsdb.create({
+            client_id: ClientId,
+            user_id: userId,
+            mail_thread_id: ThreadId
+        })
+
+        res.json({
+            message: "Success",
+            data: "Mail Sent Successfully"
+        })
+
+    } catch(err) {
+        res.status(500).json({
+            message: "Fail",
+            data: err.message
+        })
+    }
+
+}
+
+exports.replyToTicketWithAttachment = async (req, res) => {
+    
+    try{
+        const threadId = req.body.threadId
+        const messageId = req.body.messageId
+        const subjectToReply = req.body.subjectToReply
+        const emailSendTo = req.body.emailSendTo
+
+        console.log(req.files.length)
+
+        const attachments = req.files.map(file => ({
+            filename: file.originalname,
+            content: file.buffer.toString('base64')
+        }));
+        
+        const EmailData = {
+            threadId: threadId,
+            messageId: messageId,
+            subjectToReply: subjectToReply,
+            emailSendTo: emailSendTo,
+            message: req.body.message,
+            attachments: attachments
+        }
+    
+        await gmail.replyToThreadWithAttachment(EmailData);
+
+        res.json({
+            message: "Success",
+            data: "Reply Sent Successfully"
+        })
+
+    } catch(err) {
+        res.status(500).json({
+            message: "Fail",
+            data: err.message
+        })
+    }
+
+}
+
 exports.replyToTicket = async (req, res) => {
     
     try{
