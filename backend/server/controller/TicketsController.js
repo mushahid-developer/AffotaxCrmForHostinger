@@ -24,20 +24,21 @@ exports.getEmails = async (req, res) => {
             }
           });
 
-        const User_all = await Userdb.findById(userId).populate('role_id');
+        const User = await Userdb.findById(userId).populate('role_id');
 
-        const User = User_all.filter((user) => {
-            return user.role_id && user.role_id.pages.some((page) => {
-              return page.name === 'Tickets Page' && page.isChecked;
-            });
-          });
+       
 
         var Tickets = [];
         var UsersList = []
 
         if( User.role_id.name === 'Admin'){
             Tickets = await Ticketsdb.find().populate('client_id').populate("user_id");
-            UsersList = await Userdb.find();
+            const User_all = await Userdb.find();
+            User = User_all.filter((user) => {
+                return user.role_id && user.role_id.pages.some((page) => {
+                  return page.name === 'Tickets Page' && page.isChecked;
+                });
+              });
         }
         else{
             Tickets = await Ticketsdb.find({user_id: userId}).populate('client_id').populate("user_id");
