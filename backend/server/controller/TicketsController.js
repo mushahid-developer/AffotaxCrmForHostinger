@@ -24,7 +24,13 @@ exports.getEmails = async (req, res) => {
             }
           });
 
-        const User = await Userdb.findById(userId).populate('role_id');
+        const User_all = await Userdb.findById(userId).populate('role_id');
+
+        const User = User_all.filter((user) => {
+            return user.role_id && user.role_id.pages.some((page) => {
+              return page.name === 'Tickets Page' && page.isChecked;
+            });
+          });
 
         var Tickets = [];
         var UsersList = []
