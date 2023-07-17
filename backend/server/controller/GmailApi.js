@@ -28,6 +28,32 @@ class GmailApi {
         }
     };
 
+    getOutsourceAccessToken = async () => {
+        try {
+            var data = qs.stringify({
+                'client_id': '902822249198-35omnv2esshomojr08js6udg7jtgtn94.apps.googleusercontent.com',
+                'client_secret': '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',
+                'refresh_token': '1//03bEEXaA-j3HNCgYIARAAGAMSNwF-L9Ir0nIb2FvaVaLFhQW46VLYpsqXerPNgquOeDP78qWsZsSmuwM6WS0_iq-iVZdRkON4dC0',
+                'grant_type': 'refresh_token'
+            });
+            var config = {
+                method: 'post',
+                maxBodyLength: Infinity,
+                url: 'https://accounts.google.com/o/oauth2/token',
+                headers: {
+                    'Content-Type': 'application/x-www-form-urlencoded'
+                },
+                data: data
+            };
+            var response = await axios(config)
+
+            var accessToken = await response.data.access_token;
+            return accessToken
+        } catch (error) {
+            throw new Error(error.message);
+        }
+    };
+
     getAllThreads = async () => {
         try {
             var accessToken = await this.getAccessToken();
@@ -66,7 +92,7 @@ class GmailApi {
 
             var subject = await threadData.messages[0].payload.headers.find(header => header.name === 'Subject' || header.name === "subject") ? threadData.messages[0].payload.headers.find(header => header.name === 'Subject' || header.name === "subject").value : "No Subject Found";
             var readStatus = await threadData.messages[threadData.messages.length - 1].labelIds && threadData.messages[threadData.messages.length - 1].labelIds.length > 0 ? threadData.messages[threadData.messages.length - 1].labelIds.includes('UNREAD') ? 'Unread' : threadData.messages[threadData.messages.length - 1].labelIds.includes('SENT') ? 'Sent' : 'Read' : "No Status Found";
-            // var readStatus = await threadData.messages[0].labelIds;
+            
             var recipientHeaders = await threadData.messages[0].payload.headers.filter(header => header.name === 'To' || header.name === 'to' || header.name === 'Cc' || header.name === 'Bcc');
             var recipients = await recipientHeaders.length > 0 ? recipientHeaders.map(header =>  header.value) : "No Recipient Found";
 
@@ -117,7 +143,7 @@ class GmailApi {
 
                     var sentByMe = false;
                     var fromHeader = message.payload.headers.find(header => header.name === 'From');
-                    if (fromHeader && fromHeader.value && (fromHeader.value === 'info@affotax.com' || fromHeader.value === 'Affotax Team <info@affotax.com>' || fromHeader.value === 'Affotax <info@affotax.com>')) {
+                    if (fromHeader && fromHeader.value && (fromHeader.value === 'info@affotax.com' || fromHeader.value === 'Affotax Team <info@affotax.com>' || fromHeader.value === 'Affotax <info@affotax.com>' || fromHeader.value === 'Outsource Accountings <admin@outsourceaccountings.co.uk>' || fromHeader.value === 'admin@outsourceaccountings.co.uk')) {
                         sentByMe = true;
                     }
 
@@ -182,11 +208,16 @@ class GmailApi {
 
     
     // Method to get attachment data
-    getAttachment = async (attachmentId, messageId) => {
+    getAttachment = async (attachmentId, messageId, company_name) => {
         
         try {
+            var accessToken = "";
+            if(company_name === "Outsource"){
+                accessToken = await this.getOutsourceAccessToken();
 
-            var accessToken = await this.getAccessToken();
+            }else{
+                accessToken = await this.getAccessToken();
+            }
 
             const url = `https://www.googleapis.com/gmail/v1/users/me/messages/${messageId}/attachments/${attachmentId}`;
     
@@ -235,16 +266,14 @@ class GmailApi {
 
     getAllEmails = async (TicketsList) => {
         try {
-            // var threads = await this.getAllThreads();
-            // var threadIds = threads.map(thread => thread.id);
-            // var threadIds = threads.map(thread => thread.id);
             var threadIds = TicketsList;
             
             var accessToken = await this.getAccessToken();
+            var accessTokenOutsource = await this.getOutsourceAccessToken();
             
             var detailedThreads = await Promise.all(threadIds.map(async (threadId) => {
                 
-                var response = await this.getDetailedThreads(threadId, accessToken);
+                var response = await this.getDetailedThreads(threadId.thread_id, threadId.company_name === "Affotax" ? accessToken : accessTokenOutsource);
                 return response;
             }));
 
@@ -267,10 +296,14 @@ class GmailApi {
         }
     }
 
-    markThreadAsRead = async (messageId) => {
+    markThreadAsRead = async (messageId, company_name) => {
         try {
-            
-            var accessToken = await this.getAccessToken();
+            var accessToken = "";
+            if(company_name === "Outsource"){
+                accessToken = await this.getOutsourceAccessToken();
+            }else{
+                accessToken = await this.getAccessToken();
+            }
 
             var config = {
                 method: 'post',
@@ -295,7 +328,16 @@ class GmailApi {
     sendEmail = async (EmailComingData) => {
         
         try {
-            const accessToken = await this.getAccessToken();
+            
+            var accessToken = ""
+            var fromVar = ""
+            if(EmailComingData.company_name === "Affotax"){
+                accessToken = await this.getAccessToken();
+                fromVar = 'Affotax <info@affotax.com>'
+            } else {
+                accessToken = await this.getOutsourceAccessToken();
+                fromVar = 'Outsource Accountings <admin@outsourceaccountings.co.uk>'
+            }
 
             const emailData = {
                 to: EmailComingData.email,
@@ -304,7 +346,7 @@ class GmailApi {
             };
         
             const emailMessage = [
-                'From: Affotax <info@affotax.com>',
+                `From: ${fromVar}`,
                 'Content-Type: text/html; charset="UTF-8"',
                 'MIME-Version: 1.0',
                 'Content-Transfer-Encoding: 7bit',
@@ -337,13 +379,21 @@ class GmailApi {
     }
 
     sendEmailWithAttachments = async (EmailData) => {
-        
         try {
-            const accessToken = await this.getAccessToken();
+            var accessToken = ""
+            var fromVar = ""
+            if(EmailData.company_name === "Affotax"){
+                accessToken = await this.getAccessToken();
+                fromVar = 'Affotax <info@affotax.com>'
+            } else {
+                accessToken = await this.getOutsourceAccessToken();
+                fromVar = 'Outsource Accountings <admin@outsourceaccountings.co.uk>'
+            }
+
 
             const emailMessageParts = [];
 
-            emailMessageParts.push('From: Affotax <info@affotax.com>');
+            emailMessageParts.push('From: ' + fromVar);
             emailMessageParts.push('To: ' + EmailData.email);
             emailMessageParts.push('Subject: ' + EmailData.subject);
             emailMessageParts.push('MIME-Version: 1.0');
@@ -396,7 +446,16 @@ class GmailApi {
     replyToThread = async (EmailComingData) => {
         
         try {
-            const accessToken = await this.getAccessToken();
+            var accessToken = "";
+            var fromVar = "";
+            if(EmailComingData.company_name === "Outsource"){
+                accessToken = await this.getOutsourceAccessToken();
+                fromVar = 'Outsource Accountings <admin@outsourceaccountings.co.uk>'
+            }else{
+                accessToken = await this.getAccessToken();
+                fromVar = "Affotax <info@affotax.com>"
+            }
+
             const threadId = EmailComingData.threadId; // Replace with the actual thread ID
             const messageId = EmailComingData.messageId; // Replace with the actual message Id
             const replyText = EmailComingData.message;
@@ -404,7 +463,7 @@ class GmailApi {
             const emailSendTo = EmailComingData.emailSendTo;
         
             const emailMessage = [
-                'From: Affotax <info@affotax.com>',
+                `From: ${fromVar}`,
                 `To: ${emailSendTo}`,
                 `Subject: ${subjectToReply}`,
                 'Content-Type: text/html; charset=utf-8',
@@ -446,7 +505,17 @@ class GmailApi {
     replyToThreadWithAttachment = async (EmailComingData) => {
         
         try {
-            const accessToken = await this.getAccessToken();
+            var accessToken = "";
+            var fromVar = "";
+            if(EmailComingData.company_name === "Outsource"){
+                accessToken = await this.getOutsourceAccessToken();
+                fromVar = 'Outsource Accountings <admin@outsourceaccountings.co.uk>'
+            }else{
+                accessToken = await this.getAccessToken();
+                fromVar = "Affotax <info@affotax.com>"
+            }
+
+
             const threadId = EmailComingData.threadId; // Replace with the actual thread ID
             const messageId = EmailComingData.messageId; // Replace with the actual message Id
             const replyText = EmailComingData.message;
@@ -457,7 +526,7 @@ class GmailApi {
 
             const emailMessageParts = [];
 
-            emailMessageParts.push('From: Affotax <info@affotax.com>');
+            emailMessageParts.push('From: ' + fromVar);
             emailMessageParts.push('To: ' + emailSendTo);
             emailMessageParts.push('Subject: ' + subjectToReply);
             emailMessageParts.push('MIME-Version: 1.0');

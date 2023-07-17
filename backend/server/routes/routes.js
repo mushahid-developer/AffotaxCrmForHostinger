@@ -154,14 +154,14 @@ route.get('/goals/delete/one/:id', GoalsController.DeleteGoal)
 
 // Tickets
 route.get('/tickets/email/get/all', authMiddleware, TicketsController.getEmails)
-route.get('/tickets/email/markasread/:id', TicketsController.markAsRead)
+route.get('/tickets/email/markasread/:id/:cn', TicketsController.markAsRead)
 route.post('/tickets/create/new', authMiddleware, TicketsController.createNewTicket)
 route.post('/tickets/create/new/attachments', authMiddleware, upload.array('files'), TicketsController.createNewTicketWithAttachments)
 route.post('/tickets/thread/reply', authMiddleware, TicketsController.replyToTicket)
 route.post('/tickets/thread/reply/attachments', authMiddleware, upload.array('files'), TicketsController.replyToTicketWithAttachment)
 route.get('/tickets/thread/complete/:id', TicketsController.markAsCompleted)
 route.get('/tickets/thread/delete/:id', TicketsController.DeleteTicket)
-route.get('/tickets/thread/attachment/download/:id/:mid', TicketsController.DownloadAttachment)
+route.get('/tickets/thread/attachment/download/:id/:mid/:cn', TicketsController.DownloadAttachment)
 route.post('/tickets/edit/one/:id', TicketsController.EditOneTicket)
 
 module.exports = route

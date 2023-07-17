@@ -159,8 +159,6 @@ export default function Templates() {
         template: '',
       });
 
-      console.log(resp)
-
       setReRender(!reRender);
     
   }
@@ -185,7 +183,6 @@ export default function Templates() {
         template: '',
       });
 
-      console.log(resp)
 
       setReRender(!reRender);
     

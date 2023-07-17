@@ -40,10 +40,11 @@ export default function Tickets(props) {
         subject: '',
         message: '',
         templateId: '',
+        company_name: 'Affotax',
         files: []
       });
       const [clients, setClients] = useState();
-      const [users, setUsers] = useState([]);
+      const [users, setUsers] = useState(null);
       const [templatesList, setTemplatesList] = useState([]);
       const [selectedClient, setSelectedClient] = useState("");
       const [trySubmit, setTrySubmit] = useState(false);
@@ -57,6 +58,7 @@ export default function Tickets(props) {
       const [rowData, setRowData] = useState([ ]);
   
       const [jHolderFvalue, setJHolderFvalue] = useState('')
+      const [companyFvalue, setCompanyFvalue] = useState('')
       const [statusFvalue, setStatusFvalue] = useState('')
       const [activeFilter, setActiveFilter] = useState('Active')
       const [startDateFvalueDate, setStartDateFvalueDate] = useState('');
@@ -70,7 +72,6 @@ export default function Tickets(props) {
         // const roo = mainrowData; 
         var filteredArray = mainRowData
 
-        console.log(filteredArray)
         
         if(filteredArray !== undefined && activeFilter !== null && activeFilter !== ""){
           if(activeFilter === 'Active'){
@@ -83,6 +84,10 @@ export default function Tickets(props) {
         
         if(filteredArray !== undefined && jHolderFvalue !== null && jHolderFvalue !== ""){
           filteredArray = filteredArray.filter(obj => obj.ticketInfo.user_id && obj.ticketInfo.user_id.name === jHolderFvalue);
+        }
+        
+        if(filteredArray !== undefined && companyFvalue !== null && companyFvalue !== ""){
+          filteredArray = filteredArray.filter(obj => obj.ticketInfo.user_id && obj.ticketInfo.company_name === companyFvalue);
         }
 
         
@@ -251,9 +256,14 @@ export default function Tickets(props) {
       useEffect(()=>{
         setRowData(mainRowData)
         handleFilters()
-      },[mainRowData, statusFvalue, jHolderFvalue, activeFilter, startDateFvalueDate, startDateFvalue])
+      },[mainRowData, statusFvalue, companyFvalue, jHolderFvalue, activeFilter, startDateFvalueDate, startDateFvalue])
 
       
+      const getRowStyle = params => {
+        if (params.data.readStatus === 'Unread') {
+            return { background: '#c2c2c2' };
+        }
+      };
       
   
       
@@ -286,9 +296,9 @@ export default function Tickets(props) {
           
       }, [contextValue.ticketsData]);
 
-        const toDetailedMail=(dataToSend, id)=>{
+        const toDetailedMail=(dataToSend, id, company_name)=>{
 
-          axios.get(`${markMailAsRead}/${id}`, {
+          axios.get(`${markMailAsRead}/${id}/${company_name}`, {
             headers:{ 'Content-Type': 'application/json' }
           })
           contextValue.setReFetchTickets(prev => !prev);
@@ -320,6 +330,21 @@ export default function Tickets(props) {
               valueGetter: (params) => params.data.ticketInfo.client_id.client_name,
           },
           {
+              headerName: "Company",
+              field: "c",
+              flex: 1,
+              editable: false,
+              valueGetter: (params) => params.data.ticketInfo.company_name,
+              floatingFilterComponent: 'selectFloatingFilter', 
+              floatingFilterComponentParams: { 
+                options: ["Affotax", "Outsource"],
+                onValueChange:(value) => setCompanyFvalue(value),
+                value: companyFvalue,
+                suppressFilterButton: true, 
+                suppressInput: true 
+              }
+          },
+          {
               headerName: "Job Holder",
               field: "user_id",
               flex: 1,
@@ -349,7 +374,7 @@ export default function Tickets(props) {
                     color: 'blue',
                     cursor: 'pointer',
                   }}
-                  onClick={()=>{toDetailedMail( params.data, params.data.threadData.messages[params.data.threadData.messages.length - 1].id )}}
+                  onClick={()=>{toDetailedMail( params.data, params.data.threadData.messages[params.data.threadData.messages.length - 1].id, params.data.ticketInfo.company_name )}}
                   // to={{pathname: '/tickets/mail',  state: {data: params.data.threadData} }} 
                   >
                     {params.data.subject}
@@ -372,6 +397,7 @@ export default function Tickets(props) {
           },
           { 
             headerName: 'Date', 
+            sort: 'desc',
             field: 'formattedDate', 
             flex:1,
             editable: false,
@@ -449,7 +475,6 @@ export default function Tickets(props) {
             );
             setReRender( prev=> !prev)
           }catch(err){
-            console.log(err)
           }
         
         }, []);
@@ -624,6 +649,7 @@ export default function Tickets(props) {
           const formData = {
             clientId: newTicketFormData.clientId,
             subject: newTicketFormData.subject,
+            company_name: newTicketFormData.company_name,
             message: value
           }
           
@@ -643,6 +669,7 @@ export default function Tickets(props) {
           formData.append("clientId", newTicketFormData.clientId)
           formData.append("subject", newTicketFormData.subject)
           formData.append("message", value)
+          formData.append("company_name", newTicketFormData.company_name)
 
           newTicketFormData.files.forEach((file) => {
             formData.append('files', file);
@@ -663,6 +690,7 @@ export default function Tickets(props) {
           clientId: '',
           subject: '',
           message: '',
+          company_name: 'Affotax',
           files: []
         });
         setSelectedClient("");
@@ -751,11 +779,12 @@ export default function Tickets(props) {
               <AgGridReact
                   columnDefs={columnDefs}
                   onGridReady={onGridReady}
+                  getRowStyle={getRowStyle}
                   rowData={rowData}
                   defaultColDef={defaultColDef}
                   ref={gridRef}
                   animateRows={true} // Optional - set to 'true' to have rows animate when sorted
-                  rowSelection='multiple' // Options - allows click selection of rows
+                  rowSelection={false} // Options - allows click selection of rows
                   pagination = {true}
                   paginationPageSize = {25}
                   suppressDragLeaveHidesColumns={true}
@@ -784,6 +813,21 @@ export default function Tickets(props) {
           <Form 
             onSubmit={handleNewTicketSubmitForm}
           >
+
+              {roleName === "Admin" && 
+                <Form.Group className='mt-2'>
+                  <Form.Select 
+                  name='company_name'
+                  onChange={handleNewTicketDataChange}
+                  value = {newTicketFormData.company_name}
+                  >
+                      <option value="Affotax">Affotax - info@affotax.com</option>
+                      <option value="Outsource">Outsource - admin@outsourceaccountings.co.uk</option>
+                      
+                  </Form.Select>
+    
+                </Form.Group>
+              }
   
               <Form.Group className='mt-2'>
       
@@ -821,11 +865,6 @@ export default function Tickets(props) {
               </div>
   
             }
-  
-  
-  
-              
-  
   
               <Form.Group className='mt-2'>
                 <Form.Control

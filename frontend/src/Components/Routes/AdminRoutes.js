@@ -74,7 +74,6 @@ export default function AdminRoutes(props) {
             });
   
             if (response.status === 200) {
-              console.log(response.data);
               setTicketsData(response.data);
               setUnreadCounter(response.data.Emails.unreadCount);
             } else {
@@ -89,7 +88,6 @@ export default function AdminRoutes(props) {
           }
         }
       } catch (error) {
-        console.error(error);
         setTicketsData("Error");
       }
     };

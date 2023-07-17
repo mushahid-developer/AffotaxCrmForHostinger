@@ -8,7 +8,6 @@ const GoalsDateFilter = (props) => {
     },[props.value])
 
     const onChange = (e)=>{
-      console.log('month', e.target.value)
         setValue(e.target.value)
         props.setHandleOnChange(e.target.value)
     }

@@ -322,7 +322,6 @@ export default function EditClient() {
           
       
           } catch (err) {
-            console.log(err)
             Store.addNotification({
                 title: 'Error',
                 message: "Please Try Again",
@@ -519,7 +518,6 @@ export default function EditClient() {
                  }
                });
          const formData = clientFormData;
-         console.log(formData)
              setLoader(false)
              navigate("/clients");
           }
@@ -530,7 +528,6 @@ export default function EditClient() {
           
       
           } catch (err) {
-            console.log(err)
             Store.addNotification({
                 title: 'Error',
                 message: "Please Try Again",

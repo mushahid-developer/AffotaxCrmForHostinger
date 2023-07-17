@@ -75,8 +75,6 @@ export default function Login() {
 
     } catch (err) {
     
-      // console.log(err)
-      // console.log(err.response.data.message)
       if(!err.response){
         Store.addNotification({
           title: 'Success',

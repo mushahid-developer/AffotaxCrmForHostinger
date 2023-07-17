@@ -83,7 +83,6 @@ const Employees = () => {
                 }
             );
             if(response.status === 200){
-                console.log(response.data)
                 setMainRowData(response.data)
                 setLoader(false)
             }
@@ -119,7 +118,6 @@ const Employees = () => {
             headers:{ 'Content-Type': 'application/json' }
             }
         );
-            console.log(resp)
         setReRender(!reRender);
       }
     }

@@ -7,7 +7,7 @@ var gmail = require('./GmailApi')
 exports.getEmails = async (req, res) => {
     
     try{
-
+        var company_name = "Affotax";
         const userId = req.user._id
         const Clients = await Clientdb.find();
 
@@ -45,7 +45,10 @@ exports.getEmails = async (req, res) => {
             UsersList.push(User);
         }
 
-        TicketsList = await Tickets.map(ticket => ticket.mail_thread_id)
+        TicketsList = await Tickets.map(ticket => ({ 
+            thread_id: ticket.mail_thread_id,
+            company_name: ticket.company_name ? ticket.company_name : "Affotax"
+        }))
         
         
         var Emails = await gmail.getAllEmails(TicketsList);
@@ -80,14 +83,14 @@ exports.getEmails = async (req, res) => {
 
 }
 
-
 exports.markAsRead = async (req, res) => {
     
     try{
 
         const messageId = req.params.id;
+        const company_name = req.params.cn;
         
-        await gmail.markThreadAsRead(messageId);
+        await gmail.markThreadAsRead(messageId, company_name);
             
           res.json({
             message: "Success",
@@ -109,11 +112,21 @@ exports.createNewTicket = async (req, res) => {
         const ClientId = req.body.formData.clientId
 
         const client = await Clientdb.findById(ClientId);
+
+        var company_email = "";
+
+        if(req.body.formData.company_name === 'Affotax'){
+            company_email = "info@affotax.com";
+        } else {
+            company_email = "admin@outsourceaccountings.co.uk";
+        }
         
         const EmailData = {
             email: client.email,
             subject: req.body.formData.subject,
             message: req.body.formData.message,
+            company_name: req.body.formData.company_name,
+            company_email: company_email
         }
     
         const resp = await gmail.sendEmail(EmailData);
@@ -121,11 +134,14 @@ exports.createNewTicket = async (req, res) => {
         const userId = req.user._id
         const ThreadId = resp.data.threadId
         
+        
 
         await Ticketsdb.create({
             client_id: ClientId,
             user_id: userId,
-            mail_thread_id: ThreadId
+            mail_thread_id: ThreadId,
+            company_name: req.body.formData.company_name,
+            company_email: company_email
         })
 
         res.json({
@@ -172,6 +188,14 @@ exports.createNewTicketWithAttachments = async (req, res) => {
 
         const ClientId = req.body.clientId
         const client = await Clientdb.findById(ClientId);
+
+        var company_email = "";
+
+        if(req.body.company_name === 'Affotax'){
+            company_email = "info@affotax.com";
+        } else {
+            company_email = "admin@outsourceaccountings.co.uk";
+        }
         
 
         const attachments = req.files.map(file => ({
@@ -184,7 +208,9 @@ exports.createNewTicketWithAttachments = async (req, res) => {
             email: client.email,
             subject: req.body.subject,
             message: req.body.message,
-            attachments: attachments
+            attachments: attachments,
+            company_name: req.body.company_name,
+            company_email: company_email
         }
     
         const resp = await gmail.sendEmailWithAttachments(EmailData);
@@ -196,7 +222,9 @@ exports.createNewTicketWithAttachments = async (req, res) => {
         await Ticketsdb.create({
             client_id: ClientId,
             user_id: userId,
-            mail_thread_id: ThreadId
+            mail_thread_id: ThreadId,
+            company_name: req.body.company_name,
+            company_email: company_email
         })
 
         res.json({
@@ -220,8 +248,8 @@ exports.replyToTicketWithAttachment = async (req, res) => {
         const messageId = req.body.messageId
         const subjectToReply = req.body.subjectToReply
         const emailSendTo = req.body.emailSendTo
-
-        console.log(req.files.length)
+        const company_name = req.body.company_name
+        const company_email = req.body.company_email
 
         const attachments = req.files.map(file => ({
             filename: file.originalname,
@@ -234,7 +262,9 @@ exports.replyToTicketWithAttachment = async (req, res) => {
             subjectToReply: subjectToReply,
             emailSendTo: emailSendTo,
             message: req.body.message,
-            attachments: attachments
+            attachments: attachments,
+            company_name: company_name,
+            company_email: company_email,
         }
     
         await gmail.replyToThreadWithAttachment(EmailData);
@@ -260,6 +290,8 @@ exports.replyToTicket = async (req, res) => {
         const messageId = req.body.formData.messageId
         const subjectToReply = req.body.formData.subjectToReply
         const emailSendTo = req.body.formData.emailSendTo
+        const company_name = req.body.formData.company_name
+        const company_email = req.body.formData.company_email
         
         const EmailData = {
             threadId: threadId,
@@ -267,9 +299,11 @@ exports.replyToTicket = async (req, res) => {
             subjectToReply: subjectToReply,
             emailSendTo: emailSendTo,
             message: req.body.formData.message,
+            company_name: company_name,
+            company_email: company_email,
         }
     
-        const resp = await gmail.replyToThread(EmailData);
+        await gmail.replyToThread(EmailData);
 
         res.json({
             message: "Success",
@@ -337,8 +371,9 @@ exports.DownloadAttachment = async (req, res) => {
 
         const attachmentId = req.params.id;
         const messageId = req.params.mid;
+        const company_name = req.params.cn;
         
-        const resp = await gmail.getAttachment(attachmentId, messageId);
+        const resp = await gmail.getAttachment(attachmentId, messageId, company_name);
     
         // Send the attachment data in the response
         res.send(resp);

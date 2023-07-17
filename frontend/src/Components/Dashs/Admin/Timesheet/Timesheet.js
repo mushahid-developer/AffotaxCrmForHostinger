@@ -393,7 +393,6 @@ const Timesheet = (props) => {
                     ...prevState,
                     emp: response.data.curUser
                 }));
-                console.log(response.data)
                 setLoader(false)
             }
             
@@ -848,7 +847,6 @@ const Timesheet = (props) => {
     );
     } catch (error) {
     const a = error;
-        console.log(error)
     }
   };
 

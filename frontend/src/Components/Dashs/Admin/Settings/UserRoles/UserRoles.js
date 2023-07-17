@@ -173,7 +173,6 @@ const UserRoles = () => {
     //             headers:{ 'Content-Type': 'application/json' }
     //         }
     //       );
-    //       console.log(response)
     //     }
   
     //     setReRender(!reRender)

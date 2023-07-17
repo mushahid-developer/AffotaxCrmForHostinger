@@ -56,7 +56,6 @@ const EditEmployee = () => {
                 }
             );
             if(response.status === 200){
-                console.log(response.data)
                 setPreData(response.data.user)
                 setLoader(false)
             }
@@ -111,7 +110,6 @@ const EditEmployee = () => {
                     headers:{ 'Content-Type': 'application/json' }
                 }
             );
-            console.log(response)
           if(response.status === 200 && response.data.message === "User successfully Updated")
           {  
             Store.addNotification({
@@ -132,13 +130,11 @@ const EditEmployee = () => {
             }
 
             else if(response.status === 200){
-                console.log(response.data)
                 setLoader(false)
             }
             
         
             } catch (err) {
-                console.log(err)
             Store.addNotification({
                 title: 'Error',
                 message: "Please Try Again",

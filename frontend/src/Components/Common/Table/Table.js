@@ -57,7 +57,6 @@ const Table = () => {
 
  // Example of consuming Grid Event
  const cellClickedListener = useCallback( event => {
-  //  console.log('cellClicked', event);
  }, []);
 
  // Example load data from sever
@@ -65,7 +64,6 @@ const Table = () => {
    fetch('https://www.ag-grid.com/example-assets/row-data.json')
    .then(result => result.json())
    .then(rowData => setRowData(rowData))
-   .then(console.log(rowData))
  }, []);
 
  //Row Id
@@ -81,14 +79,12 @@ const Table = () => {
 // }
 
 // const onCellValueChanged = useCallback((event) => {
-//   console.log(
 //     'onCellValueChanged: ' + event.colDef.field + ' = ' + event.newValue
 //   );
 // }, []);
 
 // const onRowValueChanged = useCallback((event) => {
 //   var data = event.data;
-//   console.log(
 //     'onRowValueChanged: (' +
 //       data.model + data.make + data.price +
 //       ')'

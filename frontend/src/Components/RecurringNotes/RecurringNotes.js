@@ -71,13 +71,11 @@ const RecurringNotes = (props) => {
                 id: response.data.recurringTasksCategory.length > 0 ? response.data.recurringTasksCategory[0].id : null,
             })
         } catch (error) {
-            console.error(error);
         }
     }
 
     const HandleAddCategoryFunction = async (iidd, subTaskForm)=>{
         try {
-            console.log(subTaskForm)
             await axios.post(`${RecurringNotesAddOneCategoryUrl}`,
                 {
                 id: iidd,
@@ -91,7 +89,6 @@ const RecurringNotes = (props) => {
                 }
             );
         } catch (error) {
-            console.error(error);
             const remainingTasks = tasks.filter((task) => task.id !== iidd); // Filter out the completed task
             setTasks(remainingTasks); // Update the state with the remaining tasks array
         }
@@ -113,7 +110,6 @@ const RecurringNotes = (props) => {
                 }
             );
         } catch (error) {
-            console.error(error);
             const remainingfilteredTasks = filteredTasks.filter((task) => task.id !== iidd); // Filter out the completed task
             const remainingTasks = tasks.filter((task) => task.id !== iidd); // Filter out the completed task
             setTasks(remainingTasks); // Update the state with the remaining tasks array
@@ -133,7 +129,6 @@ const RecurringNotes = (props) => {
                 }
             );
         } catch (error) {
-            console.error(error);
             const newTask = {
                 id: iidd,
                 taskName: subTaskForm,
@@ -156,7 +151,6 @@ const RecurringNotes = (props) => {
                 }
             );
         } catch (error) {
-            console.error(error);
             const newTask = {
                 id: iidd,
                 taskName: subTaskForm,
@@ -337,7 +331,6 @@ const RecurringNotes = (props) => {
                                                 return task;
                                                 }
                                             });
-                                            console.log(updatedTasks2)
                                         
                                             setTasks(updatedTasks2);
                                             

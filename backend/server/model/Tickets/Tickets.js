@@ -21,6 +21,12 @@ var TicketsSchema = new mongoose.Schema({
         type: Boolean,
         default: true
     },
+    company_name: {
+        type: String
+    },
+    company_email: {
+        type: String
+    }
     
 });
 

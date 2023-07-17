@@ -79,7 +79,6 @@ const ViewTask = (props) => {
             }
             
         } catch (error) {
-            console.error(error);
         }
 
         

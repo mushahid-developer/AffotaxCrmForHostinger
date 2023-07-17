@@ -150,7 +150,6 @@ const Tasks = () => {
         
     
         } catch (err) {
-          console.log(err)
           Store.addNotification({
               title: 'Error',
               message: "Please Try Again",
@@ -188,7 +187,6 @@ const Tasks = () => {
         
     
         } catch (err) {
-          console.log(err)
           Store.addNotification({
               title: 'Error',
               message: "Please Try Again",
@@ -225,7 +223,6 @@ const Tasks = () => {
     
 
     const filter = async ()=>{
-      console.log(load)
 
       var filteredArray = mainRowData
 
@@ -1105,7 +1102,6 @@ const onRowValueChanged = useCallback(async (event) => {
       i = i + 1
 
   }catch(err){
-    console.log(err)
   }
 
 }, []);

@@ -197,7 +197,6 @@ const Leads = () => {
               }
           );
           if(resp.status === 200){
-              console.log(resp.data)
               setMainRowData(resp.data.leads)
             }
             
@@ -231,7 +230,6 @@ const Leads = () => {
                 }
             );
             if(response.status === 200){
-                console.log(response.data)
                 setMainRowData(response.data.leads)
                 setLoader(false)
             }
@@ -272,7 +270,6 @@ const Leads = () => {
           const newObj = { value: null, label: 'Select' };
   
           tempArr.unshift(newObj);
-          console.log(preData)
   
           setPreData(tempArr)
   
@@ -529,15 +526,12 @@ const Leads = () => {
       //  const onCellValueChanged = useCallback((event) => {
       //   if(event.colDef.field === "manager_id"){
       //     const selectedOption = preData.find(option => option.label === event.data.manager_id);
-      //     console.log(selectedOption)
       //     event.data.managerId = selectedOption ? selectedOption.value : '';
       //   }
       // }, [gridApi]);
 
        const onRowValueChanged = useCallback(async (event) => {
         var data = event.data;
-        // console.log("data",data)
-      
         await axios.post(leadEditUrl, 
           {
             data

@@ -172,7 +172,6 @@ const Construction = () => {
         
     
         } catch (err) {
-          console.log(err)
           Store.addNotification({
               title: 'Error',
               message: "Please Try Again",
@@ -210,7 +209,6 @@ const Construction = () => {
         
     
         } catch (err) {
-          console.log(err)
           Store.addNotification({
               title: 'Error',
               message: "Please Try Again",
@@ -1189,7 +1187,6 @@ const onRowValueChanged = useCallback(async (event) => {
       i = i + 1
 
   }catch(err){
-    console.log(err)
   }
 
 }, []);

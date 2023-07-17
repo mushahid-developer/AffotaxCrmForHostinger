@@ -62,8 +62,6 @@ const Clients = (props) => {
 
       
 
-      console.log(filteredArray)
-
       // Department Filter
       if(filteredArray != undefined && departmentFvalue != null && departmentFvalue !== ''){
         // filteredArray = filteredArray.filter(obj => (obj.deptListToCheck.company_name_t === obj.company_name) && (obj.deptListToCheck.departments.includes(departmentFvalue)) );
@@ -103,8 +101,6 @@ const Clients = (props) => {
             const dateObj = new Date(obj.book_start_date);
             const objMonth = dateObj.toLocaleString('default', { month: 'short' });
             const objYear = dateObj.getFullYear();
-            console.log(objMonth, objYear)
-            console.log(stateVal.monthName, stateVal.Year.trim())
             return objMonth === stateVal.monthName && objYear === +stateVal.Year.trim();
           }
         });
@@ -340,7 +336,6 @@ const Clients = (props) => {
                 headers:{ 'Content-Type': 'application/json' }
             }
           );
-          console.log(response)
         }
   
         setReRender(!reRender)

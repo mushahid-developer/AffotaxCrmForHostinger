@@ -46,7 +46,6 @@ function Timer(props) {
 
     setTime(differenceInSeconds);
 
-    console.log(timerState)
 
 
     setData(prevState => ({
@@ -94,7 +93,6 @@ function Timer(props) {
     }
   }, [timerState])
 
-  useEffect(()=>{console.log(data)},[data])
 
 
   useEffect(() => {
@@ -140,7 +138,6 @@ function Timer(props) {
   const handleStart = async (e) => {
     e.preventDefault()
     const curTime = new Date();
-    console.log(data)
     if(!timerOn) //Off to on
     {
       if (!data.clientName || !data.departmentName) {

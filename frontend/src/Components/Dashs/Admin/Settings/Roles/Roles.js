@@ -70,9 +70,6 @@ export default function Roles() {
     const Data = predata.pages
         var tempArr = []
 
-        console.log("pages", Pages)
-        console.log("Data", Data)
-
 
         if(Pages.length != 0){
             for(var i = 0 ; i < Data.length ; i++){
@@ -120,7 +117,6 @@ export default function Roles() {
   //
 
   const handlePermissionSave = async ()=>{
-    console.log(permissionsFormData)
     const response = await axios.post(savePermissionsUrl,
       {
         id: selectedRole,

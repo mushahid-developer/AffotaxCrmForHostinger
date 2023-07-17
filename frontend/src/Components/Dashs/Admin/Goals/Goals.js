@@ -426,7 +426,6 @@ async function onGridReady(params) {
   const onRowValueChanged = useCallback(async (event) => {
     var data = event.data;
     var idd = event.data._id
-    // console.log("data",data)
   
     await axios.post(`${GoalsEditOneUrl}/${idd}`, 
       {

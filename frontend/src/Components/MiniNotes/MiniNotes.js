@@ -39,7 +39,6 @@ const MiniNotes = (props) => {
             );
             setTasks(response.data.quickTasks)
         } catch (error) {
-            console.error(error);
         }
     }
 
@@ -58,7 +57,6 @@ const MiniNotes = (props) => {
                 }
             );
         } catch (error) {
-            console.error(error);
             const remainingTasks = tasks.filter((task) => task.id !== iidd); // Filter out the completed task
             setTasks(remainingTasks); // Update the state with the remaining tasks array
         }
@@ -76,7 +74,6 @@ const MiniNotes = (props) => {
                 }
             );
         } catch (error) {
-            console.error(error);
             const newTask = {
                 id: iidd,
                 taskName: subTaskForm,

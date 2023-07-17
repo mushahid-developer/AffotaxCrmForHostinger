@@ -66,7 +66,6 @@ export default function Dashboard() {
   useEffect(()=>{
     if(dashboardData){
       setSelectedDate(new Date(`01/01/${dashboardData.clientsCount.selectedYear}`))
-      console.log(dashboardData)
     }
   }, [dashboardData])
   
@@ -211,7 +210,6 @@ const options4 = {
       const elementIndex = elements[0].index;
       const clickedOn = elements[0].element.$context['dataset'].names[elementIndex]
 
-      console.log('Clicked on', clickedOn)
       const dataToSend = {
         departmentName : clickedOn,
         filterType: "Overdue"

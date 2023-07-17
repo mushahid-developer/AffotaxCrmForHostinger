@@ -346,7 +346,6 @@ export default function AddClients() {
                      headers:{ 'Content-Type': 'application/json' }
                  }
              );
-             console.log(response)
            if(response.status === 200 && response.data.message === "Data successfully added")
            {  
              Store.addNotification({
@@ -363,13 +362,11 @@ export default function AddClients() {
                  }
                });
          const formData = clientFormData;
-         console.log(formData)
              setLoader(false)
              navigate("/clients/job-planning");
           }
 
            if(response.status === 200){
-             console.log(response.data)
              setLoader(false)
            }
           

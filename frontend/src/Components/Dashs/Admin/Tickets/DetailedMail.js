@@ -23,6 +23,10 @@ export default function DetailedMail(props) {
     const mailData = location.state
     const setReFetchTickets = props.setReFetchTickets;
 
+    if(!mailData){
+        navigate('/tickets');
+    }
+
     const [replyIsPressed, setReplyIsPressed] = useState(false)
     const [replyFieldEmpty, setReplyFieldEmpty] = useState(false)
     const [sendingMail, setSendingMail] = useState(false)
@@ -98,7 +102,6 @@ export default function DetailedMail(props) {
                 var messageString = replyFormData.replace(/<p>/g, `<p style=" margin: 0px; padding: 0px;">`);
                 const token = secureLocalStorage.getItem('token') 
 
-                console.log(attachmentFiles.length)
 
                 if(attachmentFiles.length === 0){
                     await axios.post(`${replyToTicket}`, 
@@ -108,7 +111,9 @@ export default function DetailedMail(props) {
                         messageId: mailData.threadData.messages[mailData.threadData.messages.length - 1].id,
                         message: messageString,
                         emailSendTo: emailSendTo,
-                        subjectToReply: subjectToReply
+                        subjectToReply: subjectToReply,
+                        company_name: mailData.ticketInfo.company_name,
+                        company_email: mailData.ticketInfo.company_email
                     }
                     },
                     {
@@ -125,6 +130,8 @@ export default function DetailedMail(props) {
                     formData.append("message", messageString)
                     formData.append("emailSendTo", emailSendTo)
                     formData.append("subjectToReply", subjectToReply)
+                    formData.append("company_name", mailData.ticketInfo.company_name)
+                    formData.append("company_email", mailData.ticketInfo.company_email)
 
                     attachmentFiles.forEach((file) => {
                         formData.append('files', file);
@@ -160,7 +167,7 @@ export default function DetailedMail(props) {
         try{
             
             const token = secureLocalStorage.getItem('token') 
-            const response = await axios.get(`${downloadAttachment}/${attachmentId}/${messageId}`, 
+            const response = await axios.get(`${downloadAttachment}/${attachmentId}/${messageId}/${mailData.ticketInfo.company_name}`, 
             {
                 headers:{ 
                     'Content-Type': 'application/json',
@@ -170,7 +177,6 @@ export default function DetailedMail(props) {
             });
 
             const jsonData = response.data;
-            console.log(jsonData)
 
             const encodedData = jsonData.data;
             const decodedData = Buffer.from(encodedData, 'base64');
@@ -191,7 +197,6 @@ export default function DetailedMail(props) {
             URL.revokeObjectURL(url);
 
         } catch (err){
-            console.log(err.message)
         }
 
         setDownloadingAttachment('')
@@ -400,7 +405,6 @@ className="mt-3 card" >
                             <hr/>
 
                             {message.payload.body.messageAttachments.map((attachment)=>{
-                                console.log(attachment)
                                 return(
                                     <Link className={`${downloadingAttachment === attachment.attachmentId && "disabled-router-link" }`} onClick={(e)=>{handleDownloadAttachment(e, attachment.attachmentId, attachment.attachmentMessageId, attachment.attachmentFileName)}}>
                                         {attachment.attachmentFileName}
