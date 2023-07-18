@@ -119,6 +119,7 @@ export const TemplatesAddOneUrl = 'template/add/one';
 export const TemplatesEditOneUrl = 'template/edit/one';
 export const deleteTemplateUrl = 'template/delete/one';
 export const copyTemplateUrl = 'template/copy/one';
+export const usersListAddUrl = 'template/users/list/add';
 
 //Goals
 export const GoalsAddOneUrl = 'goals/add/one';

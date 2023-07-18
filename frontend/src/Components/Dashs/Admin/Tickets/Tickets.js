@@ -898,7 +898,6 @@ export default function Tickets(props) {
   
             }
   
-            {roleName === "Admin" && 
             
               <Form.Group className='mt-2'>
                     
@@ -914,7 +913,7 @@ export default function Tickets(props) {
                 </Form.Select>
   
               </Form.Group>
-            }
+            
             
   
               <div>

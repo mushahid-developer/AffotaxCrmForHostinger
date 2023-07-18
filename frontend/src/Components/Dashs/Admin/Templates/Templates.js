@@ -4,6 +4,8 @@ import 'ag-grid-community/styles/ag-grid.css'; // Core grid CSS, always needed
 import 'ag-grid-community/styles/ag-theme-alpine.css'; // Optional theme CSS
 import { Link } from 'react-router-dom';
 import { Store } from 'react-notifications-component';
+import secureLocalStorage from 'react-secure-storage';
+import Select from 'react-select';
 
 import { useSpring, animated } from 'react-spring';
 
@@ -17,7 +19,37 @@ import * as XLSX from 'xlsx';
 import { Button, Form, Modal } from 'react-bootstrap';
 
 export default function Templates() {
- 
+
+  const [selectedUserListValue, setSelectedUserListValue] = useState([]);
+  const [selectedTemplateId, setSelectedTemplateId] = useState(null);
+  const [showSelectUserListModalIsOpen, setShowSelectUserListModalIsOpen] = useState(false);
+  const [usersList, setUsersList] = useState([]);
+
+  const handleUserListChange = (e) => {
+    setSelectedUserListValue(Array.isArray(e) ? e.map(x => x.value) : []);
+  }
+
+  const handleUserPermissionChange = async ()=>{
+    try {
+      await axios.post(`${axiosURL.usersListAddUrl}/${selectedTemplateId}`,
+          {
+            usersList: selectedUserListValue 
+          },
+          {
+            headers:{ 'Content-Type': 'application/json' }
+          }
+      );
+      setSelectedUserListValue([]);
+      setSelectedTemplateId(null);
+      setShowSelectUserListModalIsOpen(false);
+      setReRender(prev => !prev)
+
+    } catch (error) {
+      
+    }
+  }
+
+  const token = secureLocalStorage.getItem('token') 
   const [isOpen, setIsOpen] = useState(false);
   
   const [showAddCategoryModal, setshowAddCategoryModal] = useState(false);
@@ -142,7 +174,7 @@ export default function Templates() {
       e.preventDefault();
     
 
-      const resp = await axios.post(`${axiosURL.TemplatesAddOneUrl}`,
+      await axios.post(`${axiosURL.TemplatesAddOneUrl}`,
           {
             formData: addTemplateFormData 
           },
@@ -213,12 +245,18 @@ export default function Templates() {
       try {
           const response = await axios.get(axiosURL.TemplatesGetAllUrl,
               {
-                  headers:{ 'Content-Type': 'application/json' }
+                headers:{ 
+                  'Content-Type': 'application/json',
+                  'Authorization': 'Bearer ' + token
+                }
               }
           );
           if(response.status === 200){
 
               setMainRowData(response.data.Templates)
+              setUsersList(response.data.users.map(names => {
+                return{value: names._id, label: names.name}
+              }))
               setCategoriesNames(response.data.TemplateCategories.map(names => {
                 return { value: names._id, label: names.name };
               }));
@@ -314,17 +352,22 @@ export default function Templates() {
           flex:2,
           cellRendererFramework: (params)=>
           <>
+            <Link onClick={()=>{setSelectedTemplateId(params.data._id); setSelectedUserListValue(params.data.users_list); setShowSelectUserListModalIsOpen(!showSelectUserListModalIsOpen)}} style={{all: 'unset', cursor: 'pointer', textAlign: 'center !important'}}>
+              <svg width="16px" height="16px" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg"><g id="SVGRepo_bgCarrier" stroke-width="0"></g><g id="SVGRepo_tracerCarrier" stroke-linecap="round" stroke-linejoin="round"></g><g id="SVGRepo_iconCarrier"> <circle cx="12" cy="6" r="4" stroke="#1C274C" stroke-width="1.5"></circle> <path d="M19.9975 18C20 17.8358 20 17.669 20 17.5C20 15.0147 16.4183 13 12 13C7.58172 13 4 15.0147 4 17.5C4 19.9853 4 22 12 22C14.231 22 15.8398 21.8433 17 21.5634" stroke="#1C274C" stroke-width="1.5" stroke-linecap="round"></path> </g></svg>
+            </Link>
+
             <Link onClick={()=>{handleActionButtons("Copy", params.data._id)}} style={{all: 'unset', cursor: 'pointer', textAlign: 'center !important'}}>
               <svg className="mx-1" xmlns="http://www.w3.org/2000/svg" width="20px" height="20px" viewBox="0 0 256 256">
               <title>Copy Template Row</title>
                 <path d="M48.186 92.137c0-8.392 6.49-14.89 16.264-14.89s29.827-.225 29.827-.225-.306-6.99-.306-15.88c0-8.888 7.954-14.96 17.49-14.96 9.538 0 56.786.401 61.422.401 4.636 0 8.397 1.719 13.594 5.67 5.196 3.953 13.052 10.56 16.942 14.962 3.89 4.402 5.532 6.972 5.532 10.604 0 3.633 0 76.856-.06 85.34-.059 8.485-7.877 14.757-17.134 14.881-9.257.124-29.135.124-29.135.124s.466 6.275.466 15.15-8.106 15.811-17.317 16.056c-9.21.245-71.944-.49-80.884-.245-8.94.245-16.975-6.794-16.975-15.422s.274-93.175.274-101.566zm16.734 3.946l-1.152 92.853a3.96 3.96 0 0 0 3.958 4.012l73.913.22a3.865 3.865 0 0 0 3.91-3.978l-.218-8.892a1.988 1.988 0 0 0-2.046-1.953s-21.866.64-31.767.293c-9.902-.348-16.672-6.807-16.675-15.516-.003-8.709.003-69.142.003-69.142a1.989 1.989 0 0 0-2.007-1.993l-23.871.082a4.077 4.077 0 0 0-4.048 4.014zm106.508-35.258c-1.666-1.45-3.016-.84-3.016 1.372v17.255c0 1.106.894 2.007 1.997 2.013l20.868.101c2.204.011 2.641-1.156.976-2.606l-20.825-18.135zm-57.606.847a2.002 2.002 0 0 0-2.02 1.988l-.626 96.291a2.968 2.968 0 0 0 2.978 2.997l75.2-.186a2.054 2.054 0 0 0 2.044-2.012l1.268-62.421a1.951 1.951 0 0 0-1.96-2.004s-26.172.042-30.783.042c-4.611 0-7.535-2.222-7.535-6.482S152.3 63.92 152.3 63.92a2.033 2.033 0 0 0-2.015-2.018l-36.464-.23z" stroke="#979797" fill-rule="evenodd"/>
               </svg>
             </Link>
+
             <Link onClick={()=>{handleActionButtons("Delete", params.data._id)}} style={{all: 'unset', cursor: 'pointer', textAlign: 'center !important'}}>
-                
                 <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="feather feather-x icon-16">
                   <title>Delete Template</title>
-                  <line x1="18" y1="6" x2="6" y2="18"></line><line x1="6" y1="6" x2="18" y2="18"></line></svg>
+                  <line x1="18" y1="6" x2="6" y2="18"></line><line x1="6" y1="6" x2="18" y2="18"></line>
+                </svg>
             </Link>
           </>
       }
@@ -449,6 +492,7 @@ const exportToExcel = (e) => {
             <option value="200">200</option>
           </select>
         </div>
+ 
 
       </div>
 
@@ -562,6 +606,37 @@ const exportToExcel = (e) => {
       </div>
     </div>
 </div>
+
+
+      <Modal show={showSelectUserListModalIsOpen} centered onHide={()=>{setShowSelectUserListModalIsOpen(!showSelectUserListModalIsOpen)}}>
+        <Modal.Header closeButton>
+          <Modal.Title>Allowed Users</Modal.Title>
+        </Modal.Header>
+        <Modal.Body>
+
+          <Form 
+          onSubmit={handleUserPermissionChange}
+          >
+            
+            <Select
+              className="dropdown"
+              placeholder="Select Option"
+              value={usersList.filter(obj => selectedUserListValue.includes(obj.value))} // set selected values
+              options={usersList} // set list of the data
+              onChange={handleUserListChange} // assign onChange function
+              isMulti
+              isClearable
+            />        
+
+
+          </Form>
+
+        </Modal.Body>
+        <Modal.Footer>
+          <Button onClick={()=>{setShowSelectUserListModalIsOpen(!showSelectUserListModalIsOpen)}}>Close</Button>
+          <Button onClick={handleUserPermissionChange} className='btn btn-success' >Save</Button>
+        </Modal.Footer>
+      </Modal>
 
 
 

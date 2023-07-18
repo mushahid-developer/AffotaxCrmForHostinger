@@ -13,7 +13,11 @@ var TemplatesSchema = new mongoose.Schema({
     category_id: {
         type: mongoose.Types.ObjectId,
         ref: 'templates_categories'
-    }
+    },
+    users_list: [{
+        type: mongoose.Types.ObjectId,
+        ref: 'users'
+    }]
 });
 
 const Templatesdb = mongoose.model('templates', TemplatesSchema);

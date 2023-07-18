@@ -140,11 +140,12 @@ route.get('/construction/task/set/completed/one/:id', ConstructionController.Set
 //Templates
 route.post('/template/category/add/one', TemplateController.addTemplateCategory)
 route.get('/template/category/delete/one/:id', TemplateController.deleteTemplateCategory)
-route.get('/template/get/all', TemplateController.getAllTemplates)
+route.get('/template/get/all', authMiddleware, TemplateController.getAllTemplates)
 route.post('/template/add/one', TemplateController.addOneTemplates)
 route.post('/template/edit/one/:id', TemplateController.EditOneTemplate)
 route.get('/template/delete/one/:id', TemplateController.DeleteOneTemplate)
 route.get('/template/copy/one/:id', TemplateController.CopyOneTemplate)
+route.post('/template/users/list/add/:id', TemplateController.addUsersToList)
 
 //Goals
 route.post('/goals/add/one', GoalsController.addGoal)
