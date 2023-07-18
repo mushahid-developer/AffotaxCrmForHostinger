@@ -71,7 +71,6 @@ export default function Roles() {
     const Data = predata.pages;
     const PagesPermissions = predata.permissions.length > 0 ? predata.permissions : [];
 
-    // console.log(Pages)
     
     var tempArr = []
     var tempPagesPermissions = [];
@@ -83,51 +82,67 @@ export default function Roles() {
         
         const RolesP = Pages.find(page => page.name === Data[i].name)
         const RolesPermissions = RolesP?.permissions;
-        // console.log(Data[i])
-        // console.log(RolesPermissions)
 
-              if(RolesPermissions?.length != 0){
-                for(var x = 0 ; x < PagesPermissions.length ; x++){
-                  const PageNameToCheckPermission = Data[i].name.split(" ")[0];
-                  const PageNameToCheckIfPermissionIsOfPage = PagesPermissions.length > 0 && PagesPermissions[x].name.split(" ")[0];
-                  if(PageNameToCheckPermission === PageNameToCheckIfPermissionIsOfPage){
-                    const checkIfPermissionOrNot = RolesPermissions.some(item => item.name === PagesPermissions[x].name && item.isChecked === true)
-                    if(checkIfPermissionOrNot){
-                      var ArrPagesPermissionsObj = {
-                        name: PagesPermissions[x].name,
-                        isChecked: true
-                      }
-                    }else{
-                      var ArrPagesPermissionsObj = {
-                        name: PagesPermissions[x].name,
-                        isChecked: false
-                      }
-                    }
-
-                    tempPagesPermissions.push(ArrPagesPermissionsObj)
-  
-                    // PagesPermissions[x].name
-  
+        if(RolesP){
+          if(RolesPermissions?.length != 0){
+            for(var x = 0 ; x < PagesPermissions.length ; x++){
+              const PageNameToCheckPermission = Data[i].name.split(" ")[0];
+              const PageNameToCheckIfPermissionIsOfPage = PagesPermissions.length > 0 && PagesPermissions[x].name.split(" ")[0];
+              if(PageNameToCheckPermission === PageNameToCheckIfPermissionIsOfPage){
+                const checkIfPermissionOrNot = RolesPermissions.some(item => item.name === PagesPermissions[x].name && item.isChecked === true)
+                if(checkIfPermissionOrNot){
+                  var ArrPagesPermissionsObj = {
+                    name: PagesPermissions[x].name,
+                    isChecked: true
+                  }
+                }else{
+                  var ArrPagesPermissionsObj = {
+                    name: PagesPermissions[x].name,
+                    isChecked: false
                   }
                 }
+  
+                tempPagesPermissions.push(ArrPagesPermissionsObj)
+  
+                // PagesPermissions[x].name
+  
               }
-              else if( !RolesPermissions || RolesPermissions.length === 0){
-
-                if(PagesPermissions.length !== 0){
-                  for(var x = 0 ; x < PagesPermissions.length ; x++){
-                    const PageNameToCheckPermission = Data[i].name.split(" ")[0];
-                    const PageNameToCheckIfPermissionIsOfPage = PagesPermissions[x].name.split(" ")[0];
-                    if(PageNameToCheckPermission === PageNameToCheckIfPermissionIsOfPage){
-                      var ArrPagesPermissionsObj = {
-                        name: PagesPermissions[x].name,
-                        isChecked: false
-                      }
-                      tempPagesPermissions.push(ArrPagesPermissionsObj)
-                    }
+            }
+          }
+          else if( !RolesPermissions || RolesPermissions.length === 0){
+  
+            if(PagesPermissions.length !== 0){
+              for(var x = 0 ; x < PagesPermissions.length ; x++){
+                const PageNameToCheckPermission = Data[i].name.split(" ")[0];
+                const PageNameToCheckIfPermissionIsOfPage = PagesPermissions[x].name.split(" ")[0];
+                if(PageNameToCheckPermission === PageNameToCheckIfPermissionIsOfPage){
+                  var ArrPagesPermissionsObj = {
+                    name: PagesPermissions[x].name,
+                    isChecked: false
                   }
+                  tempPagesPermissions.push(ArrPagesPermissionsObj)
                 }
-
               }
+            }
+  
+          }
+
+        } else {
+          if(PagesPermissions.length !== 0){
+            for(var x = 0 ; x < PagesPermissions.length ; x++){
+              const PageNameToCheckPermission = Data[i].name.split(" ")[0];
+              const PageNameToCheckIfPermissionIsOfPage = PagesPermissions[x].name.split(" ")[0];
+              if(PageNameToCheckPermission === PageNameToCheckIfPermissionIsOfPage){
+                var ArrPagesPermissionsObj = {
+                  name: PagesPermissions[x].name,
+                  isChecked: false
+                }
+                tempPagesPermissions.push(ArrPagesPermissionsObj)
+              }
+            }
+          }
+        }
+
 
               const includesCheck = Pages.some(item => item.name === Data[i].name && item.isChecked === true);
               if(includesCheck){
