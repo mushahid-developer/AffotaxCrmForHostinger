@@ -71,18 +71,20 @@ export default function Roles() {
     const Data = predata.pages;
     const PagesPermissions = predata.permissions.length > 0 ? predata.permissions : [];
 
-    console.log(Pages)
-
-        var tempArr = []
-        var tempPagesPermissions = [];
-
-
-        if(Pages.length != 0){
-
-            for(var i = 0 ; i < Data.length ; i++){
-
-              const RolesP = Pages.find(page => page.name === Data[i].name)
-              const RolesPermissions = RolesP.permissions;
+    // console.log(Pages)
+    
+    var tempArr = []
+    var tempPagesPermissions = [];
+    
+    
+    if(Pages.length != 0){
+      
+      for(var i = 0 ; i < Data.length ; i++){
+        
+        const RolesP = Pages.find(page => page.name === Data[i].name)
+        const RolesPermissions = RolesP?.permissions;
+        // console.log(Data[i])
+        // console.log(RolesPermissions)
 
               if(RolesPermissions?.length != 0){
                 for(var x = 0 ; x < PagesPermissions.length ; x++){
@@ -108,7 +110,8 @@ export default function Roles() {
   
                   }
                 }
-              }else if( !RolesPermissions || RolesPermissions.length === 0){
+              }
+              else if( !RolesPermissions || RolesPermissions.length === 0){
 
                 if(PagesPermissions.length !== 0){
                   for(var x = 0 ; x < PagesPermissions.length ; x++){
