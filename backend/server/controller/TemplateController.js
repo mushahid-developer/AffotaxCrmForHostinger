@@ -41,7 +41,8 @@ exports.getAllTemplates = async (req, res) => {
         if( User.role_id.name === 'Admin'){
             Templates = await Templatesdb.find().populate('category_id');
         }else{
-            Templates = await Templatesdb.find({ users_list: { $in: [userId] } }).populate('category_id');
+            Templates = await Templatesdb.find().populate('category_id');
+            // Templates = await Templatesdb.find({ users_list: { $in: [userId] } }).populate('category_id');
         }
 
         const users_all = await Userdb.find({ isActive: true }).populate('role_id');
