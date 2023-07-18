@@ -11,12 +11,16 @@ var RoleSchema = new mongoose.Schema({
         },
         name:{
             type: String
-        }
+        },
+        permissions: [{
+            isChecked:{
+                type: Boolean
+            },
+            name:{
+                type: String
+            }
+        }]
     }],
-    permissions: [{
-        type: mongoose.Types.ObjectId,
-        ref: 'permissions'
-    }]
 });
 
 const Roledb = mongoose.model('role', RoleSchema);

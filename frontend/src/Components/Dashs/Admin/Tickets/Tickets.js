@@ -28,6 +28,7 @@ var EditOneTicketUrl = axiosURL.EditOneTicketUrl;
 export default function Tickets(props) {
 
   const roleName= props.roleName
+  const ticketsPagePermissions = props.ticketsPagePermissions
   const quillRef = useRef(null);
   
   const contextValue = useContext(TicketsContext);
@@ -814,21 +815,30 @@ export default function Tickets(props) {
             onSubmit={handleNewTicketSubmitForm}
           >
 
-              {roleName === "Admin" && 
-                <Form.Group className='mt-2'>
-                  <Form.Select 
-                  name='company_name'
-                  onChange={handleNewTicketDataChange}
-                  value = {newTicketFormData.company_name}
-                  >
-                      <option value="Affotax">Affotax - info@affotax.com</option>
-                      <option value="Outsource">Outsource - admin@outsourceaccountings.co.uk</option>
-                      
-                  </Form.Select>
-    
-                </Form.Group>
-              }
+              <Form.Group className='mt-2'>
+                <Form.Select 
+                name='company_name'
+                onChange={handleNewTicketDataChange}
+                value = {newTicketFormData.company_name}
+                >
+                  {ticketsPagePermissions && ticketsPagePermissions.map(perm => {
+                    if(perm.name === "Tickets Affotax" && perm.isChecked){
+                      return(
+                        <option value="Affotax">Affotax - info@affotax.com</option>
+                      )
+                    }
+                    if(perm.name === "Tickets Outsource" && perm.isChecked){
+                      return(
+                        <option value="Outsource">Outsource - admin@outsourceaccountings.co.uk</option>
+                      )
+                    }
+                  })}
+                    
+                </Form.Select>
   
+              </Form.Group>
+             
+
               <Form.Group className='mt-2'>
       
                 <Form.Select 

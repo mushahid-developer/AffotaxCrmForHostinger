@@ -66,35 +66,107 @@ export default function Roles() {
 
     setSelectedRolePages(filteredArray[0].pages)
 
-    const Pages = filteredArray[0].pages
-    const Data = predata.pages
+    const Pages = filteredArray[0].pages;
+    // const RolesPermissions = Pages.permissions ? Pages.permissions : [] ;
+    const Data = predata.pages;
+    const PagesPermissions = predata.permissions.length > 0 ? predata.permissions : [];
+
+    console.log(Pages)
+
         var tempArr = []
+        var tempPagesPermissions = [];
 
 
         if(Pages.length != 0){
+
             for(var i = 0 ; i < Data.length ; i++){
 
-              const includesCheck = Pages.some(item => item.name === Data[i].name && item.isChecked === true);
+              const RolesP = Pages.find(page => page.name === Data[i].name)
+              const RolesPermissions = RolesP.permissions;
 
+              if(RolesPermissions?.length != 0){
+                for(var x = 0 ; x < PagesPermissions.length ; x++){
+                  const PageNameToCheckPermission = Data[i].name.split(" ")[0];
+                  const PageNameToCheckIfPermissionIsOfPage = PagesPermissions.length > 0 && PagesPermissions[x].name.split(" ")[0];
+                  if(PageNameToCheckPermission === PageNameToCheckIfPermissionIsOfPage){
+                    const checkIfPermissionOrNot = RolesPermissions.some(item => item.name === PagesPermissions[x].name && item.isChecked === true)
+                    if(checkIfPermissionOrNot){
+                      var ArrPagesPermissionsObj = {
+                        name: PagesPermissions[x].name,
+                        isChecked: true
+                      }
+                    }else{
+                      var ArrPagesPermissionsObj = {
+                        name: PagesPermissions[x].name,
+                        isChecked: false
+                      }
+                    }
+
+                    tempPagesPermissions.push(ArrPagesPermissionsObj)
+  
+                    // PagesPermissions[x].name
+  
+                  }
+                }
+              }else if( !RolesPermissions || RolesPermissions.length === 0){
+
+                if(PagesPermissions.length !== 0){
+                  for(var x = 0 ; x < PagesPermissions.length ; x++){
+                    const PageNameToCheckPermission = Data[i].name.split(" ")[0];
+                    const PageNameToCheckIfPermissionIsOfPage = PagesPermissions[x].name.split(" ")[0];
+                    if(PageNameToCheckPermission === PageNameToCheckIfPermissionIsOfPage){
+                      var ArrPagesPermissionsObj = {
+                        name: PagesPermissions[x].name,
+                        isChecked: false
+                      }
+                      tempPagesPermissions.push(ArrPagesPermissionsObj)
+                    }
+                  }
+                }
+
+              }
+
+              const includesCheck = Pages.some(item => item.name === Data[i].name && item.isChecked === true);
               if(includesCheck){
                   var ArrObj = {
                       name: Data[i].name,
-                      isChecked: true
+                      isChecked: true,
+                      permissions: tempPagesPermissions
                   }
               }else if(!includesCheck){
                   var ArrObj = {
                       name: Data[i].name,
-                      isChecked: false
+                      isChecked: false,
+                      permissions: tempPagesPermissions
                   }
               }
+              tempPagesPermissions = []
               tempArr.push(ArrObj)
             }
+
+
         }else if(Pages.length === 0){
             for(var i = 0 ; i < Data.length ; i++){
+
+              for(var x = 0 ; x < PagesPermissions.length ; x++){
+                const PageNameToCheckPermission = Data[i].name.split(" ")[0];
+                const PageNameToCheckIfPermissionIsOfPage = PagesPermissions[x].name.split(" ")[0];
+                if(PageNameToCheckPermission === PageNameToCheckIfPermissionIsOfPage){
+
+                  var ArrPagesPermissionsObj = {
+                    name: PagesPermissions[x].name,
+                    isChecked: false
+                  }
+                  tempPagesPermissions.push(ArrPagesPermissionsObj)
+                }
+              }
+
                 var ArrObj = {
                     name: Data[i].name,
-                    isChecked: false
+                    isChecked: false,
+                    permissions: tempPagesPermissions
                 }
+                tempPagesPermissions = []
                 tempArr.push(ArrObj)
             }
         }
@@ -114,10 +186,31 @@ export default function Roles() {
     setPermissionsFormData(updatedCheckboxes);
   };
 
+  const handleFormPagePermChanges = (event, pageIndex, permComingIndex) => {
+    const checkboxName = event.target.name;
+    const isChecked = event.target.checked;
+  
+    setPermissionsFormData(prevState => {
+      const updatedCheckboxes = prevState.map((page, index) => {
+        if (index === pageIndex) {
+          const updatedPermissions = page.permissions.map((perm, permIndex) =>
+            permIndex === permComingIndex ? { ...perm, isChecked: isChecked } : perm
+          );
+  
+          return { ...page, permissions: updatedPermissions };
+        }
+  
+        return page;
+      });
+  
+      return updatedCheckboxes;
+    });
+  };
+
   //
 
   const handlePermissionSave = async ()=>{
-    const response = await axios.post(savePermissionsUrl,
+    await axios.post(savePermissionsUrl,
       {
         id: selectedRole,
         pages: permissionsFormData
@@ -126,7 +219,8 @@ export default function Roles() {
       headers:{ 'Content-Type': 'application/json' }
       }
       );
-      
+   
+
       setNewRoleIsOpen(false);
       setReRender(!reRender)
   }
@@ -297,20 +391,38 @@ export default function Roles() {
                 <Form>
                     <Accordion defaultActiveKey="0">
                     {permissionsFormData &&
-                        permissionsFormData.map((page, ind) => {
-
-
-                        return (
-                            <Accordion.Item eventKey={ind} key={ind}>
-                            <Accordion.Header>
-                                <Form.Group controlId="formBasicCheckbox">
-                                <Form.Check type="checkbox" name={page.name} onChange={handleFormPageChange} checked={page.isChecked} label={page.name} />
-                                </Form.Group>
-                            </Accordion.Header>
-                            <Accordion.Body></Accordion.Body>
-                            </Accordion.Item>
-                        );
-                        })}
+        permissionsFormData.map((page, pageIndex) => {
+          return (
+            <Accordion.Item eventKey={pageIndex} key={pageIndex}>
+              <Accordion.Header>
+                <Form.Group controlId="formBasicCheckbox">
+                  <Form.Check
+                    type="checkbox"
+                    name={page.name}
+                    onChange={handleFormPageChange}
+                    checked={page.isChecked}
+                    label={page.name}
+                  />
+                </Form.Group>
+              </Accordion.Header>
+              <Accordion.Body>
+                {page.permissions.map((perm, permIndex) => {
+                  return (
+                    <Form.Group controlId="formBasicCheckbox" key={permIndex}>
+                      <Form.Check
+                        type="checkbox"
+                        name={perm.name}
+                        onChange={event => handleFormPagePermChanges(event, pageIndex, permIndex)}
+                        checked={perm.isChecked}
+                        label={perm.name}
+                      />
+                    </Form.Group>
+                  );
+                })}
+              </Accordion.Body>
+            </Accordion.Item>
+          );
+        })}
                     </Accordion>
                 </Form>
                :

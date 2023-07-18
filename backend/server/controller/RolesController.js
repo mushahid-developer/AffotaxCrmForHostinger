@@ -1,4 +1,5 @@
 const Pagedb = require("../model/RolesPermissions/Page");
+const Permissionsdb = require("../model/RolesPermissions/Permissions");
 const Roledb = require("../model/RolesPermissions/Roles");
 const Userdb = require("../model/Users/Users");
 
@@ -6,10 +7,12 @@ exports.getRolesPreData = async (req, res) => {
 
     const roles = await Roledb.find();
     const Pages = await Pagedb.find();
+    const permissions = await Permissionsdb.find();
     
     res.status(200).json({
         roles: roles,
         pages: Pages,
+        permissions: permissions
     })
 
 }

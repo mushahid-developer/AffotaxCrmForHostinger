@@ -49,6 +49,7 @@ export default function AdminRoutes(props) {
 
 
   const [ticketsData, setTicketsData] = useState([]);
+  const [ticketsPagePermissions, setTicketsPagePermissions] = useState(null);
   const [reFetchTickets, setReFetchTickets] = useState(false);
   const [unreadCounter, setUnreadCounter] = useState(0);
 
@@ -60,6 +61,39 @@ export default function AdminRoutes(props) {
   
 
   useEffect(() => {
+    const fetchDataImd = async () => {
+      try {
+        for (const page of pagesAccess) {
+          if (page.name === "Tickets Page" && page.isChecked) {
+            setTicketsData("Loading");
+            setTicketsPagePermissions(page.permissions)
+            const token = secureLocalStorage.getItem('token') 
+            const response = await axios.get(getAllTickets, {
+              headers:{ 
+                'Content-Type': 'application/json',
+                'Authorization': 'Bearer ' + token
+              }
+            });
+  
+            if (response.status === 200) {
+              setTicketsData(response.data);
+              setUnreadCounter(response.data.Emails.unreadCount);
+            } else {
+              setTicketsData("Error");
+            }
+
+            finalTicketData = {
+              ticketsData,
+              setReFetchTickets: setReFetchTickets
+            }
+            
+          }
+        }
+      } catch (error) {
+        setTicketsData("Error");
+      }
+    };
+
     const fetchData = async () => {
       try {
         for (const page of pagesAccess) {
@@ -92,7 +126,7 @@ export default function AdminRoutes(props) {
       }
     };
   
-    fetchData(); // Run immediately
+    fetchDataImd(); // Run immediately
   
     const interval = setInterval(fetchData, 60 * 1000); // Run every 5 minutes (300 seconds)
   
@@ -146,7 +180,7 @@ export default function AdminRoutes(props) {
                   <Route path="/goals" element = {<Goals />}></Route>
                   <Route path="/tickets" element = {
                     <TicketsContext.Provider value = {finalTicketData}>
-                      <Tickets  setReFetchTickets = {setReFetchTickets} roleName={roleName} />
+                      <Tickets  setReFetchTickets = {setReFetchTickets} roleName={roleName} ticketsPagePermissions={ticketsPagePermissions} />
                     </TicketsContext.Provider>
                   }></Route>
                   <Route path="/tickets/mail" element = {<DetailedMail setReFetchTickets = {setReFetchTickets}/>}></Route>
