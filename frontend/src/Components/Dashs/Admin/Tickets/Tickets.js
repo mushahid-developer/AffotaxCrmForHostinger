@@ -393,6 +393,7 @@ export default function Tickets(props) {
           { headerName: 'Recipients', field: 'recipients', flex:2, editable: false, },
           { 
             headerName: 'Status', 
+            sort: 'desc',
             field: 'readStatus', 
             flex:0.6,
             editable: false,
@@ -407,7 +408,6 @@ export default function Tickets(props) {
           },
           { 
             headerName: 'Date', 
-            sort: 'desc',
             field: 'formattedDate', 
             flex:1,
             editable: false,
