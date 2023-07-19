@@ -1383,7 +1383,7 @@
     const obj2 = {
         headerName: "Partner",
         field:"partner",
-        flex: 1,
+        flex: 1.2,
         editable: false,
         valueGetter: p => {
           return p.data.client_id.partner //to get value from obj inside obj
