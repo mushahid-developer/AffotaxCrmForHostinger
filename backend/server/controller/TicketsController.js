@@ -34,7 +34,7 @@ exports.getEmails = async (req, res) => {
         if( User.role_id.name === 'Admin'){
             Tickets = await Ticketsdb.find().populate('client_id').populate("user_id");
             const User_all = await Userdb.find().populate('role_id');
-            const templatesList = await Templatesdb.find();
+            templatesList = await Templatesdb.find();
             UsersList = User_all.filter((user) => {
                 return user.role_id && user.role_id.pages.some((page) => {
                   return page.name === 'Tickets Page' && page.isChecked;
