@@ -602,13 +602,11 @@ export default function Tickets(props) {
     } else if(field === "clientId"){
         name = "clientId"
         value = e.value
+        setSelectedClientFunct(value)
     } else {
       e.preventDefault();
        name = e.target.name;
        value = e.target.value;
-       if(name === "clientId"){
-        setSelectedClientFunct(value)
-       }
     }
 
     setNewTicketFormData(prevState => ({
