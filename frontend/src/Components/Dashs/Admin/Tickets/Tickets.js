@@ -3,6 +3,7 @@ import { AgGridReact } from 'ag-grid-react'; // the AG Grid React Component
 import 'ag-grid-community/styles/ag-grid.css'; // Core grid CSS, always needed
 import 'ag-grid-community/styles/ag-theme-alpine.css'; // Optional theme CSS
 import { Link, useNavigate } from 'react-router-dom';
+import Select from 'react-select';
 
 import ReactQuill, { Quill } from 'react-quill';
 import 'react-quill/dist/quill.snow.css';
@@ -45,8 +46,10 @@ export default function Tickets(props) {
         files: []
       });
       const [clients, setClients] = useState();
+      const [clientsListSelect, setClientsListSelect] = useState([]);
       const [users, setUsers] = useState(null);
       const [templatesList, setTemplatesList] = useState([]);
+      const [templatesListSelect, setTemplatesListSelect] = useState([]);
       const [selectedClient, setSelectedClient] = useState("");
       const [trySubmit, setTrySubmit] = useState(false);
       const [mailIsSending, setMailIsSending] = useState(false);
@@ -291,8 +294,14 @@ export default function Tickets(props) {
             setLoader(false)
             setMainRowData(contextValue.ticketsData.Emails ? contextValue.ticketsData.Emails.detailedThreads : []);
             setClients(contextValue.ticketsData.Clients);
+            setClientsListSelect(contextValue.ticketsData.Clients?.map(names => {
+              return{value: names._id, label: `${names.company_name} - ${names.client_name}`}
+            }));
             setUsers(contextValue.ticketsData.UsersList);
             setTemplatesList(contextValue.ticketsData.templatesList);
+            setTemplatesListSelect(contextValue.ticketsData.templatesList?.map(names => {
+              return{value: names._id, label: `${names.name} - ${names.description}`}
+            }))
           }
           
       }, [contextValue.ticketsData]);
@@ -578,6 +587,7 @@ export default function Tickets(props) {
 
   const handleNewTicketDataChange = (e, field)=>{
 
+
     setTrySubmit(false);
 
     var name = "";
@@ -589,6 +599,9 @@ export default function Tickets(props) {
       // value = e.replace(/<p>/g, `<p style=" margin: 0px; padding: 0px;">`);
       value = e;
 
+    } else if(field === "clientId"){
+        name = "clientId"
+        value = e.value
     } else {
       e.preventDefault();
        name = e.target.name;
@@ -608,15 +621,14 @@ export default function Tickets(props) {
   }
 
   const handleTemplateSelect = (e) => {
-    e.preventDefault();
-
-    const {name, value} = e.target;
+    const tempValue = e.value ? e.value : "";
+    const value = tempValue;
 
     if(value === ""){
       setNewTicketFormData(prevState => ({
         ...prevState,
         message: "",
-        [name]: ""
+        templateId: ""
       }));
     } else {
           const templateData = templatesList.find(template => template._id === value);
@@ -624,12 +636,12 @@ export default function Tickets(props) {
           setNewTicketFormData(prevState => ({
             ...prevState,
             message: htmlString,
-            [name]: value
+            templateId: value
           }));
-
     }
 
   }
+
 
   const handleNewTicketSubmitForm = async (e)=>{
     e.preventDefault();
@@ -841,7 +853,7 @@ export default function Tickets(props) {
 
               <Form.Group className='mt-2'>
       
-                <Form.Select 
+                {/* <Form.Select 
                 name='clientId'
                 onChange={handleNewTicketDataChange}
                 value = {newTicketFormData.clientId}
@@ -850,7 +862,17 @@ export default function Tickets(props) {
                     {clients && clients.map((client, index)=>
                         <option key={index} value={client._id}>{client.company_name} - {client.client_name}</option>
                     )}
-                </Form.Select>
+                </Form.Select> */}
+
+                <Select
+                  name='clientId'
+                  className="dropdown"
+                  placeholder="Select Client"
+                  value={clientsListSelect.find(val => val._id === newTicketFormData.clientId)} // set selected values
+                  options={clientsListSelect} // set list of the data
+                  onChange={(e) => {handleNewTicketDataChange(e, 'clientId')}} // assign onChange function
+                  isClearable
+                />
   
               </Form.Group>
   
@@ -901,7 +923,7 @@ export default function Tickets(props) {
             
               <Form.Group className='mt-2'>
                     
-                <Form.Select 
+                {/* <Form.Select 
                 name='templateId'
                 onChange={handleTemplateSelect}
                 value = {newTicketFormData.templateId}
@@ -910,7 +932,16 @@ export default function Tickets(props) {
                     {templatesList && templatesList.map((template, index)=>
                         <option key={index} value={template._id}>{template.name} - {template.description}</option>
                     )}
-                </Form.Select>
+                </Form.Select> */}
+
+                <Select
+                  className="dropdown"
+                  placeholder="Select Template"
+                  value={templatesListSelect.find(val => val._id === newTicketFormData.templateId)} // set selected values
+                  options={templatesListSelect} // set list of the data
+                  onChange={handleTemplateSelect} // assign onChange function
+                  isClearable
+                />
   
               </Form.Group>
             
