@@ -169,7 +169,9 @@ exports.EditOneTicket = async (req, res) => {
         const userId = req.body.user_id
 
         await Ticketsdb.findByIdAndUpdate(tickedId, {
-            user_id: userId
+            user_id: userId,
+            note: req.body.note,
+            job_date: req.body.job_date
         });
         
         res.json({

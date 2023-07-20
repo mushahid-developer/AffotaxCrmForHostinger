@@ -435,6 +435,44 @@ export default function Tickets(props) {
               suppressInput: true 
             },
           },
+          { 
+            headerName: 'Job Date', 
+            field: 'job_date', 
+            flex:1,
+            editable: true,
+            valueGetter: (params)=>{
+              if(params.data.ticketInfo.job_date && params.data.ticketInfo.job_date !== "Invalid Date")
+            {
+              const deadline = new Date(params.data.ticketInfo.job_date)
+              let ye = new Intl.DateTimeFormat('en', { year: 'numeric' }).format(deadline);
+              let mo = new Intl.DateTimeFormat('en', { month: 'short' }).format(deadline);
+              let da = new Intl.DateTimeFormat('en', { day: '2-digit' }).format(deadline);
+              return(`${da}-${mo}-${ye}`);
+              }
+              else{
+                return ""
+            }
+            },
+            floatingFilterComponent: 'selectFloatingFilterWthDate', 
+            floatingFilterComponentParams: { 
+              options: ["Expired", "Today", "Tomorrow", "In 7 days", "In 15 days", "Month Wise", "Custom"],
+              onValueChange:(value) => setStartDateFvalue(value),
+              value: startDateFvalue,
+              onDateValueChange:(value) => setStartDateFvalueDate(value),
+              dateValue: startDateFvalueDate,
+              suppressFilterButton: true, 
+              suppressInput: true 
+            },
+          },
+          { 
+            headerName: 'Note', 
+            field: 'note', 
+            flex:3,
+            editable: true,
+            valueGetter: (params)=>{
+              return params.data.ticketInfo.note
+            }
+          },
           {
               headerName: 'Action', 
               field: 'price',
@@ -470,14 +508,23 @@ export default function Tickets(props) {
             event.data.Jobholder_id = selectedOption ? selectedOption._id : '';
             event.data.ticketInfo.user_id.name = selectedOption ? selectedOption.name : '';
             }
+          if(event.colDef.field === "note"){
+            event.data.ticketInfo.note = event.data.note
+          }
+          if(event.colDef.field === "job_date"){
+            event.data.ticketInfo.job_date = event.data.job_date
+          }
         }, [gridApi]);
 
         const onRowValueChanged = useCallback(async (event) => {
           var data = event.data;
+          console.log(data)
           try{
             await axios.post(`${EditOneTicketUrl}/${data.ticketInfo._id}`, 
               {
                 user_id: data.Jobholder_id,
+                note: data.note,
+                job_date: data.job_date
               },
               {
                 headers:{ 'Content-Type': 'application/json' }
