@@ -347,7 +347,7 @@ export default function Tickets(props) {
               valueGetter: (params) => params.data.ticketInfo.company_name,
               floatingFilterComponent: 'selectFloatingFilter', 
               floatingFilterComponentParams: { 
-                options: ["Affotax", "Outsource"],
+                options: ["Affotax", "Outsource", 'Online Taxation'],
                 onValueChange:(value) => setCompanyFvalue(value),
                 value: companyFvalue,
                 suppressFilterButton: true, 
@@ -840,6 +840,11 @@ export default function Tickets(props) {
                     if(perm.name === "Tickets Outsource" && perm.isChecked){
                       return(
                         <option value="Outsource">Outsource - admin@outsourceaccountings.co.uk</option>
+                      )
+                    }
+                    if(perm.name === "Tickets Online Taxation" && perm.isChecked){
+                      return(
+                        <option value="Online Taxation">Online Taxation - rashid@onlinetaxation.co.uk</option>
                       )
                     }
                   })}

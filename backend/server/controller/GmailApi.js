@@ -54,6 +54,32 @@ class GmailApi {
         }
     };
 
+    getOnlineTaxationAccessToken = async () => {
+        try {
+            var data = qs.stringify({
+                'client_id': '541004799248-ad7pidjubliojkn4vf3s07ca534fmiq9.apps.googleusercontent.com',
+                'client_secret': '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',
+                'refresh_token': '1//03BdMiWUv2QcgCgYIARAAGAMSNgF-L9IrWknR_seCtY_31ojZ_38L9p5GEvQNN5cOlWhpAYiYfthtDU_dduWKmEZIORIbKtfV3w',
+                'grant_type': 'refresh_token'
+            });
+            var config = {
+                method: 'post',
+                maxBodyLength: Infinity,
+                url: 'https://accounts.google.com/o/oauth2/token',
+                headers: {
+                    'Content-Type': 'application/x-www-form-urlencoded'
+                },
+                data: data
+            };
+            var response = await axios(config)
+
+            var accessToken = await response.data.access_token;
+            return accessToken
+        } catch (error) {
+            throw new Error(error.message);
+        }
+    };
+
     getAllThreads = async () => {
         try {
             var accessToken = await this.getAccessToken();
@@ -143,7 +169,7 @@ class GmailApi {
 
                     var sentByMe = false;
                     var fromHeader = message.payload.headers.find(header => header.name === 'From');
-                    if (fromHeader && fromHeader.value && (fromHeader.value === 'info@affotax.com' || fromHeader.value === 'Affotax Team <info@affotax.com>' || fromHeader.value === 'Affotax <info@affotax.com>' || fromHeader.value === 'Outsource Accountings <admin@outsourceaccountings.co.uk>' || fromHeader.value === 'admin@outsourceaccountings.co.uk')) {
+                    if (fromHeader && fromHeader.value && (fromHeader.value === 'info@affotax.com' || fromHeader.value === 'Affotax Team <info@affotax.com>' || fromHeader.value === 'Affotax <info@affotax.com>' || fromHeader.value === 'Outsource Accountings <admin@outsourceaccountings.co.uk>' || fromHeader.value === 'admin@outsourceaccountings.co.uk' || fromHeader.value === 'Online Taxation <rashid@onlinetaxation.co.uk>' || fromHeader.value === 'rashid@onlinetaxation.co.uk')) {
                         sentByMe = true;
                     }
 
@@ -206,17 +232,16 @@ class GmailApi {
         }
     }
 
-    
-    // Method to get attachment data
     getAttachment = async (attachmentId, messageId, company_name) => {
         
         try {
             var accessToken = "";
-            if(company_name === "Outsource"){
-                accessToken = await this.getOutsourceAccessToken();
-
-            }else{
+            if(company_name === "Affotax"){
                 accessToken = await this.getAccessToken();
+            } else if(company_name === "Outsource"){
+                accessToken = await this.getOutsourceAccessToken();
+            } else if(company_name === "Online Taxation"){
+                accessToken = await this.getOnlineTaxationAccessToken();
             }
 
             const url = `https://www.googleapis.com/gmail/v1/users/me/messages/${messageId}/attachments/${attachmentId}`;
@@ -270,10 +295,11 @@ class GmailApi {
             
             var accessToken = await this.getAccessToken();
             var accessTokenOutsource = await this.getOutsourceAccessToken();
+            var accessTokenOnlineTaxation = await this.getOnlineTaxationAccessToken();
             
             var detailedThreads = await Promise.all(threadIds.map(async (threadId) => {
                 
-                var response = await this.getDetailedThreads(threadId.thread_id, threadId.company_name === "Affotax" ? accessToken : accessTokenOutsource);
+                var response = await this.getDetailedThreads(threadId.thread_id, threadId.company_name === "Affotax" ? accessToken : threadId.company_name === "Outsource" ? accessTokenOutsource : accessTokenOnlineTaxation);
                 return response;
             }));
 
@@ -299,10 +325,12 @@ class GmailApi {
     markThreadAsRead = async (messageId, company_name) => {
         try {
             var accessToken = "";
-            if(company_name === "Outsource"){
-                accessToken = await this.getOutsourceAccessToken();
-            }else{
+            if(company_name === "Affotax"){
                 accessToken = await this.getAccessToken();
+            } else if(company_name === "Outsource"){
+                accessToken = await this.getOutsourceAccessToken();
+            } else if(company_name === "Online Taxation"){
+                accessToken = await this.getOnlineTaxationAccessToken();
             }
 
             var config = {
@@ -334,9 +362,12 @@ class GmailApi {
             if(EmailComingData.company_name === "Affotax"){
                 accessToken = await this.getAccessToken();
                 fromVar = 'Affotax <info@affotax.com>'
-            } else {
+            } else if(EmailComingData.company_name === "Outsource"){
                 accessToken = await this.getOutsourceAccessToken();
                 fromVar = 'Outsource Accountings <admin@outsourceaccountings.co.uk>'
+            } else if(EmailComingData.company_name === "Online Taxation"){
+                accessToken = await this.getOnlineTaxationAccessToken();
+                fromVar = 'Online Taxation <rashid@onlinetaxation.co.uk>'
             }
 
             const emailData = {
@@ -382,12 +413,16 @@ class GmailApi {
         try {
             var accessToken = ""
             var fromVar = ""
-            if(EmailData.company_name === "Affotax"){
+
+           if(EmailData.company_name === "Affotax"){
                 accessToken = await this.getAccessToken();
                 fromVar = 'Affotax <info@affotax.com>'
-            } else {
+            } else if(EmailData.company_name === "Outsource"){
                 accessToken = await this.getOutsourceAccessToken();
                 fromVar = 'Outsource Accountings <admin@outsourceaccountings.co.uk>'
+            } else if(EmailData.company_name === "Online Taxation"){
+                accessToken = await this.getOnlineTaxationAccessToken();
+                fromVar = 'Online Taxation <rashid@onlinetaxation.co.uk>'
             }
 
 
@@ -448,12 +483,15 @@ class GmailApi {
         try {
             var accessToken = "";
             var fromVar = "";
-            if(EmailComingData.company_name === "Outsource"){
+            if(EmailComingData.company_name === "Affotax"){
+                accessToken = await this.getAccessToken();
+                fromVar = 'Affotax <info@affotax.com>'
+            } else if(EmailComingData.company_name === "Outsource"){
                 accessToken = await this.getOutsourceAccessToken();
                 fromVar = 'Outsource Accountings <admin@outsourceaccountings.co.uk>'
-            }else{
-                accessToken = await this.getAccessToken();
-                fromVar = "Affotax <info@affotax.com>"
+            } else if(EmailComingData.company_name === "Online Taxation"){
+                accessToken = await this.getOnlineTaxationAccessToken();
+                fromVar = 'Online Taxation <rashid@onlinetaxation.co.uk>'
             }
 
             const threadId = EmailComingData.threadId; // Replace with the actual thread ID
@@ -507,12 +545,15 @@ class GmailApi {
         try {
             var accessToken = "";
             var fromVar = "";
-            if(EmailComingData.company_name === "Outsource"){
+            if(EmailComingData.company_name === "Affotax"){
+                accessToken = await this.getAccessToken();
+                fromVar = 'Affotax <info@affotax.com>'
+            } else if(EmailComingData.company_name === "Outsource"){
                 accessToken = await this.getOutsourceAccessToken();
                 fromVar = 'Outsource Accountings <admin@outsourceaccountings.co.uk>'
-            }else{
-                accessToken = await this.getAccessToken();
-                fromVar = "Affotax <info@affotax.com>"
+            } else if(EmailComingData.company_name === "Online Taxation"){
+                accessToken = await this.getOnlineTaxationAccessToken();
+                fromVar = 'Online Taxation <rashid@onlinetaxation.co.uk>'
             }
 
 

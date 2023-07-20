@@ -119,9 +119,11 @@ exports.createNewTicket = async (req, res) => {
 
         if(req.body.formData.company_name === 'Affotax'){
             company_email = "info@affotax.com";
-        } else {
+        } else if(req.body.formData.company_name === "Outsource") {
             company_email = "admin@outsourceaccountings.co.uk";
-        }
+        } else if(req.body.formData.company_name === "Online Taxation") {
+            company_email = "rashid@onlinetaxation.co.uk";
+        } 
         
         const EmailData = {
             email: client.email,
@@ -195,9 +197,11 @@ exports.createNewTicketWithAttachments = async (req, res) => {
 
         if(req.body.company_name === 'Affotax'){
             company_email = "info@affotax.com";
-        } else {
+        } else if(req.body.company_name === "Outsource") {
             company_email = "admin@outsourceaccountings.co.uk";
-        }
+        } else if(req.body.company_name === "Online Taxation") {
+            company_email = "rashid@onlinetaxation.co.uk";
+        } 
         
 
         const attachments = req.files.map(file => ({
