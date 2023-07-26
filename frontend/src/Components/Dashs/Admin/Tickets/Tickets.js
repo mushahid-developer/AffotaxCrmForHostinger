@@ -395,7 +395,7 @@ export default function Tickets(props) {
             headerName: 'Status', 
             sort: 'desc',
             field: 'readStatus', 
-            flex:0.6,
+            flex:0.8,
             editable: false,
             floatingFilterComponent: 'selectFloatingFilter', 
               floatingFilterComponentParams: { 
@@ -409,7 +409,7 @@ export default function Tickets(props) {
           { 
             headerName: 'Date', 
             field: 'formattedDate', 
-            flex:1,
+            flex:1.5,
             editable: false,
             valueGetter: (params)=>{
               if(params.data.formattedDate && params.data.formattedDate !== "Invalid Date")
