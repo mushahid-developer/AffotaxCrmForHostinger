@@ -82,7 +82,7 @@ export default function DetailedMail(props) {
       var subjectToReply = mailData.subject;
       var emailSendTo = mailData.recipients[0];
 
-      const fileTypes = ["JPEG", "PNG", "PDF"];
+      const fileTypes = ["JPEG", "PNG", "PDF", "XLS", "XLSX"];
 
       const handleFilesChange = (file) => {
         const filesArray = Array.from(file);

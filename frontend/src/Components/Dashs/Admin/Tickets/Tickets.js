@@ -622,7 +622,7 @@ export default function Tickets(props) {
     }
   }
 
-  const fileTypes = ["JPEG", "PNG", "PDF"];
+  const fileTypes = ["JPEG", "PNG", "PDF", "XLS", "XLSX"];
 
   const handleFilesChange = (file) => {
     const filesArray = Array.from(file);
