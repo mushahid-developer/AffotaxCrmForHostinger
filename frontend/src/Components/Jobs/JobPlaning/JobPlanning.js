@@ -20,6 +20,7 @@ import { saveAs } from 'file-saver';
 import * as XLSX from 'xlsx';
 import { jsPDF } from 'jspdf';
 import 'jspdf-autotable';
+import secureLocalStorage from 'react-secure-storage';
 
 var preDataUrl = axiosURL.addJobPreData;
 var jobPlanningUrl = axiosURL.jobPlanning;
@@ -1401,7 +1402,7 @@ export default function JobPlanning(props) {
   const onRowValueChanged = useCallback(async (event) => {
     var data = event.data;
 
-
+    const token = secureLocalStorage.getItem('token')
     const resp = await axios.post(JobPlaning_Update_One_Url,
       {
         _id: data._id,
@@ -1426,7 +1427,10 @@ export default function JobPlanning(props) {
         phone: data.phone,
       },
       {
-        headers: { 'Content-Type': 'application/json' }
+        headers:{ 
+          'Content-Type': 'application/json',
+          'Authorization': 'Bearer ' + token
+         }
       }
     );
 

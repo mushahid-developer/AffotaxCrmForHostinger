@@ -53,7 +53,7 @@ route.post('/admin/dashoard/get', getDashboardData )
 route.get('/job/add/predata', JobController.addNewClientPreData )
 route.get('/job/get/all', JobController.getJobPlanning )
 route.post('/job/client/add', JobController.addNewClient )
-route.post('/job/planing/edit', JobController.editJobPlanning )
+route.post('/job/planing/edit', authMiddleware, JobController.editJobPlanning )
 route.post('/job/planing/edit/many', JobController.editManyJobPlanning )
 
 
@@ -164,7 +164,7 @@ route.post('/tickets/thread/reply/attachments', authMiddleware, upload.array('fi
 route.get('/tickets/thread/complete/:id', TicketsController.markAsCompleted)
 route.get('/tickets/thread/delete/:id', TicketsController.DeleteTicket)
 route.get('/tickets/thread/attachment/download/:id/:mid/:cn', TicketsController.DownloadAttachment)
-route.post('/tickets/edit/one/:id', TicketsController.EditOneTicket)
+route.post('/tickets/edit/one/:id',authMiddleware, TicketsController.EditOneTicket)
 
 //Notificaions
 route.get('/notifications/get/all', authMiddleware, GetAllNotifications)

@@ -44,7 +44,7 @@ export default function TopBar(props) {
 
   const markAllNoti = async (e)=>{
     e.preventDefault();
-
+    
     const token = secureLocalStorage.getItem('token')
     await axios.get(markAllNotificationsReadUrl,
       {

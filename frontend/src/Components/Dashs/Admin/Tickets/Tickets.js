@@ -518,6 +518,7 @@ export default function Tickets(props) {
     var data = event.data;
     console.log(data)
     try {
+      const token = secureLocalStorage.getItem('token')
       await axios.post(`${EditOneTicketUrl}/${data.ticketInfo._id}`,
         {
           user_id: data.Jobholder_id,
@@ -525,7 +526,10 @@ export default function Tickets(props) {
           job_date: data.job_date
         },
         {
-          headers: { 'Content-Type': 'application/json' }
+          headers:{ 
+            'Content-Type': 'application/json',
+            'Authorization': 'Bearer ' + token
+           }
         }
       );
       setReRender(prev => !prev)

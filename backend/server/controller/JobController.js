@@ -137,6 +137,7 @@ exports.addNewClient = async (req, res) => {
     const year_end = new Date(req.body.year_end)
     const job_deadline = new Date(req.body.job_deadline)
     const work_deadline = new Date(req.body.work_deadline)
+    const curUserName = req.user.name;
     
 
       try{
@@ -177,7 +178,7 @@ exports.addNewClient = async (req, res) => {
             if(prevUserId !== req.body.job_holder_id){
               await Notidb.create({
                   title: "New Job Assigned",
-                  description: "You have been Assigned a new Job",
+                  description: `${curUserName} Assigned you a new Job`,
                   redirectLink: "/clients/job-planning",
                   user_id: req.body.job_holder_id
               })
