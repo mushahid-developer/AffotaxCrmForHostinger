@@ -1,4 +1,5 @@
 const Clientdb = require('../model/Client/client');
+const Notidb = require('../model/Notifications/Notifications');
 const Templatesdb = require('../model/Templates/Templates');
 const Ticketsdb = require('../model/Tickets/Tickets');
 const Userdb = require('../model/Users/Users');
@@ -168,11 +169,25 @@ exports.EditOneTicket = async (req, res) => {
         const tickedId = req.params.id;
         const userId = req.body.user_id
 
+        const ticket = await Ticketsdb.findById(tickedId)
+
+        const prevUserId = ticket.user_id;
+
+
         await Ticketsdb.findByIdAndUpdate(tickedId, {
             user_id: userId,
             note: req.body.note,
             job_date: req.body.job_date
         });
+
+        if(prevUserId !== userId){
+            await Notidb.create({
+                title: "New Ticket Assigned",
+                description: "You have been Assigned a new ticket",
+                redirectLink: "/tickets",
+                user_id: userId
+            })
+        }
         
         res.json({
             message: "Success",

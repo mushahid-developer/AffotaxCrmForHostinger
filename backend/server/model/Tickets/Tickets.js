@@ -26,6 +26,14 @@ var TicketsSchema = new mongoose.Schema({
     },
     company_email: {
         type: String
+    },
+    job_date: {
+        type: String,
+        default: ""
+    },
+    note: {
+        type: String,
+        default: ""
     }
     
 });

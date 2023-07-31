@@ -1,6 +1,6 @@
 //BaseUrl
 export const BaseUrl = 'https://crm.affotax.com/api/'; // Live
-// export const BaseUrl = 'http://localhost:7878/api/'; // Local
+// export const BaseUrl = 'http://192.168.10.26:7878/api/'; // Local
 // 192.168.10.16
 
 //Auth / Users
@@ -138,3 +138,9 @@ export const markMailAsCompleted = 'tickets/thread/complete';
 export const markMailAsDeleted = 'tickets/thread/delete';
 export const downloadAttachment = 'tickets/thread/attachment/download';
 export const EditOneTicketUrl = 'tickets/edit/one';
+
+//Notifications
+export const getAllNotificationsUrl = 'notifications/get/all';
+export const markAllNotificationsReadUrl = 'notifications/mark/all/read';
+export const markOneNotificationsReadUrl = 'notifications/mark/one/read';
+

@@ -1,5 +1,6 @@
 const Clientdb = require("../model/Client/client")
-const Jobsdb = require("../model/Jobs/jobs")
+const Jobsdb = require("../model/Jobs/jobs");
+const Notidb = require("../model/Notifications/Notifications");
 const Userdb = require("../model/Users/Users")
 const mongoose = require('mongoose');
 
@@ -139,6 +140,10 @@ exports.addNewClient = async (req, res) => {
     
 
       try{
+
+        const prevJob = Jobsdb.findById(req.body._id);
+        const prevUserId = prevJob.job_holder_id
+
   
         Jobsdb.findOneAndUpdate({_id:req.body._id}, {
           //data here
@@ -154,6 +159,7 @@ exports.addNewClient = async (req, res) => {
           subscription: req.body.subscription
 
         }, function (err, place) {
+
           Clientdb.findOneAndUpdate({_id:req.body.client_id}, {
             //data here
             vat_login: req.body.vat_login,
@@ -165,7 +171,19 @@ exports.addNewClient = async (req, res) => {
             email: req.body.email,
             phone: req.body.phone
   
-          }, function (err, place) {
+          }, async function (err, place) {
+
+
+            if(prevUserId !== req.body.job_holder_id){
+              await Notidb.create({
+                  title: "New Job Assigned",
+                  description: "You have been Assigned a new Job",
+                  redirectLink: "/clients/job-planning",
+                  user_id: req.body.job_holder_id
+              })
+          }
+
+
             res.status(200).json({
               message: "Data successfully Updated"
             })
@@ -492,43 +510,3 @@ exports.editManyJobPlanning = async (req, res) => {
     res.status(500).json({ message: "Failed to Update Data" });
   }
 };
-
-// exports.getAllClients = async (req, res) => {
-
-//   const clients = await Clientdb.find();
-//   var finalArr = [];
-
-//   for (var cli of clients){
-
-//     const jobb = await Jobsdb.find( {client_id:cli._id} );
-
-//     var totalHours = 0;
-//     var totalFee = 0;
-//     if(jobb){
-//       for (var jobas of jobb){
-//         totalHours = totalHours + +jobas.hours
-//         totalFee = totalFee + +jobas.fee
-//       }
-//     }
-
-//     var obj = {
-//       _id: cli._id,
-//       book_start_date: cli.book_start_date,
-//       company_name: cli.company_name,
-//       client_name: cli.client_name,
-//       isActive: cli.isActive,
-//       total_hours: totalHours,
-//       total_fee: totalFee
-//     }
-
-//     finalArr.push(obj)
-//   }
-   
-//       if (!clients) {
-//           return res.status(400).json({
-//               message: "Some Error, Please try again later",
-//           })
-//       }
-
-//       res.json(finalArr);
-// }

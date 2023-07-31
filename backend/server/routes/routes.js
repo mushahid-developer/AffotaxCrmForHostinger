@@ -28,6 +28,7 @@ const { addOneChartOfAccounts, getAllChartOfAccounts } = require('../controller/
 const { getAttendanceSheet } = require('../controller/HrController');
 const { GetAllRecurringTasks, AddOneRecurringTasksCategory, AddOneRecurringTasks, CheckOneRecurringTasks, DeleteOneRecurringTasks, DeleteOneTaskCategory } = require('../controller/RecurringTasksController');
 const { getDashboardData } = require('../controller/DashboardController');
+const { GetAllNotifications, MarkAllAsRead, MarkOneAsRead } = require('../controller/NotificationsController');
 
 // Api Routes
 route.get('/', (req, res)=>{
@@ -164,5 +165,10 @@ route.get('/tickets/thread/complete/:id', TicketsController.markAsCompleted)
 route.get('/tickets/thread/delete/:id', TicketsController.DeleteTicket)
 route.get('/tickets/thread/attachment/download/:id/:mid/:cn', TicketsController.DownloadAttachment)
 route.post('/tickets/edit/one/:id', TicketsController.EditOneTicket)
+
+//Notificaions
+route.get('/notifications/get/all', authMiddleware, GetAllNotifications)
+route.get('/notifications/mark/all/read', authMiddleware, MarkAllAsRead)
+route.get('/notifications/mark/one/read/:id', MarkOneAsRead)
 
 module.exports = route
