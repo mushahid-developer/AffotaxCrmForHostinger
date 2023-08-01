@@ -35,6 +35,7 @@ import axios from '../../Api/Axios';
 import * as axiosURL from '../../Api/AxiosUrls';
 import secureLocalStorage from "react-secure-storage";
 import TicketsContext from "../Dashs/Admin/Tickets/TicketsContext";
+import MyList from "../Dashs/Admin/MyList/MyList";
 var getAllTickets = axiosURL.getAllTickets;
 
 export default function AdminRoutes(props) {
@@ -178,6 +179,7 @@ export default function AdminRoutes(props) {
                   <Route path="/construction" element = {<Construction />}></Route>
                   <Route path="/templates" element = {<Templates />}></Route>
                   <Route path="/goals" element = {<Goals />}></Route>
+                  <Route path="/my_list" element = {<MyList />}></Route>
                   <Route path="/tickets" element = {
                     <TicketsContext.Provider value = {finalTicketData}>
                       <Tickets  setReFetchTickets = {setReFetchTickets} roleName={roleName} ticketsPagePermissions={ticketsPagePermissions} />

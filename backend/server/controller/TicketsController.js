@@ -171,8 +171,12 @@ exports.EditOneTicket = async (req, res) => {
         const curUserName = req.user.name;
 
         const ticket = await Ticketsdb.findById(tickedId)
-
+        const client_id = ticket.client_id;
         const prevUserId = ticket.user_id;
+
+        const client = await Clientdb.findOne({_id:client_id});
+        const ClientName = client.client_name;
+        const CompanyName = client.company_name;
 
 
         await Ticketsdb.findByIdAndUpdate(tickedId, {
@@ -184,7 +188,7 @@ exports.EditOneTicket = async (req, res) => {
         if(prevUserId !== userId){
             await Notidb.create({
                 title: "New Ticket Assigned",
-                description: `${curUserName} Assigned you a new ticket`,
+                description: `${curUserName} Assigned you a new ticket of "${ClientName}", and Company Name is "${CompanyName}`,
                 redirectLink: "/tickets",
                 user_id: userId
             })

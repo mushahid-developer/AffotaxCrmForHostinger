@@ -29,7 +29,12 @@ var ProjCompletedUrl = axiosURL.ConstructionTaskSetCompletedUrl;
 
 
 
-const Construction = () => {
+const Construction = (props) => {
+
+  const formPage = props.fromPage;
+  const userNameFilter = props.userNameFilter;
+
+
     const [loader, setLoader] = useState(true)
     const [reRender, setReRender] = useState(true)
     const [reRender2, setReRender2] = useState(0)
@@ -262,6 +267,11 @@ const Construction = () => {
       //Status Filter
       if(filteredArray !== undefined && statusFvalue !== null && statusFvalue !== ""){
         filteredArray = filteredArray.filter(obj => obj.status && obj.status === statusFvalue);
+      }
+
+       // Job Holder Filter For MyList Page
+       if (filteredArray != undefined && formPage != undefined && userNameFilter !== "") {
+        filteredArray = await filteredArray.filter(obj => obj.Jobholder_id && obj.Jobholder_id.name === userNameFilter);
       }
 
       
@@ -1255,6 +1265,12 @@ useEffect(()=>{
     const a = error;
   }
   };
+
+  const gridOptions = {
+    // Use the autoHeight option to adjust the table height to fit the content
+    domLayout: 'autoHeight',
+    // Other grid options if needed
+  };
       
 
 
@@ -1462,12 +1478,13 @@ useEffect(()=>{
 
         <div>
           {/* On div wrapping Grid a) specify theme CSS Class Class and b) sets Grid size */}
-          <div className="ag-theme-alpine" style={{ height: '81vh'}}>
+          <div className="ag-theme-alpine" style={formPage !== undefined ? {} : { height: '81vh' }}>
 
             {/* <button onClick={deleteHandler}>delete</button> */}
 
             <AgGridReact
               onGridReady={onGridReady}
+              gridOptions={formPage !== undefined ? gridOptions : undefined}
               columnDefs={columnDefs}
               rowData={rowData}
               defaultColDef={defaultColDef}

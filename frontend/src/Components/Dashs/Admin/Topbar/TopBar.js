@@ -1,4 +1,4 @@
-import { useEffect, useState } from 'react';
+import { useEffect, useRef, useState } from 'react';
 import Timer from './Timer';
 import logo from "../../../../Assets/Images/logo.svg"
 import Note from "../../../../Assets/Images/note.svg"
@@ -18,6 +18,7 @@ export default function TopBar(props) {
   const recurringNoteIsOpen = props.recurringNoteIsOpen;
   const setRecurringNoteIsOpen = props.setRecurringNoteIsOpen;
   
+  const notificationRef = useRef(null);
 
   const [reRender, setReRender] = useState(false)
   const [user, setUser] = useState("")
@@ -77,6 +78,31 @@ export default function TopBar(props) {
       console.log(error)
     }
   }
+  useEffect(() => {
+    // Event listener callback function
+    const handleDocumentClick = (event) => {
+      // Check if the click occurred outside the notification bar
+      if (notificationRef.current && !notificationRef.current.contains(event.target)) {
+        // Close the notification bar if it's open
+        setNotificationIsOpen(false);
+      }
+    };
+
+    // Add event listener when component mounts
+    document.addEventListener('click', handleDocumentClick);
+
+    // Clean up the event listener when component unmounts
+    return () => {
+      document.removeEventListener('click', handleDocumentClick);
+    };
+  }, []);
+
+  const handleNotificationClick = (event) => {
+    // Prevent the click from propagating to the document and closing the notification bar immediately
+    event.stopPropagation();
+    // Toggle the state of the notification bar
+    setNotificationIsOpen((prevNotificationIsOpen) => !prevNotificationIsOpen);
+  };
   
 
   useEffect(() => {
@@ -111,7 +137,7 @@ export default function TopBar(props) {
           <div style={{alignItems: 'center', justifyContent: 'right',}} className="col-4 d-flex">
 
             <div style={{position: 'relative',}}>
-              <Link onClick={()=>{setNotificationIsOpen(prev => !prev)}} className='mx-1' style={{all: 'unset',}} >
+              <Link ref={notificationRef} onClick={handleNotificationClick} className='mx-1' style={{all: 'unset',}} >
                 <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="feather feather-bell icon"><path d="M18 8A6 6 0 0 0 6 8c0 7-3 9-3 9h18s-3-2-3-9"></path><path d="M13.73 21a2 2 0 0 1-3.46 0"></path></svg>
                 
                 {notificationsData && notificationsData.unreadNotiNumber > 0 && 
@@ -174,8 +200,15 @@ export default function TopBar(props) {
 
                           <a onClick={()=>{markOneAsRead(noti)}} style={{all: 'unset'}}>
                             <div key={ind} style={{}} className={`${!noti.isRead ? "NotiBarNew" : "NotiBar"}`}>
-                              <p style={{fontWeight: '600', fontSize: '17px',}}>
-                                {noti.title}
+                              <p style={{display: 'flex', fontWeight: '600', fontSize: '17px', placeContent: 'space-between',}}>
+                                <span>
+                                  {noti.title}
+                                </span>
+                                {!noti.isRead && 
+                                  <span style={{fontSize: '12px', color: 'blue',}}>
+                                      *Unread
+                                  </span>
+                                }
                               </p>
                               <p style={{fontSize: '11px',}}>
                                 {noti.description}

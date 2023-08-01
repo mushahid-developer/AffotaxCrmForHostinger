@@ -29,6 +29,9 @@ var JobPlaning_Update_Many_Url = axiosURL.JobPlaning_Update_Many_Url;
 
 export default function JobPlanning(props) {
 
+  const formPage = props.fromPage;
+  const userNameFilter = props.userNameFilter;
+
   const roleName = props.roleName;
   const pagesAccess = props.pagesAccess;
 
@@ -431,6 +434,11 @@ export default function JobPlanning(props) {
       filteredArray = await filteredArray.filter(obj => obj.job_name && obj.job_name === departmentFvalue);
     }
 
+    // Job Holder Filter For MyList Page
+    if (filteredArray != undefined && formPage != undefined && userNameFilter !== "") {
+      filteredArray = await filteredArray.filter(obj => obj.job_holder_id && obj.job_holder_id.name === userNameFilter);
+    }
+    
     // Job Holder Filter
     if (filteredArray != undefined && jHolderFvalue != null && jHolderFvalue !== "") {
       filteredArray = await filteredArray.filter(obj => obj.job_holder_id && obj.job_holder_id.name === jHolderFvalue);
@@ -834,17 +842,27 @@ export default function JobPlanning(props) {
     e.stopPropagation();
   }
 
+  const getData = ()=>{
+    fetch(jobPlanningUrl)
+    .then(result => result.json())
+    .then(rowData => {
+      setMainRowData(rowData);
+      Promise.all([
+        getPreData(),
+        handleColHideOnStart(),
+      ]);
+    });
+  }
+
   // Example load data from sever
   useEffect(() => {
-    fetch(jobPlanningUrl)
-      .then(result => result.json())
-      .then(rowData => {
-        setMainRowData(rowData);
-        Promise.all([
-          getPreData(),
-          handleColHideOnStart(),
-        ]);
-      });
+    getData();
+
+    // const intervalId = setInterval(() => {
+    //   getData();
+    // }, 30000);
+    // return () => clearInterval(intervalId);
+
   }, [mainReRender]);
 
   useEffect(() => {
@@ -940,6 +958,7 @@ export default function JobPlanning(props) {
     {
       headerName: "Company Name",
       field: "comName",
+      
       flex: 2.7,
       editable: false,
       valueGetter: p => {
@@ -1594,6 +1613,12 @@ export default function JobPlanning(props) {
     }
   };
 
+  const gridOptions = {
+    // Use the autoHeight option to adjust the table height to fit the content
+    domLayout: 'autoHeight',
+    // Other grid options if needed
+  };
+
 
 
 
@@ -1729,7 +1754,7 @@ export default function JobPlanning(props) {
                 </button>
               </div>
 
-
+              { formPage === undefined &&
               <div className=' mx-2'>
                 <div className="dropdown">
                   <button className="btn p-0" type="button" id="dropdownMenuButton" data-bs-toggle="dropdown" aria-expanded="false">
@@ -1896,6 +1921,8 @@ export default function JobPlanning(props) {
                   </div>
                 </div>
               </div>
+
+              }
 
 
             </div>
@@ -2290,37 +2317,28 @@ export default function JobPlanning(props) {
 
           <div>
             {/* On div wrapping Grid a) specify theme CSS Class Class and b) sets Grid size */}
-            <div className="ag-theme-alpine" style={{ height: '81vh' }}>
+            <div className="ag-theme-alpine" style={formPage !== undefined ? {} : { height: '81vh' }}>
 
               {/* <button onClick={deleteHandler}>delete</button> */}
 
               <AgGridReact
                 getRowId={getRowId}
-
+                gridOptions={formPage !== undefined ? gridOptions : undefined}
                 onGridReady={onGridReady}
-
                 ref={gridRef} // Ref for accessing Grid's API
-
                 rowData={rowData} // Row Data for Rows
-
                 columnDefs={columnDefs} // Column Defs for Columns
                 defaultColDef={defaultColDef} // Default Column Properties
-
                 animateRows={true} // Optional - set to 'true' to have rows animate when sorted
                 rowSelection='multiple' // Options - allows click selection of rows
-                // rowMultiSelectWithClick = {true} //Optional - allow to select rows without hloding ctrl
-
+                // rowMultiSelectWithClick = {true} //Optional - allow to select rows without holding ctrl
                 pagination={true}
                 paginationPageSize={25}
-
                 //  enableCellChangeFlash = {true}
-
                 onCellClicked={cellClickedListener} // Optional - registering for Grid Event
-
                 editType={'fullRow'}
                 onCellValueChanged={onCellValueChanged}
                 onRowValueChanged={onRowValueChanged}
-
                 suppressDragLeaveHidesColumns={true} // disable move above header to hide column
                 frameworkComponents={frameworkComponents}
               />

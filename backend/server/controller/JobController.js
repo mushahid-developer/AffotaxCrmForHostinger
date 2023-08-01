@@ -159,7 +159,11 @@ exports.addNewClient = async (req, res) => {
           fee: req.body.fee,
           subscription: req.body.subscription
 
-        }, function (err, place) {
+        }, async function (err, place) {
+
+          const client = await Clientdb.findOne({_id:req.body.client_id});
+          const ClientName = client.client_name;
+          const CompanyName = client.company_name;
 
           Clientdb.findOneAndUpdate({_id:req.body.client_id}, {
             //data here
@@ -178,7 +182,7 @@ exports.addNewClient = async (req, res) => {
             if(prevUserId !== req.body.job_holder_id){
               await Notidb.create({
                   title: "New Job Assigned",
-                  description: `${curUserName} Assigned you a new Job`,
+                  description: `${curUserName} Assigned you a new Job of "${ClientName}", and Company Name is "${CompanyName}"`,
                   redirectLink: "/clients/job-planning",
                   user_id: req.body.job_holder_id
               })
