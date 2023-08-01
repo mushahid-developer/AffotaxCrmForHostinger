@@ -434,10 +434,10 @@ export default function JobPlanning(props) {
       filteredArray = await filteredArray.filter(obj => obj.job_name && obj.job_name === departmentFvalue);
     }
 
-    // Job Holder Filter For MyList Page
-    if (filteredArray != undefined && formPage != undefined && userNameFilter !== "") {
-      filteredArray = await filteredArray.filter(obj => obj.job_holder_id && obj.job_holder_id.name === userNameFilter);
-    }
+    // // Job Holder Filter For MyList Page
+    // if (filteredArray != undefined && formPage != undefined && userNameFilter !== "") {
+    //   filteredArray = await filteredArray.filter(obj => obj.job_holder_id && obj.job_holder_id.name === userNameFilter);
+    // }
     
     // Job Holder Filter
     if (filteredArray != undefined && jHolderFvalue != null && jHolderFvalue !== "") {

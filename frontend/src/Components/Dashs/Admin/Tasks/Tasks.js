@@ -237,10 +237,10 @@ const Tasks = (props) => {
         }
       }else {
 
-        // Job Holder Filter For MyList Page
-        if (filteredArray != undefined && formPage != undefined && userNameFilter !== "") {
-          filteredArray = await filteredArray.filter(obj => obj.Jobholder_id && obj.Jobholder_id.name === userNameFilter);
-        }
+        // // Job Holder Filter For MyList Page
+        // if (filteredArray != undefined && formPage != undefined && userNameFilter !== "") {
+        //   filteredArray = await filteredArray.filter(obj => obj.Jobholder_id && obj.Jobholder_id.name === userNameFilter);
+        // }
 
         // Job Holder Filter
         if(filteredArray !== undefined && jHolderFvalue !== null && jHolderFvalue !== ""){
