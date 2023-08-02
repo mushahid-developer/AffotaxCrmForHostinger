@@ -1613,11 +1613,11 @@ export default function JobPlanning(props) {
     }
   };
 
-  const gridOptions = {
-    // Use the autoHeight option to adjust the table height to fit the content
-    domLayout: 'autoHeight',
-    // Other grid options if needed
-  };
+  // const gridOptions = {
+  //   // Use the autoHeight option to adjust the table height to fit the content
+  //   domLayout: 'autoHeight',
+  //   // Other grid options if needed
+  // };
 
 
 
@@ -2317,13 +2317,13 @@ export default function JobPlanning(props) {
 
           <div>
             {/* On div wrapping Grid a) specify theme CSS Class Class and b) sets Grid size */}
-            <div className="ag-theme-alpine" style={formPage !== undefined ? {} : { height: '81vh' }}>
+            <div className="ag-theme-alpine" style={{ height: '81vh' }}>
 
               {/* <button onClick={deleteHandler}>delete</button> */}
 
               <AgGridReact
                 getRowId={getRowId}
-                gridOptions={formPage !== undefined ? gridOptions : undefined}
+                // gridOptions={formPage !== undefined ? gridOptions : undefined}
                 onGridReady={onGridReady}
                 ref={gridRef} // Ref for accessing Grid's API
                 rowData={rowData} // Row Data for Rows

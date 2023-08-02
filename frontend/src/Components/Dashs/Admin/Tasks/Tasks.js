@@ -1148,11 +1148,11 @@ useEffect(() => {
   }
   };
       
-  const gridOptions = {
-    // Use the autoHeight option to adjust the table height to fit the content
-    domLayout: 'autoHeight',
-    // Other grid options if needed
-  };
+  // const gridOptions = {
+  //   // Use the autoHeight option to adjust the table height to fit the content
+  //   domLayout: 'autoHeight',
+  //   // Other grid options if needed
+  // };
 
 
     if(loader)
@@ -1277,13 +1277,13 @@ useEffect(() => {
 
         <div>
           {/* On div wrapping Grid a) specify theme CSS Class Class and b) sets Grid size */}
-          <div className="ag-theme-alpine" style={formPage !== undefined ? {} : { height: '81vh' }}>
+          <div className="ag-theme-alpine" style={{ height: '81vh' }}>
 
             {/* <button onClick={deleteHandler}>delete</button> */}
 
             <AgGridReact
               onGridReady={onGridReady}
-              gridOptions={formPage !== undefined ? gridOptions : undefined}
+              // gridOptions={formPage !== undefined ? gridOptions : undefined}
               columnDefs={columnDefs}
               rowData={rowData}
               defaultColDef={defaultColDef}
