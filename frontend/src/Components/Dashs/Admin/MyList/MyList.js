@@ -10,6 +10,7 @@ const MyTable = () => {
   return (
     <>
 
+    <div className='myListDiv'>
       <Accordion className='' defaultActiveKey="0">
       <Accordion.Item eventKey="0">
         <Accordion.Header>Job Planning</Accordion.Header>
@@ -44,6 +45,8 @@ const MyTable = () => {
         </Accordion.Body>
       </Accordion.Item>
     </Accordion>
+    </div>
+
 
 
     </>
