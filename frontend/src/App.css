@@ -678,3 +678,8 @@ transition: width .3s ease-in-out;
 .NotiBarNew:hover {
   background-color: #e6e6e6;
 }
+
+.myListDiv .accordion-body{
+  margin: 0px !important;
+  padding: 0px !important;
+}
