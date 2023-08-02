@@ -1170,7 +1170,7 @@ useEffect(() => {
             <div style={{
         border: 'none'
         }}
-        className="mt-3 card" >
+        className={`${!formPage && "mt-3"} card`} >
         
         <div style={{alignItems: 'center', justifyContent: 'space-between',}} className='d-flex'>
 
