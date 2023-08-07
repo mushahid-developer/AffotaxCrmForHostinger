@@ -6,8 +6,10 @@ const Userdb = require("../model/Users/Users");
 
 exports.addProjectName = async (req, res) => {
     try{
+        const usersList = req.body.usersList;
         ProjectNameDb.create({
-            name: req.body.name
+            name: req.body.name,
+            users_list: usersList
         }).then(
             res.status(200).json({
                 message: "Project Name Created Successfully"
@@ -15,6 +17,27 @@ exports.addProjectName = async (req, res) => {
         )
     } catch (err) {
         console.error('Error:', err)
+    }
+}
+
+exports.editProjectName = async (req, res) => {
+    try {
+        const projId = req.params.id;
+        const usersList = req.body.usersList;
+
+        await ProjectNameDb.findByIdAndUpdate(projId,{
+            name: req.body.name,
+            users_list: usersList
+        })
+
+        res.status(200).json({
+            message: "Project Name Edited Successfully"
+        })
+
+    } catch (err) {
+        res.status(400).json({
+            message: "Some Error Occured"
+        })
     }
 }
 
@@ -36,7 +59,28 @@ exports.deleteProjectName = async (req, res) => {
 exports.getAllProjects = async (req, res) => {
 
     try {
-        const projects = await ProjectDb.find().populate('Jobholder_id').populate('projectname_id').populate('lead').populate({path: 'task_id',populate: {path: 'subtasks_id'},});
+
+        const userId = req.user._id
+        const User = await Userdb.findById(userId).populate('role_id');
+        var projects = [];
+        if( User.role_id.name === 'Admin'){
+            projects = await ProjectDb.find().populate('Jobholder_id').populate('projectname_id').populate('lead').populate({path: 'task_id',populate: {path: 'subtasks_id'},});
+        }else{
+            projects = await ProjectDb.find().populate('Jobholder_id')
+                .populate({
+                  path: 'projectname_id',
+                  match: { users_list: { $in: [userId] } }
+                })
+                .populate('lead')
+                .populate({
+                  path: 'task_id',
+                  populate: { path: 'subtasks_id' },
+                });
+
+            projects = projects.filter(project => project.projectname_id !== null);
+        }
+
+        // const projects = await ProjectDb.find().populate('Jobholder_id').populate('projectname_id').populate('lead').populate({path: 'task_id',populate: {path: 'subtasks_id'},});
         const users_all = await Userdb.find({ isActive: true }).populate('role_id');
         const projectNames = await ProjectNameDb.find();
 
@@ -52,7 +96,8 @@ exports.getAllProjects = async (req, res) => {
             projects: projects,
             projectNames: projectNames,
             users: users,
-            curUser: curUser
+            curUser: curUser,
+            userRole: User.role_id.name
         })
         
       } catch (err) {

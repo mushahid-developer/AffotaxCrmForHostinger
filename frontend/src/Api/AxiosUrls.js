@@ -60,6 +60,7 @@ export const assignRoleToUserUrl = 'roles/users/assign/role';
 
 //Tasks
 export const addProjectName = 'tasks/add/project/name'
+export const editProjectName = 'tasks/edit/project/name'
 export const deleteProjectName = 'tasks/delete/project/name'
 export const getAllTasksUrl = 'tasks/all/get';
 export const addOneTasksUrl = 'tasks/add/project';

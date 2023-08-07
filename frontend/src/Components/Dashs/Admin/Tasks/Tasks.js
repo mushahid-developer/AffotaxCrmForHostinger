@@ -13,6 +13,7 @@ import ViewTask from './ViewTask';
 import DropdownFilter from '../../../Jobs/JobPlaning/DropdownFilter';
 import SelectUnSelectFilter from '../../../Jobs/JobPlaning/SelectUnSelectFilter';
 import DropdownFilterWithDate from '../../../Jobs/JobPlaning/DropDownFilterWithDate';
+import Select from 'react-select';
 
 import { saveAs } from 'file-saver';
 import * as XLSX from 'xlsx';
@@ -21,6 +22,7 @@ import { useSpring, animated } from 'react-spring';
 import secureLocalStorage from 'react-secure-storage';
 
 var addProjectName = axiosURL.addProjectName;
+var editProjectName = axiosURL.editProjectName;
 var deleteProjectName = axiosURL.deleteProjectName;
 var getAllTasksUrl = axiosURL.getAllTasksUrl;
 var addOneTasksUrl = axiosURL.addOneTasksUrl;
@@ -45,7 +47,10 @@ const Tasks = (props) => {
     const [showViewTaskModal, setShowViewTaskModal] = useState(false);
     
     const [showAddProjectModal, setShowAddProjectModal] = useState(false);
+    const [showEditProjectModal, setShowEditProjectModal] = useState(false);
     const [addProjectFormData, setAddProjectFormData] = useState();
+    const [editProjectFormData, setEditProjectFormData] = useState();
+    const [editSelectedProject, setEditSelectedProject] = useState("");
 
     const [openProjectId, setOpenProjectId] = useState(null)
     const [openProjectTasks, setOpenProjectTasks] = useState(null)
@@ -68,6 +73,7 @@ const Tasks = (props) => {
     const [jobDateFvalueDate, setJobDateFvalueDate] = useState('');
     const [jobDateFvalue, setJobDateFvalue] = useState('');
 
+    const [userRole, setUserRole] = useState("");
 
     const [usersForFilter, setUsersForFilter] = useState([]);
 
@@ -93,6 +99,24 @@ const Tasks = (props) => {
 
     const [gridApi, setGridApi] = useState(null);
 
+    const [selectedUserListValue, setSelectedUserListValue] = useState([]);
+    const [selectedEditUserListValue, setSelectedEditUserListValue] = useState([]);
+    
+    const handleUserListChange = (e) => {
+      setSelectedUserListValue(Array.isArray(e) ? e.map(x => x.value) : []);
+    }
+
+    const handleEditUserListChange = (e) => {
+      setSelectedEditUserListValue(Array.isArray(e) ? e.map(x => x.value) : []);
+    }
+
+    const handleBeforEditOpen = (task)=>{
+      setEditSelectedProject(task);
+      setEditProjectFormData(task.name)
+      setSelectedEditUserListValue(task.users_list)
+      setShowEditProjectModal(true);
+    };
+
     
     const gridRef = useRef();
     
@@ -105,7 +129,7 @@ const Tasks = (props) => {
       opacity: isOpen ? 1 : 0,
       position: 'absolute',
       backgroundColor: 'white',
-      width: '13.5%',
+      width: 'inherit',
       boxShadow: 'rgba(0, 0, 0, 0.14) 0px 8px 10px 1px, rgba(0, 0, 0, 0.12) 0px 3px 14px 2px, rgba(0, 0, 0, 0.2) 0px 5px 5px -3px',
       borderRadius: '0px 0px 9px 9px',
   });
@@ -175,7 +199,8 @@ const Tasks = (props) => {
       try {
         const response = await axios.post(addProjectName,
             {
-              name: addProjectFormData 
+              name: addProjectFormData,
+              usersList: selectedUserListValue
             },
             {
               headers:{ 'Content-Type': 'application/json' }
@@ -183,8 +208,48 @@ const Tasks = (props) => {
         );
         
         if(response){
-          setAddProjectFormData('')
+          setAddProjectFormData('');
+          setSelectedUserListValue([]);
           setShowAddProjectModal(false);
+          setReRender(!reRender)
+          
+        }
+        
+    
+        } catch (err) {
+          Store.addNotification({
+              title: 'Error',
+              message: "Please Try Again",
+              type: "danger",
+              insert: "top",
+              container: "top-center",
+              animationIn: ["animate__animated", "animate__fadeIn"],
+              animationOut: ["animate__animated", "animate__fadeOut"],
+              dismiss: {
+                duration: 5000,
+                onScreen: true
+              }
+            });
+      };
+
+    }
+
+    const handleEditProjectForm = async ()=>{
+      try {
+        const response = await axios.post(`${editProjectName}/${editSelectedProject._id}`,
+            {
+              name: editProjectFormData,
+              usersList: selectedEditUserListValue
+            },
+            {
+              headers:{ 'Content-Type': 'application/json' }
+            }
+        );
+        
+        if(response){
+          setEditProjectFormData('');
+          setSelectedEditUserListValue([]);
+          setShowEditProjectModal(false);
           setReRender(!reRender)
           
         }
@@ -687,6 +752,7 @@ const Tasks = (props) => {
                 }
             );
             if(response.status === 200){
+              setUserRole(response.data.userRole)
               setPreData(response.data.users)
               setProjectNames(response.data.projectNames)
               
@@ -1202,60 +1268,65 @@ useEffect(() => {
         }} className='btn btn-primary mx-2'>
             Excel
         </Link>
-        <div style={{
-              width: '11rem',
-              overflow: 'visible',
-              zIndex: '100',
-              alignSelf: 'center',
-              marginRight: '19px',
-        }}>
-                <div style={{
-                    width: '100%',     
-                    display: 'flex',
-                    alignItems: 'center',
-                    lineHeight: '1.5',
-                    fontSize: '1rem', 
-                    borderBottom: '1px solid #ced4da', 
-                    padding: '8px', 
-                    borderRadius: '0rem',
-                    cursor: 'pointer',
-                }} 
-                onClick={handleToggle}
-                >
-                        <div  style={{width: '100%'}} className='row'>
-                            <div className='col-10'>
-                                Projects
-                            </div>
-                            <div style={{padding: '0px', textAlign: 'right',}} className='col-2'>
-                                <svg style={{width: '20px', stroke: 'rgb(123, 129, 144)'}} xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" ><path d="M7 10l5 5 5-5" stroke="#7b8190" stroke-width="2" fill="none"></path></svg>
-                            </div>
-                        </div>
-                </div>
-                <animated.div style={dropdownAnimation}>
-                    {isOpen && (
-                    <div >
-                        <div style={{padding: 10}}>
-                        {projectNames && projectNames.map((task, ind)=>{
-                            return(
-                            <div style={{cursor: 'default'}} key={ind} className='row recurringTask_task'>
-                                <div className='col-10'>
-                                    <p> {task.name} </p>
-                                </div>
-                                
-                                <div className='col-2'>
-                                  <div onClick={()=>{handleDeleteProjectName(task._id)}} style={{cursor: "pointer"}}>
-                                    <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="feather feather-x icon-16"><line x1="18" y1="6" x2="6" y2="18"></line><line x1="6" y1="6" x2="18" y2="18"></line></svg>
+        {userRole === "Admin" && 
+          <div style={{
+                width: '11rem',
+                overflow: 'visible',
+                zIndex: '100',
+                alignSelf: 'center',
+                marginRight: '19px',
+          }}>
+                  <div style={{
+                      width: '100%',     
+                      display: 'flex',
+                      alignItems: 'center',
+                      lineHeight: '1.5',
+                      fontSize: '1rem', 
+                      borderBottom: '1px solid #ced4da', 
+                      padding: '8px', 
+                      borderRadius: '0rem',
+                      cursor: 'pointer',
+                  }} 
+                  onClick={handleToggle}
+                  >
+                          <div  style={{width: '100%'}} className='row'>
+                              <div className='col-10'>
+                                  Projects
+                              </div>
+                              <div style={{padding: '0px', textAlign: 'right',}} className='col-2'>
+                                  <svg style={{width: '20px', stroke: 'rgb(123, 129, 144)'}} xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" ><path d="M7 10l5 5 5-5" stroke="#7b8190" stroke-width="2" fill="none"></path></svg>
+                              </div>
+                          </div>
+                  </div>
+                  <animated.div style={dropdownAnimation}>
+                      {isOpen && (
+                      <div >
+                          <div style={{padding: 10}}>
+                          {projectNames && projectNames.map((task, ind)=>{
+                              return(
+                              <div style={{cursor: 'default'}} key={ind} className='row recurringTask_task'>
+                                  <div className='col-9'>
+                                      <p> {task.name} </p>
                                   </div>
-                                </div>
-                            </div>
-                            )}
-                        )}
-                           
-                        </div>
-                    </div>
-                    )}
-                </animated.div>
-            </div>
+                                  
+                                  <div style={{padding: '0px', display: 'flex', alignSelf: 'center',}} className='col-3'>
+                                    <div onClick={()=>{handleBeforEditOpen(task);}} style={{cursor: "pointer"}}>
+                                    <svg width="16px" height="16px" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg"><g id="SVGRepo_bgCarrier" stroke-width="0"></g><g id="SVGRepo_tracerCarrier" stroke-linecap="round" stroke-linejoin="round"></g><g id="SVGRepo_iconCarrier"> <path d="M20.1498 7.93997L8.27978 19.81C7.21978 20.88 4.04977 21.3699 3.32977 20.6599C2.60977 19.9499 3.11978 16.78 4.17978 15.71L16.0498 3.84C16.5979 3.31801 17.3283 3.03097 18.0851 3.04019C18.842 3.04942 19.5652 3.35418 20.1004 3.88938C20.6356 4.42457 20.9403 5.14781 20.9496 5.90463C20.9588 6.66146 20.6718 7.39189 20.1498 7.93997V7.93997Z" stroke="#000000" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"></path> </g></svg>
+                                    </div>
+                                    <div onClick={()=>{handleDeleteProjectName(task._id)}} style={{cursor: "pointer"}}>
+                                      <svg xmlns="http://www.w3.org/2000/svg" width="16px" height="16px" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="feather feather-x icon-16"><line x1="18" y1="6" x2="6" y2="18"></line><line x1="6" y1="6" x2="18" y2="18"></line></svg>
+                                    </div>
+                                  </div>
+                              </div>
+                              )}
+                          )}
+                            
+                          </div>
+                      </div>
+                      )}
+                  </animated.div>
+          </div>
+        }
           <div className=''>
             <Link onClick={()=>{setShowAddProjectModal(true);}} className='btn btn-primary'>
               Add Project
@@ -1331,6 +1402,18 @@ useEffect(() => {
               />
             </Form.Group>              
 
+            <Form.Group className='mt-2'>
+              <Select
+                className="dropdown"
+                placeholder="Select Users"
+                value={fPreData.filter(obj => selectedUserListValue.includes(obj.value))} // set selected values
+                options={fPreData} // set list of the data
+                onChange={handleUserListChange} // assign onChange function
+                isMulti
+                isClearable
+              />
+            </Form.Group>
+
           </Form>
 
         </Modal.Body>
@@ -1340,9 +1423,46 @@ useEffect(() => {
         </Modal.Footer>
       </Modal>
 
+    <Modal show={showEditProjectModal} centered onHide={()=>{setShowEditProjectModal(!showEditProjectModal)}}>
+        <Modal.Header closeButton>
+          <Modal.Title>Edit Project</Modal.Title>
+        </Modal.Header>
+        <Modal.Body>
 
+          <Form 
+          onSubmit={handleEditProjectForm}
+          >
+            
+            <Form.Group className='mt-2'>
+              <Form.Control
+                  name='projectName'
+                  type="text"
+                  placeholder="Project Name"
+                  onChange={(e)=>{setEditProjectFormData(e.target.value)}}
+                  value = {editProjectFormData}
+              />
+            </Form.Group>              
 
+            <Form.Group className='mt-2'>
+              <Select
+                className="dropdown"
+                placeholder="Select Users"
+                value={fPreData.filter(obj => selectedEditUserListValue && selectedEditUserListValue.includes(obj.value))} // set selected values
+                options={fPreData} // set list of the data
+                onChange={handleEditUserListChange} // assign onChange function
+                isMulti
+                isClearable
+              />
+            </Form.Group>
 
+          </Form>
+
+        </Modal.Body>
+        <Modal.Footer>
+          <Button onClick={()=>{setShowEditProjectModal(!showEditProjectModal)}}>Close</Button>
+          <Button onClick={handleEditProjectForm} className='btn btn-success' >Save</Button>
+        </Modal.Footer>
+      </Modal>
 
     <Modal show={showAddTaskModal} centered onHide={handleCloseAddTaskModal}>
         <Modal.Header closeButton>

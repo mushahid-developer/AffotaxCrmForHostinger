@@ -580,8 +580,7 @@ transition: width .3s ease-in-out;
 
 .recurringTask_task{
   align-content: center;
-  height: 30px;
-  /* border: 1px solid #ced4da */
+  min-height: 30px;
 }
 
 .recurringTask_task:hover{

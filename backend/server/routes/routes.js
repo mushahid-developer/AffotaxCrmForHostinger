@@ -88,6 +88,7 @@ route.post('/roles/users/assign/role', RolesController.assignRoleToUser)
 
 //Tasks
 route.post('/tasks/add/project/name', TasksController.addProjectName)
+route.post('/tasks/edit/project/name/:id', TasksController.editProjectName)
 route.get('/tasks/delete/project/name/:id', TasksController.deleteProjectName)
 route.get('/tasks/all/get', authMiddleware, TasksController.getAllProjects)
 route.post('/tasks/add/project', TasksController.AddOneProject)
