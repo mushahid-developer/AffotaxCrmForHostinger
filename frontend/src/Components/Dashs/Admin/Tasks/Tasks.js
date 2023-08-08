@@ -146,6 +146,27 @@ const Tasks = (props) => {
     }));
     }
 
+    const notificationRef = useRef(null);
+
+    useEffect(() => {
+      // Event listener callback function
+      const handleDocumentClick = (event) => {
+        // Check if the click occurred outside the notification bar
+        if (notificationRef.current && !notificationRef.current.contains(event.target)) {
+          // Close the notification bar if it's open
+          setIsOpen(false);
+        }
+      };
+  
+      // Add event listener when component mounts
+      document.addEventListener('click', handleDocumentClick);
+  
+      // Clean up the event listener when component unmounts
+      return () => {
+        document.removeEventListener('click', handleDocumentClick);
+      };
+    }, []);
+
     const handleAddTaskForm = async ()=>{
       try {
         const response = await axios.post(addOneTasksUrl,
@@ -1287,7 +1308,7 @@ useEffect(() => {
                       borderRadius: '0rem',
                       cursor: 'pointer',
                   }} 
-                  onClick={handleToggle}
+                  onClick={handleToggle} ref={notificationRef}
                   >
                           <div  style={{width: '100%'}} className='row'>
                               <div className='col-10'>

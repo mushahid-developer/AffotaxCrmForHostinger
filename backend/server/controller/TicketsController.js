@@ -113,6 +113,7 @@ exports.createNewTicket = async (req, res) => {
     
     try{
         const ClientId = req.body.formData.clientId
+        const userName = req.user.name
 
         const client = await Clientdb.findById(ClientId);
 
@@ -146,7 +147,8 @@ exports.createNewTicket = async (req, res) => {
             user_id: userId,
             mail_thread_id: ThreadId,
             company_name: req.body.formData.company_name,
-            company_email: company_email
+            company_email: company_email,
+            lastMessageSentBy: userName
         })
 
         res.json({
@@ -212,6 +214,7 @@ exports.createNewTicketWithAttachments = async (req, res) => {
     
     try{
 
+        const userName = req.user.name
         const ClientId = req.body.clientId
         const client = await Clientdb.findById(ClientId);
 
@@ -252,7 +255,8 @@ exports.createNewTicketWithAttachments = async (req, res) => {
             user_id: userId,
             mail_thread_id: ThreadId,
             company_name: req.body.company_name,
-            company_email: company_email
+            company_email: company_email,
+            lastMessageSentBy: userName
         })
 
         res.json({
@@ -272,6 +276,9 @@ exports.createNewTicketWithAttachments = async (req, res) => {
 exports.replyToTicketWithAttachment = async (req, res) => {
     
     try{
+
+        const userName = req.user.name
+        
         const threadId = req.body.threadId
         const messageId = req.body.messageId
         const subjectToReply = req.body.subjectToReply
@@ -297,6 +304,10 @@ exports.replyToTicketWithAttachment = async (req, res) => {
     
         await gmail.replyToThreadWithAttachment(EmailData);
 
+        await Ticketsdb.findOneAndUpdate({mail_thread_id: threadId}, {
+            lastMessageSentBy: userName
+        });
+
         res.json({
             message: "Success",
             data: "Reply Sent Successfully"
@@ -314,6 +325,9 @@ exports.replyToTicketWithAttachment = async (req, res) => {
 exports.replyToTicket = async (req, res) => {
     
     try{
+
+        const userName = req.user.name
+
         const threadId = req.body.formData.threadId
         const messageId = req.body.formData.messageId
         const subjectToReply = req.body.formData.subjectToReply
@@ -332,6 +346,10 @@ exports.replyToTicket = async (req, res) => {
         }
     
         await gmail.replyToThread(EmailData);
+
+        await Ticketsdb.findOneAndUpdate({mail_thread_id: threadId}, {
+            lastMessageSentBy: userName
+        });
 
         res.json({
             message: "Success",

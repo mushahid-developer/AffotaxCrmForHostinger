@@ -34,6 +34,10 @@ var TicketsSchema = new mongoose.Schema({
     note: {
         type: String,
         default: ""
+    },
+    lastMessageSentBy: {
+        type: String,
+        default: ""
     }
     
 });

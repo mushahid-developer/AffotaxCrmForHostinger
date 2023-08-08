@@ -22,7 +22,7 @@ export default function DetailedMail(props) {
     const location = useLocation();
     const mailData = location.state
     const setReFetchTickets = props.setReFetchTickets;
-
+    console.log(mailData)
     if(!mailData){
         navigate('/tickets');
     }
@@ -344,54 +344,62 @@ className="mt-3 card" >
 
 
 
-{reversedArray.map(message => {
+{reversedArray.map((message, index) => {
     if(message.payload.body.sentByMe)
     {
         return(
-            <div style={{
+            <div key={index} style={{
                 display: 'flex',
                 flexDirection: 'row-reverse'
             }}>
-                <div style={{
-                    border: 'none',
-                    marginTop: "5px",
-                    padding: "10px 15px",
-                    backgroundColor: 'lightgray',
-                    Width: 'fit-content',
-                    maxWidth: '90%'
-                }} className='card'>
-                    {/* <HTMLRenderer htmlContent={message.payload.body.data.slice(1)} /> */}
-                    <HTMLRenderer htmlContent={removeQuotedText(message.payload.body.data.charAt(0) === "�" ? message.payload.body.data.slice(3) : message.payload.body.data)} />
+                <div>
+                    <div style={{
+                        border: 'none',
+                        marginTop: "5px",
+                        padding: "10px 15px",
+                        backgroundColor: 'lightgray',
+                        Width: 'fit-content',
+                        maxWidth: '90%'
+                    }} className='card'>
+                        {/* <HTMLRenderer htmlContent={message.payload.body.data.slice(1)} /> */}
+                        <HTMLRenderer htmlContent={removeQuotedText(message.payload.body.data.charAt(0) === "�" ? message.payload.body.data.slice(3) : message.payload.body.data)} />
 
 
-                    {message.payload.body.messageAttachments.length !== 0 && 
-                        <>
-                            <hr/>
+                        {message.payload.body.messageAttachments.length !== 0 && 
+                            <>
+                                <hr/>
 
-                            {message.payload.body.messageAttachments.map((attachment)=>{
-                                return(
-                                    <Link className={`${downloadingAttachment === attachment.attachmentId && "disabled-router-link" }`} onClick={(e)=>{handleDownloadAttachment(e, attachment.attachmentId, attachment.attachmentMessageId, attachment.attachmentFileName)}}>
-                                        {attachment.attachmentFileName}
-                                        {downloadingAttachment && downloadingAttachment === attachment.attachmentId && 
-                                            <span>
-                                                <img style={{height: '20px', paddingLeft: '10px'}} src={loaderr} alt="" />
-                                            </span>
-                                        }
-                                    </Link>
-                                )
-                            })}
-                        </>
+                                {message.payload.body.messageAttachments.map((attachment)=>{
+                                    return(
+                                        <Link className={`${downloadingAttachment === attachment.attachmentId && "disabled-router-link" }`} onClick={(e)=>{handleDownloadAttachment(e, attachment.attachmentId, attachment.attachmentMessageId, attachment.attachmentFileName)}}>
+                                            {attachment.attachmentFileName}
+                                            {downloadingAttachment && downloadingAttachment === attachment.attachmentId && 
+                                                <span>
+                                                    <img style={{height: '20px', paddingLeft: '10px'}} src={loaderr} alt="" />
+                                                </span>
+                                            }
+                                        </Link>
+                                    )
+                                })}
+                            </>
+                        }
+                        
+                    </div>
+                    {index === 0 && mailData.ticketInfo.lastMessageSentBy && 
+                        <p style={{ fontSize: '13px', }}>Sent By {mailData.ticketInfo.lastMessageSentBy}</p>
                     }
                 </div>
 
 
                 {/* {message.payload.body.data} */}
+                    
             </div>
+
         )
     }
     else{
         return(
-            <div style={{
+            <div key={index} style={{
                 border: 'none',
                 marginTop: "5px",
                 padding: "10px 15px",
