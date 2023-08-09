@@ -842,26 +842,36 @@ export default function JobPlanning(props) {
     e.stopPropagation();
   }
 
-  const getData = ()=>{
-    fetch(jobPlanningUrl)
-    .then(result => result.json())
-    .then(rowData => {
-      setMainRowData(rowData);
-      Promise.all([
-        getPreData(),
-        handleColHideOnStart(),
-      ]);
-    });
+  const getData = async (timeAttempt)=>{
+
+    try {
+      const response = await axios.get(jobPlanningUrl,
+        {
+          headers: { 'Content-Type': 'application/json' }
+        }
+      );
+      setMainRowData(response.data);
+      if(timeAttempt === "first"){
+        Promise.all([
+          getPreData(),
+          handleColHideOnStart(),
+        ]);
+      }
+
+      console.log("Rendered") 
+    } catch (err) {
+      console.log(err) 
+    }
   }
 
   // Example load data from sever
   useEffect(() => {
-    getData();
+    getData("first");
 
-    // const intervalId = setInterval(() => {
-    //   getData();
-    // }, 30000);
-    // return () => clearInterval(intervalId);
+    const intervalId = setInterval(() => {
+      getData("second");
+    }, 30000);
+    return () => clearInterval(intervalId);
 
   }, [mainReRender]);
 
