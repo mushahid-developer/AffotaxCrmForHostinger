@@ -238,6 +238,7 @@ export default function JobPlanning(props) {
         if (arr.job_name === "Bookkeeping") {
           if ((deadline.setHours(0, 0, 0, 0) < today.setHours(0, 0, 0, 0) || (deadline.setHours(0, 0, 0, 0) < today.setHours(0, 0, 0, 0) && (yearEnd.setHours(0, 0, 0, 0) < today.setHours(0, 0, 0, 0))) )) {
             bookkeepingOverDue = bookkeepingOverDue + 1;
+            console.log(filteredArray)
           }
           else if ( (deadline.setHours(0, 0, 0, 0) === today.setHours(0, 0, 0, 0)) || ( (yearEnd.setHours(0, 0, 0, 0) <= today.setHours(0, 0, 0, 0)) && !(deadline.setHours(0, 0, 0, 0) <= today.setHours(0, 0, 0, 0)) ) ) {
             bookkeepingDue = bookkeepingDue + 1;
