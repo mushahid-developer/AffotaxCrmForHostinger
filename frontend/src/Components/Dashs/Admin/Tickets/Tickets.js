@@ -330,14 +330,14 @@ export default function Tickets(props) {
       field: "a",
       flex: 1.5,
       editable: false,
-      valueGetter: (params) => params.data.ticketInfo.client_id.company_name && params.data.ticketInfo.client_id.company_name,
+      valueGetter: (params) => params.data.ticketInfo.client_id && params.data.ticketInfo.client_id.company_name,
     },
     {
       headerName: "Client Name",
       field: "b",
       flex: 1,
       editable: false,
-      valueGetter: (params) => params.data.ticketInfo.client_id.client_name && params.data.ticketInfo.client_id.client_name,
+      valueGetter: (params) => params.data.ticketInfo.client_id && params.data.ticketInfo.client_id.client_name,
     },
     {
       headerName: "Company",
