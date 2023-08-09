@@ -605,6 +605,8 @@ transition: width .3s ease-in-out;
   background-color: white;
   height: 40px;
   padding: 0 10px;
+  position: absolute;
+  bottom: 0px;
 }
 
 .fixed-row-cell {
