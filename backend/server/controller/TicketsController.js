@@ -1,6 +1,7 @@
 const Clientdb = require('../model/Client/client');
 const Notidb = require('../model/Notifications/Notifications');
 const Templatesdb = require('../model/Templates/Templates');
+const MessageIdsDb = require('../model/Tickets/MessageIds');
 const Ticketsdb = require('../model/Tickets/Tickets');
 const Userdb = require('../model/Users/Users');
 var gmail = require('./GmailApi')
@@ -55,17 +56,78 @@ exports.getEmails = async (req, res) => {
         
         
         var Emails = await gmail.getAllEmails(TicketsList);
+
+
+        var messageIds = [];
                 
-        Emails.detailedThreads = Emails.detailedThreads.map(email => {
+        Emails.detailedThreads.forEach(async email => {
             const matchingTicket = Tickets.find(ticket => ticket.mail_thread_id === email.threadId);
             if (matchingTicket) {
-              // Add ticket information to the email thread
-              email.ticketInfo = matchingTicket;
+                email.decryptedMessages.map(oneEma => {
+                    messageIds.push(
+                        {
+                            messageid: oneEma.id,
+                            ticket_id: matchingTicket._id.toString(),
+                            thread_id: matchingTicket.mail_thread_id
+                        }
+                    )
+                  })
+    
+                  // Create an array to collect new message documents
+                    const newMessageDocs = [];
+    
+                    for (const messageObject of messageIds) {
+                    const existingMessage = await MessageIdsDb.findOne({
+                        ticket_id: messageObject.ticket_id,
+                        message_id: messageObject.messageid,
+                        mail_thread_id: messageObject.thread_id
+                    });
+    
+                    if (!existingMessage) {
+                        newMessageDocs.push({
+                        ticket_id: messageObject.ticket_id,
+                        message_id: messageObject.messageid,
+                        mail_thread_id: messageObject.thread_id,
+                        // other fields you might need
+                        });
+
+                        const ureadEmail = email.decryptedMessages.find(unreadEmail => unreadEmail.id === messageObject.messageid)
+                        
+                        if(ureadEmail && ureadEmail.labelIds.includes('UNREAD')){
+                            Notidb.create({
+                                title: "Reply to a ticket received",
+                                description: `You have recieved Reply to a ticket "${email.subject}" from "${email.ticketInfo.client_id.company_name}"`,
+                                redirectLink: "/tickets",
+                                user_id: email.ticketInfo.user_id._id
+                            })
+                        }
+                    }
+                    }
+    
+                    // Insert new message documents in bulk
+                    if (newMessageDocs.length > 0) {
+                        try {
+                            MessageIdsDb.insertMany(newMessageDocs);
+                        } catch (error) {
+                        }
+                    }
             }
             return email;
           });
 
-          
+                
+        Emails.detailedThreads = Emails.detailedThreads.map((email, index) => {
+            const matchingTicket = Tickets.find(ticket => ticket.mail_thread_id === email.threadId);
+            if (matchingTicket) {
+              // Add ticket information to the email thread
+              email.ticketInfo = matchingTicket;
+              if (index === 7){
+                console.log(email)
+              }
+            }
+
+            return email;
+          });
 
 
         const resp = {
