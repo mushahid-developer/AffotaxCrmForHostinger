@@ -6,6 +6,7 @@ const cors = require('cors');
 const path = require('path');
 const cluster = require("cluster");
 const totalCPUs = require("os").availableParallelism();
+const compression = require('compression');
 
 const connectDB = require('./server/database/connection');
 require('./server/controller/RecurringTaskPing');
@@ -32,6 +33,7 @@ if (cluster.isPrimary) {
 
   app.use(bodyParser.json());
   app.use(cors());
+  app.use(compression());
   app.use(morgan('tiny'));
   app.use('/api', require('./server/routes/routes'));
 
