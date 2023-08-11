@@ -238,11 +238,11 @@ exports.addNewClient = async (req, res) => {
         {
           $group: {
             _id: "$client_id",
-            totalHours: { $sum: { $ifNull: [ { $toDouble: "$hours" }, 0 ] } },
-            totalFee: { $sum: { $ifNull: [ { $toDouble: "$fee" }, 0 ] } }
+            totalHours: { $sum: { $convert: { input: "$hours", to: "double", onError: 0 } } },
+            totalFee: { $sum: { $convert: { input: "$fee", to: "double", onError: 0 } } }
           }
         }
-      ]).exec();      
+      ]).exec();
       const [clients, jobs] = await Promise.all([clientsPromise, jobsPromise]);
       const jobMap = new Map(jobs.map(({ _id, totalHours, totalFee }) => [_id.toString(), { totalHours, totalFee }]));
       const finalArr = clients.map(({ _id, book_start_date, company_name, client_name, isActive, source, partner, job_name }) => {
