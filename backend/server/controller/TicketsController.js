@@ -85,7 +85,7 @@ exports.getEmails = async (req, res) => {
     
                     if (!existingMessage) {
                         newMessageDocs.push({
-                        ticket_id: messageObject.ticket_id,
+                        ticket_id: messageObject.ticket_id.toString(),
                         message_id: messageObject.messageid,
                         mail_thread_id: messageObject.thread_id,
                         // other fields you might need
@@ -96,7 +96,7 @@ exports.getEmails = async (req, res) => {
                         if(ureadEmail && ureadEmail.labelIds.includes('UNREAD')){
                             Notidb.create({
                                 title: "Reply to a ticket received",
-                                description: `You have recieved Reply to a ticket "${email.subject}" from "${email.ticketInfo.client_id.company_name}"`,
+                                description: `You've received a response to a ticket with the subject "${email.subject}" from the company named "${email.ticketInfo.client_id.company_name}" and the client's name is "${email.ticketInfo.client_id.client_name}".`,
                                 redirectLink: "/tickets",
                                 user_id: email.ticketInfo.user_id._id
                             })
@@ -116,18 +116,28 @@ exports.getEmails = async (req, res) => {
           });
 
                 
-        Emails.detailedThreads = Emails.detailedThreads.map((email, index) => {
+          Emails.detailedThreads = await Promise.all(Emails.detailedThreads.map(async email => {
             const matchingTicket = Tickets.find(ticket => ticket.mail_thread_id === email.threadId);
+            
             if (matchingTicket) {
-              // Add ticket information to the email thread
               email.ticketInfo = matchingTicket;
-              if (index === 7){
-                console.log(email)
-              }
+          
+              email.decryptedMessages = await Promise.all(email.decryptedMessages.map(async mail => {
+                const matchingMessageData = await MessageIdsDb.findOne({ message_id: mail.id });
+                
+                if (matchingMessageData.messageSentBy) {
+                  mail.messageSentBy = matchingMessageData.messageSentBy;
+                  console.log(matchingMessageData);
+                  console.log('matchingMessageData');
+                }
+                
+                return mail;
+              }));
             }
-
+          
             return email;
-          });
+          }));
+          
 
 
         const resp = {
@@ -407,11 +417,25 @@ exports.replyToTicket = async (req, res) => {
             company_email: company_email,
         }
     
-        await gmail.replyToThread(EmailData);
+        const gmailResp = await gmail.replyToThread(EmailData);
 
-        await Ticketsdb.findOneAndUpdate({mail_thread_id: threadId}, {
+        
+
+        const ticketData = await Ticketsdb.findOneAndUpdate({mail_thread_id: threadId}, {
             lastMessageSentBy: userName
         });
+
+        const newMessageId = gmailResp.data.id;
+        const newThreadId = gmailResp.data.threadId;
+        const newTicketId = ticketData._id.toString();
+        const messageSentBy = userName;
+
+        MessageIdsDb.create({
+            ticket_id: newTicketId,
+            message_id: newMessageId,
+            messageSentBy: messageSentBy,
+            mail_thread_id: newThreadId,
+        })
 
         res.json({
             message: "Success",

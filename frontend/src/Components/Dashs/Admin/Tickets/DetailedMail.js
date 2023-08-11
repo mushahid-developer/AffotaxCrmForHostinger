@@ -203,6 +203,20 @@ export default function DetailedMail(props) {
 
     }
 
+    function getEmailDate(headers) {
+        const dateHeader = headers.find(header => header.name === 'Date');
+        const dateValue = dateHeader ? dateHeader.value : null;
+      
+        if (dateValue) {
+          // Split the date value by space and remove the last part (time zone offset)
+          const dateWithoutOffset = dateValue.split(' ').slice(0, -1).join(' ');
+      
+          return dateWithoutOffset;
+        }
+        
+        return null;
+      }
+
   return (
     <>
         <>
@@ -352,14 +366,16 @@ className="mt-3 card" >
                 display: 'flex',
                 flexDirection: 'row-reverse'
             }}>
-                <div>
+                <div style={{textAlign: '-webkit-right',}}>
                     <div style={{
                         border: 'none',
                         marginTop: "5px",
                         padding: "10px 15px",
                         backgroundColor: 'lightgray',
                         Width: 'fit-content',
-                        maxWidth: '90%'
+                        maxWidth: '90%',
+                        minWidth: 'fit-content',
+                        textAlign: 'left',
                     }} className='card'>
                         {/* <HTMLRenderer htmlContent={message.payload.body.data.slice(1)} /> */}
                         <HTMLRenderer htmlContent={removeQuotedText(message.payload.body.data.charAt(0) === "�" ? message.payload.body.data.slice(3) : message.payload.body.data)} />
@@ -385,9 +401,13 @@ className="mt-3 card" >
                         }
                         
                     </div>
-                    {index === 0 && mailData.ticketInfo.lastMessageSentBy && 
-                        <p style={{ fontSize: '13px', }}>Sent By {mailData.ticketInfo.lastMessageSentBy}</p>
+                    { message.messageSentBy && 
+                        <p style={{ fontSize: '13px', }}>Sent By {message.messageSentBy}</p>
                     }
+
+                    <p style={{ fontSize: '13px' }}>{getEmailDate(message.payload.headers)}</p>
+
+                    
                 </div>
 
 
