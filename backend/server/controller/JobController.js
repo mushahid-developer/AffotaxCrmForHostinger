@@ -264,7 +264,7 @@ exports.addNewClient = async (req, res) => {
       res.json(finalArr);
     } catch (error) {
       console.error(error);
-      res.status(500).json({ message: "Internal server error" });
+      res.status(500).json({ message: error.message });
     }
   };
 
