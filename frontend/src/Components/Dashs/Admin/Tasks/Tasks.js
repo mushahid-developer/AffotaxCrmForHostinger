@@ -853,7 +853,7 @@ const Tasks = (props) => {
         startDate: projData.startDate,
         deadline: projData.deadline,
         Jobholder_id: projData.Jobholder_id,
-        status: projData.status,
+        status: "Progress",
         _id: `${projData._id}1001`,
       }
       setRowData(prev => [...prev, copiedProj])

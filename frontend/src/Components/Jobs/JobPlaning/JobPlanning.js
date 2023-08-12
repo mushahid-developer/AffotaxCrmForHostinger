@@ -14,7 +14,6 @@ import MyFloatingFilter from './MyFloatingFilter';
 import DropdownFilter from './DropdownFilter';
 import DropdownFilterWithDate from './DropDownFilterWithDate';
 import { Form } from 'react-bootstrap';
-import AddButton from "../../../Assets/Images/addButton.png"
 
 import { saveAs } from 'file-saver';
 import * as XLSX from 'xlsx';
@@ -140,11 +139,14 @@ export default function JobPlanning(props) {
     email: true,
     phone: true,
     country: true,
+    ticket: true,
   });
 
   const { state } = useLocation();
   const location = useLocation();
   const navigate = useNavigate();
+  const queryParams = new URLSearchParams(location.search);
+  const jobIdFromUrl = queryParams.get('job_id');
 
   const [rowData, setRowData] = useState(); // Set rowData to Array of Objects, one Object per Row
   const [mainrowData, setMainRowData] = useState(); // Set rowData to Array of Objects, one Object per Row
@@ -339,7 +341,6 @@ export default function JobPlanning(props) {
       billingOverDue
     }));
 
-
     if (filteredArray != undefined) {
       filteredArray = await filteredArray.filter(obj => obj.client_id && obj.client_id.isActive === true);
     }
@@ -393,6 +394,10 @@ export default function JobPlanning(props) {
         }
       });
 
+    }
+    // Job Id Filter
+    if (filteredArray != undefined && jobIdFromUrl != null && jobIdFromUrl !== "") {
+      filteredArray = await filteredArray.filter(obj => obj._id && obj._id === jobIdFromUrl);
     }
 
     // Department Filter
@@ -1305,15 +1310,16 @@ export default function JobPlanning(props) {
       },
       editable: false,
     },
-    //   {
-    //     field: 'actions',
-    //     flex: 1,
-    //     editable: false,
-    //     filter: false,
-    //     cellRendererFramework: ()=><div>
-    //       <button className='btn btn-danger h1'> delete</button>
-    //     </div>
-    //   }
+      {
+        headerName: "Ticket",
+        field: 'ticket',
+        flex: 1,
+        editable: false,
+        filter: false,
+        cellRendererFramework: (p)=><div>
+          <a target="_blank" href={`/tickets?company_name=${p.data.client_id.client_name}&client_name=${p.data.client_id.client_name}`} className=''> Tickets</a>
+        </div>
+      }
   ];
 
 
@@ -1453,6 +1459,7 @@ export default function JobPlanning(props) {
       gridApi.columnApi.setColumnVisible("country", false)
       gridApi.columnApi.setColumnVisible("source", false)
       gridApi.columnApi.setColumnVisible("partner", false)
+      gridApi.columnApi.setColumnVisible("ticket", false)
     }
 
   }
@@ -1696,6 +1703,7 @@ export default function JobPlanning(props) {
                           <li><button onClick={(e) => { toggleColHandler(e, "email") }} className={`dropdown-item ${!colVisibility.email ? "" : "active"}`} >Email</button></li>
                           <li><button onClick={(e) => { toggleColHandler(e, "phone") }} className={`dropdown-item ${!colVisibility.phone ? "" : "active"}`} >Phone</button></li>
                           <li><button onClick={(e) => { toggleColHandler(e, "country") }} className={`dropdown-item ${!colVisibility.country ? "" : "active"}`} >Country</button></li>
+                          <li><button onClick={(e) => { toggleColHandler(e, "ticket") }} className={`dropdown-item ${!colVisibility.ticket ? "" : "active"}`} >Ticket</button></li>
                         </ul>
                       </div>
                     </div>

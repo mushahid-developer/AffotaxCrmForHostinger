@@ -44,8 +44,9 @@ const Leads = () => {
 
     const [reRender, setReRender] = useState(true)
 
-    const [mainRowData, setMainRowData] = useState([ ]);
+    const [mainRowData, setMainRowData] = useState([]);
     const [rowData, setRowData] = useState([]);
+    const [users, setUsers] = useState([]);
 
     const [preData, setPreData] = useState([]);
     
@@ -198,6 +199,7 @@ const Leads = () => {
           );
           if(resp.status === 200){
               setMainRowData(resp.data.leads)
+              setUsers(resp.data.users)
             }
             
           setLoader(false)
@@ -361,6 +363,18 @@ const Leads = () => {
         { headerName: 'Co Name', field: 'companyName', flex:1.3 },
         { headerName: 'Client Name', field: 'clientName', flex:1.3 },
         { 
+          headerName: 'Job Holder', 
+          field: 'Jobholder_id', 
+          flex:1.3,
+          valueGetter: p => {
+              return p.data.Jobholder_id ? p.data.Jobholder_id.name : "" //to get value from obj inside obj
+            },
+          cellEditor: 'agSelectCellEditor',
+          cellEditorParams: {
+            values: preData && preData.map(option => option.label),
+          },
+        },
+        { 
           headerName: 'Department', 
           field: 'department', 
           flex:1.3,
@@ -523,12 +537,13 @@ const Leads = () => {
         resizable: true
        }), []);
 
-      //  const onCellValueChanged = useCallback((event) => {
-      //   if(event.colDef.field === "manager_id"){
-      //     const selectedOption = preData.find(option => option.label === event.data.manager_id);
-      //     event.data.managerId = selectedOption ? selectedOption.value : '';
-      //   }
-      // }, [gridApi]);
+       const onCellValueChanged = useCallback((event) => {
+        if(event.colDef.field === "Jobholder_id"){
+          console.log(preData)
+          const selectedOption = preData.find(option => option.label === event.data.Jobholder_id);
+          event.data.Jobholder_id = selectedOption ? selectedOption.value : '';
+        }
+      }, [gridApi]);
 
        const onRowValueChanged = useCallback(async (event) => {
         var data = event.data;
@@ -779,6 +794,7 @@ const Leads = () => {
                 paginationPageSize = {25}
                 suppressDragLeaveHidesColumns={true}
                 editType={'fullRow'}
+                onCellValueChanged={onCellValueChanged}
                 onRowValueChanged={onRowValueChanged}
                 frameworkComponents={frameworkComponents}
             />

@@ -17,6 +17,8 @@ import DropdownFilter from '../../../Jobs/JobPlaning/DropdownFilter';
 import { saveAs } from 'file-saver';
 import * as XLSX from 'xlsx';
 import { Button, Form, Modal } from 'react-bootstrap';
+import ReactQuill from 'react-quill';
+import HTMLRenderer from '../Tickets/HtmlRenderer';
 
 export default function Templates() {
 
@@ -116,16 +118,47 @@ export default function Templates() {
   });
 
   
-  const handleAddFormDataChange = (e)=>{
-    const { name, value } = e.target;
+  const handleAddFormDataChange = (e, field)=>{
+
+    var name = "";
+    var value = "";
+
+    if (field === "~~~~") {
+
+      name = "template";
+      value = e;
+
+    } else {
+      e.preventDefault();
+      name = e.target.name;
+      value = e.target.value;
+    }
+
     setAddTemplateFormData(prevState => ({
       ...prevState,
       [name]: value
-  }));
+    }));
+    
   }
 
-  const handleEditFormDataChange = (e)=>{
-    const { name, value } = e.target;
+  const handleEditFormDataChange = (e, field)=>{
+    
+    
+    var name = "";
+    var value = "";
+
+    if (field === "~~~~") {
+
+      name = "template";
+      value = e;
+
+    } else {
+      e.preventDefault();
+      name = e.target.name;
+      value = e.target.value;
+    }
+
+
     setEditTemplateFormData(prevState => ({
       ...prevState,
       [name]: value
@@ -380,6 +413,30 @@ export default function Templates() {
       editable: false,
       resizable: true
      }));
+
+     const modules = {
+
+      toolbar: [
+        [{ 'header': [1, 2, false] }],
+        ['bold', 'italic', 'underline', 'strike', 'blockquote'],
+        [{ 'list': 'ordered' }, { 'list': 'bullet' }, { 'indent': '-1' }, { 'indent': '+1' }],
+        ['link', 'image'],
+        ['clean']
+      ],
+  
+    };
+  
+    const formats = [
+      'header',
+      'bold', 'italic', 'underline', 'strike', 'blockquote',
+      'list', 'bullet', 'indent',
+      'link', 'image'
+    ];
+
+    const editorStyle = {
+      backgroundColor: 'white',
+      borderRadius: '5px',
+    };
 
      const onPageSizeChanged = useCallback(() => {
       var value = document.getElementById('page-size').value;
@@ -721,14 +778,25 @@ const exportToExcel = (e) => {
             </Form.Group>
 
             <Form.Group className='mt-2'>
-            <Form.Control
+            {/* <Form.Control
               as="textarea"
               name='template'
               placeholder="Template"
               onChange={handleAddFormDataChange}
               value={addTemplateFormData.template}
               rows= {8}
-            />
+            /> */}
+
+              <ReactQuill
+                name="template"
+                theme="snow"
+                modules={modules}
+                formats={formats}
+                style={editorStyle}
+                onChange={(e) => { handleAddFormDataChange(e, "~~~~") }}
+                value={addTemplateFormData.template}
+              />
+
           </Form.Group>
             
 
@@ -790,14 +858,18 @@ const exportToExcel = (e) => {
             </Form.Group>
 
             <Form.Group className='mt-2'>
-            <Form.Control
-              as="textarea"
-              name='template'
-              placeholder="Template"
-              onChange={handleEditFormDataChange}
-              value={editTemplateFormData.template}
-              rows= {8}
-            />
+
+              <ReactQuill
+                name="template"
+                theme="snow"
+                modules={modules}
+                formats={formats}
+                style={editorStyle}
+                onChange={(e) => { handleEditFormDataChange(e, "~~~~") }}
+                value={editTemplateFormData.template}
+              />
+
+
           </Form.Group>
             
 
@@ -817,9 +889,11 @@ const exportToExcel = (e) => {
           <Modal.Title>Template View</Modal.Title>
         </Modal.Header>
         <Modal.Body>
-          <div style={{ whiteSpace: 'pre-line' }}>
+          {/* <div style={{ whiteSpace: 'pre-line' }}>
             {showTemplateModalData}
-          </div>
+          </div> */}
+
+          <HTMLRenderer htmlContent={showTemplateModalData} />
 
         </Modal.Body>
         <Modal.Footer>

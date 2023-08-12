@@ -2,6 +2,7 @@ import React from 'react';
 import JobPlanning from '../../../Jobs/JobPlaning/JobPlanning';
 import Tasks from '../Tasks/Tasks';
 import Construction from '../Construction/Construction';
+import Leads from "../Leads/Leads";
 import Accordion from 'react-bootstrap/Accordion';
 
 const MyTable = () => {
@@ -35,6 +36,17 @@ const MyTable = () => {
       </Accordion.Item>
       
       <Accordion.Item eventKey="2">
+        <Accordion.Header>Leads</Accordion.Header>
+        <Accordion.Body>
+         
+          <div>
+            <Leads fromPage="MyList" userNameFilter="Rashid"/>
+          </div>
+
+        </Accordion.Body>
+      </Accordion.Item>
+      
+      <Accordion.Item eventKey="3">
         <Accordion.Header>Construction</Accordion.Header>
         <Accordion.Body>
          
@@ -44,6 +56,7 @@ const MyTable = () => {
 
         </Accordion.Body>
       </Accordion.Item>
+
     </Accordion>
     </div>
 

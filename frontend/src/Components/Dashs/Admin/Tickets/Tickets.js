@@ -2,7 +2,7 @@ import React, { useState, useEffect, useMemo, useRef, useCallback, useContext } 
 import { AgGridReact } from 'ag-grid-react'; // the AG Grid React Component
 import 'ag-grid-community/styles/ag-grid.css'; // Core grid CSS, always needed
 import 'ag-grid-community/styles/ag-theme-alpine.css'; // Optional theme CSS
-import { Link, useNavigate } from 'react-router-dom';
+import { Link, useLocation, useNavigate } from 'react-router-dom';
 import Select from 'react-select';
 
 import ReactQuill, { Quill } from 'react-quill';
@@ -27,6 +27,12 @@ var markMailAsCompleted = axiosURL.markMailAsCompleted;
 var EditOneTicketUrl = axiosURL.EditOneTicketUrl;
 
 export default function Tickets(props) {
+
+  const location = useLocation();
+  const queryParams = new URLSearchParams(location.search);
+  const clientNameFromUrl = queryParams.get('client_name');
+  const companyNameFromUrl = queryParams.get('company_name');
+  const ticketIdFromUrl = queryParams.get('ticket_id');
 
   // const roleName = props.roleName
   const ticketsPagePermissions = props.ticketsPagePermissions
@@ -88,6 +94,18 @@ export default function Tickets(props) {
 
     if (filteredArray !== undefined && jHolderFvalue !== null && jHolderFvalue !== "") {
       filteredArray = filteredArray.filter(obj => obj.ticketInfo.user_id && obj.ticketInfo.user_id.name === jHolderFvalue);
+    }
+
+    if (filteredArray !== undefined && ticketIdFromUrl !== null && ticketIdFromUrl !== "") {
+      filteredArray = filteredArray.filter(obj => obj.ticketInfo.user_id && obj.ticketInfo._id === ticketIdFromUrl);
+    }
+
+    if (filteredArray !== undefined && companyNameFromUrl !== null && companyNameFromUrl !== "") {
+      filteredArray = filteredArray.filter(obj => obj.ticketInfo.user_id && obj.ticketInfo.client_id.company_name === companyNameFromUrl);
+    }
+
+    if (filteredArray !== undefined && clientNameFromUrl !== null && clientNameFromUrl !== "") {
+      filteredArray = filteredArray.filter(obj => obj.ticketInfo.user_id && obj.ticketInfo.client_id.client_name === clientNameFromUrl);
     }
 
     if (filteredArray !== undefined && companyFvalue !== null && companyFvalue !== "") {
