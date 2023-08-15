@@ -45,6 +45,10 @@ var LeadSchema = new mongoose.Schema({
         type: mongoose.Types.ObjectId,
         ref: 'users'
     },
+    Jobholder_id: {
+        type: mongoose.Types.ObjectId,
+        ref: 'users'
+    },
     reason:{
         type: String,
     }

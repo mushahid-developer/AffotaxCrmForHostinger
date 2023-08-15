@@ -293,7 +293,7 @@ exports.CopyOneProject = async (req, res) => {
         startDate: projects.startDate,
         deadline: projects.deadline,
         Jobholder_id: projects.Jobholder_id,
-        status: projects.status,
+        status: 'Progress',
         hrs: projects.hrs,
         job_date: projects.job_date,
         lead: projects.lead,

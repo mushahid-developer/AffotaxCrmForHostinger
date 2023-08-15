@@ -97,7 +97,7 @@ exports.getEmails = async (req, res) => {
                             Notidb.create({
                                 title: "Reply to a ticket received",
                                 description: `You've received a response to a ticket with the subject "${email.subject}" from the company named "${email.ticketInfo.client_id.company_name}" and the client's name is "${email.ticketInfo.client_id.client_name}".`,
-                                redirectLink: "/tickets",
+                                redirectLink: `/tickets?ticket_id=${messageObject.ticket_id.toString()}`,
                                 user_id: email.ticketInfo.user_id._id
                             })
                         }
@@ -263,7 +263,7 @@ exports.EditOneTicket = async (req, res) => {
             await Notidb.create({
                 title: "New Ticket Assigned",
                 description: `${curUserName} Assigned you a new ticket of "${ClientName}", and Company Name is "${CompanyName}`,
-                redirectLink: "/tickets",
+                redirectLink: `/tickets?ticket_id=${tickedId.toString()}`,
                 user_id: userId
             })
         }

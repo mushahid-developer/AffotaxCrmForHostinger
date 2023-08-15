@@ -10,7 +10,7 @@ var TicketsSchema = new mongoose.Schema({
         type: mongoose.Types.ObjectId,
         ref: 'users'
     },
-    mail_thread_id: {
+    mail_thread_id: {   
         type: String,
     },
     notes: {

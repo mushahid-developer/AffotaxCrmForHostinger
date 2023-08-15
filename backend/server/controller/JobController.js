@@ -183,7 +183,7 @@ exports.addNewClient = async (req, res) => {
               await Notidb.create({
                   title: "New Job Assigned",
                   description: `${curUserName} Assigned you a new Job of "${ClientName}", and Company Name is "${CompanyName}"`,
-                  redirectLink: "/clients/job-planning",
+                  redirectLink: `/clients/job-planning?job_id=${req.body._id}`,
                   user_id: req.body.job_holder_id
               })
           }

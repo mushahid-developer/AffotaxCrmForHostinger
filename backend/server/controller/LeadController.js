@@ -1,7 +1,8 @@
 const LeadDb = require("../model/Leads/Leads");
+const Userdb = require("../model/Users/Users");
 
 exports.getAllLeads = async (req, res) => {
-    const leads = await LeadDb.find().sort({_id: -1}).populate('manager_id');
+    const leads = await LeadDb.find().sort({_id: -1}).populate('manager_id').populate("Jobholder_id");
      
         if (!leads) {
             return res.status(400).json({
@@ -9,8 +10,11 @@ exports.getAllLeads = async (req, res) => {
             })
         }
 
+    const users = await Userdb.find();
+
         var response = {
-            leads: leads
+            leads: leads,
+            users: users
         }
 
         res.json(response);
@@ -21,6 +25,8 @@ exports.addUpdateLead = async (req, res) => {
 
     const time_now = new Date();
     const followUpDate = req.body.data.followUpDate ? new Date(req.body.data.followUpDate) : null
+
+    console.log(req.body.data)
 
     if(req.body.data._id === "New"){
         //Add New Lead
@@ -34,6 +40,7 @@ exports.addUpdateLead = async (req, res) => {
             createDate: time_now,
             followUpDate: followUpDate ? followUpDate != 'Invalid Date' && followUpDate : time_now,
             // manager_id: req.body.data.manager_id && req.body.data.manager_id,
+            Jobholder_id: req.body.data.Jobholder_id ? req.body.data.Jobholder_id : null,
             proposalTemplate: req.body.data.proposalTemplate && req.body.data.proposalTemplate,
             email: req.body.data.email && req.body.data.email,
             note: req.body.data.note && req.body.data.note,
@@ -55,6 +62,7 @@ exports.addUpdateLead = async (req, res) => {
             partner: req.body.data.partner && req.body.data.partner,
             followUpDate: followUpDate && followUpDate != 'Invalid Date' && followUpDate,
             // manager_id: req.body.data.manager_id && req.body.data.manager_id,
+            Jobholder_id: req.body.data.Jobholder_id ? req.body.data.Jobholder_id : null,
             proposalTemplate: req.body.data.proposalTemplate && req.body.data.proposalTemplate,
             email: req.body.data.email && req.body.data.email,
             note: req.body.data.note && req.body.data.note,
