@@ -1317,7 +1317,7 @@ export default function JobPlanning(props) {
         editable: false,
         filter: false,
         cellRendererFramework: (p)=><div>
-          <a target="_blank" href={`/tickets?company_name=${p.data.client_id.client_name}&client_name=${p.data.client_id.client_name}`} className=''> Tickets</a>
+          <a target="_blank" href={`/tickets?company_name=${p.data.client_id.company_name}&client_name=${p.data.client_id.client_name}`} className=''> Tickets</a>
         </div>
       }
   ];
