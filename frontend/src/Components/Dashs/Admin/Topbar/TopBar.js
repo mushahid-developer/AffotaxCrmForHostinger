@@ -71,6 +71,7 @@ export default function TopBar(props) {
       );
 
       navigate(noti.redirectLink)
+      // history.push(noti.redirectLink);
       setReRender(prev => !prev)
       setNotificationIsOpen(false)
 

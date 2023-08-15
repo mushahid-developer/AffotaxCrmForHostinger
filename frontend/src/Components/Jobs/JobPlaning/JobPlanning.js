@@ -788,7 +788,7 @@ export default function JobPlanning(props) {
     filter()
 
 
-  }, [statusFvalue, sourceFValue, partnerFValue, subscriptionFvalue, jStatusFvalue, cManagerFvalue, departmentFvalue, jHolderFvalue, yearEndFvalue, yearEndFvalueDate, deadlineFvalue, deadlineFvalueDate, jobDateFvalue, jobDateFvalueDate, mainrowData])
+  }, [jobIdFromUrl, statusFvalue, sourceFValue, partnerFValue, subscriptionFvalue, jStatusFvalue, cManagerFvalue, departmentFvalue, jHolderFvalue, yearEndFvalue, yearEndFvalueDate, deadlineFvalue, deadlineFvalueDate, jobDateFvalue, jobDateFvalueDate, mainrowData])
 
 
 

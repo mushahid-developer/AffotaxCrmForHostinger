@@ -278,7 +278,7 @@ export default function Tickets(props) {
   useEffect(() => {
     setRowData(mainRowData)
     handleFilters()
-  }, [mainRowData, statusFvalue, companyFvalue, jHolderFvalue, activeFilter, startDateFvalueDate, startDateFvalue])
+  }, [ticketIdFromUrl, companyNameFromUrl, clientNameFromUrl, mainRowData, statusFvalue, companyFvalue, jHolderFvalue, activeFilter, startDateFvalueDate, startDateFvalue])
 
 
   const getRowStyle = params => {
