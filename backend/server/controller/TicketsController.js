@@ -56,63 +56,39 @@ exports.getEmails = async (req, res) => {
         
         
         var Emails = await gmail.getAllEmails(TicketsList);
-
-
-        var messageIds = [];
                 
         Emails.detailedThreads.forEach(async email => {
             const matchingTicket = Tickets.find(ticket => ticket.mail_thread_id === email.threadId);
             if (matchingTicket) {
-                email.decryptedMessages.map(oneEma => {
-                    messageIds.push(
-                        {
-                            messageid: oneEma.id,
-                            ticket_id: matchingTicket._id.toString(),
-                            thread_id: matchingTicket.mail_thread_id
-                        }
-                    )
-                  })
-    
-                  // Create an array to collect new message documents
-                    const newMessageDocs = [];
-    
-                    for (const messageObject of messageIds) {
+                email.decryptedMessages.map(async oneEma => {
+                    
+                    
                     const existingMessage = await MessageIdsDb.findOne({
-                        ticket_id: messageObject.ticket_id,
-                        message_id: messageObject.messageid,
-                        mail_thread_id: messageObject.thread_id
+                        ticket_id: matchingTicket._id.toString(),
+                        message_id: oneEma.id,
+                        mail_thread_id: matchingTicket.mail_thread_id
                     });
-    
+
                     if (!existingMessage) {
-                        newMessageDocs.push({
-                        ticket_id: messageObject.ticket_id.toString(),
-                        message_id: messageObject.messageid,
-                        mail_thread_id: messageObject.thread_id,
-                        // other fields you might need
+                        await MessageIdsDb.create({
+                            ticket_id: matchingTicket._id.toString(),
+                            message_id: oneEma.id,
+                            mail_thread_id: matchingTicket.mail_thread_id
                         });
 
-                        const ureadEmail = email.decryptedMessages.find(unreadEmail => unreadEmail.id === messageObject.messageid)
-                        
+                        const ureadEmail = email.decryptedMessages.find(unreadEmail => unreadEmail.id === oneEma.id)
                         if(ureadEmail && ureadEmail.labelIds.includes('UNREAD')){
                             Notidb.create({
                                 title: "Reply to a ticket received",
                                 description: `You've received a response to a ticket with the subject "${email.subject}" from the company named "${email.ticketInfo.client_id.company_name}" and the client's name is "${email.ticketInfo.client_id.client_name}".`,
-                                redirectLink: `/tickets?ticket_id=${messageObject.ticket_id.toString()}`,
+                                redirectLink: `/tickets?ticket_id=${matchingTicket._id.toString()}`,
                                 user_id: email.ticketInfo.user_id._id
                             })
                         }
                     }
-                    }
-    
-                    // Insert new message documents in bulk
-                    if (newMessageDocs.length > 0) {
-                        try {
-                            MessageIdsDb.insertMany(newMessageDocs);
-                        } catch (error) {
-                        }
-                    }
+
+                  })
             }
-            return email;
           });
 
                 
@@ -125,10 +101,8 @@ exports.getEmails = async (req, res) => {
               email.decryptedMessages = await Promise.all(email.decryptedMessages.map(async mail => {
                 const matchingMessageData = await MessageIdsDb.findOne({ message_id: mail.id });
                 
-                if (matchingMessageData.messageSentBy) {
+                if (matchingMessageData && matchingMessageData.messageSentBy) {
                   mail.messageSentBy = matchingMessageData.messageSentBy;
-                  console.log(matchingMessageData);
-                  console.log('matchingMessageData');
                 }
                 
                 return mail;
