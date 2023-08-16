@@ -232,95 +232,6 @@ export default function JobPlanning(props) {
       }
     }
 
-    if (filteredArray) {
-      for (var arr of filteredArray) {
-        var deadline = new Date(arr.job_deadline)
-        var yearEnd = new Date(arr.year_end)
-
-        if (arr.job_name === "Bookkeeping") {
-          if ((deadline.setHours(0, 0, 0, 0) < today.setHours(0, 0, 0, 0) || (deadline.setHours(0, 0, 0, 0) < today.setHours(0, 0, 0, 0) && (yearEnd.setHours(0, 0, 0, 0) < today.setHours(0, 0, 0, 0))) )) {
-            bookkeepingOverDue = bookkeepingOverDue + 1;
-          }
-          else if ( (deadline.setHours(0, 0, 0, 0) === today.setHours(0, 0, 0, 0)) || ( (yearEnd.setHours(0, 0, 0, 0) <= today.setHours(0, 0, 0, 0)) && !(deadline.setHours(0, 0, 0, 0) <= today.setHours(0, 0, 0, 0)) ) ) {
-            bookkeepingDue = bookkeepingDue + 1;
-          }
-        }
-        else if (arr.job_name === "Payroll") {
-          if ((deadline.setHours(0, 0, 0, 0) < today.setHours(0, 0, 0, 0) || (deadline.setHours(0, 0, 0, 0) < today.setHours(0, 0, 0, 0) && (yearEnd.setHours(0, 0, 0, 0) < today.setHours(0, 0, 0, 0))) )) {
-            PayrollOverDue = PayrollOverDue + 1;
-          }
-         
-          else if ( (deadline.setHours(0, 0, 0, 0) === today.setHours(0, 0, 0, 0)) || ( (yearEnd.setHours(0, 0, 0, 0) <= today.setHours(0, 0, 0, 0)) && !(deadline.setHours(0, 0, 0, 0) <= today.setHours(0, 0, 0, 0)) ) ) {
-            PayrollDue = PayrollDue + 1;
-          }
-          
-        }
-        else if (arr.job_name === "Vat Return") {
-          if ((deadline.setHours(0, 0, 0, 0) < today.setHours(0, 0, 0, 0) || (deadline.setHours(0, 0, 0, 0) < today.setHours(0, 0, 0, 0) && (yearEnd.setHours(0, 0, 0, 0) < today.setHours(0, 0, 0, 0))) )) {
-            vatreturnOverDue = vatreturnOverDue + 1;
-          }
-          
-          else if ( (deadline.setHours(0, 0, 0, 0) === today.setHours(0, 0, 0, 0)) || ( (yearEnd.setHours(0, 0, 0, 0) <= today.setHours(0, 0, 0, 0)) && !(deadline.setHours(0, 0, 0, 0) <= today.setHours(0, 0, 0, 0)) ) ) {
-            vatreturnDue = vatreturnDue + 1;
-          }
-          
-        }
-        else if (arr.job_name === "Accounts") {
-          if ((deadline.setHours(0, 0, 0, 0) < today.setHours(0, 0, 0, 0) || (deadline.setHours(0, 0, 0, 0) < today.setHours(0, 0, 0, 0) && (yearEnd.setHours(0, 0, 0, 0) < today.setHours(0, 0, 0, 0))) )) {
-            accountsOverDue = accountsOverDue + 1;
-          }
-         
-          else if ( (deadline.setHours(0, 0, 0, 0) === today.setHours(0, 0, 0, 0)) || ( (yearEnd.setHours(0, 0, 0, 0) <= today.setHours(0, 0, 0, 0)) && !(deadline.setHours(0, 0, 0, 0) <= today.setHours(0, 0, 0, 0)) ) ) {
-            accountsDue = accountsDue + 1;
-          }
-          
-        }
-        else if (arr.job_name === "Personal Tax") {
-          if ((deadline.setHours(0, 0, 0, 0) < today.setHours(0, 0, 0, 0) || (deadline.setHours(0, 0, 0, 0) < today.setHours(0, 0, 0, 0) && (yearEnd.setHours(0, 0, 0, 0) < today.setHours(0, 0, 0, 0))) )) {
-            personaltaxOverDue = personaltaxOverDue + 1;
-          }
-         
-          else if ( (deadline.setHours(0, 0, 0, 0) === today.setHours(0, 0, 0, 0)) || ( (yearEnd.setHours(0, 0, 0, 0) <= today.setHours(0, 0, 0, 0)) && !(deadline.setHours(0, 0, 0, 0) <= today.setHours(0, 0, 0, 0)) ) ) {
-            personaltaxDue = personaltaxDue + 1;
-          }
-          
-        }
-        else if (arr.job_name === "Company Sec") {
-          if ((deadline.setHours(0, 0, 0, 0) < today.setHours(0, 0, 0, 0) || (deadline.setHours(0, 0, 0, 0) < today.setHours(0, 0, 0, 0) && (yearEnd.setHours(0, 0, 0, 0) < today.setHours(0, 0, 0, 0))) )) {
-            companysecOverDue = companysecOverDue + 1;
-          }
-          
-          else if ( (deadline.setHours(0, 0, 0, 0) === today.setHours(0, 0, 0, 0)) || ( (yearEnd.setHours(0, 0, 0, 0) <= today.setHours(0, 0, 0, 0)) && !(deadline.setHours(0, 0, 0, 0) <= today.setHours(0, 0, 0, 0)) ) ) {
-            companysecDue = companysecDue + 1;
-          }
-          
-        }
-        else if (arr.job_name === "Address") {
-          if ((deadline.setHours(0, 0, 0, 0) < today.setHours(0, 0, 0, 0) || (deadline.setHours(0, 0, 0, 0) < today.setHours(0, 0, 0, 0) && (yearEnd.setHours(0, 0, 0, 0) < today.setHours(0, 0, 0, 0))) )) {
-            addressOverDue = addressOverDue + 1;
-          }
-          
-          else if ( (deadline.setHours(0, 0, 0, 0) === today.setHours(0, 0, 0, 0)) || ( (yearEnd.setHours(0, 0, 0, 0) <= today.setHours(0, 0, 0, 0)) && !(deadline.setHours(0, 0, 0, 0) <= today.setHours(0, 0, 0, 0)) ) ) {
-            addressDue = addressDue + 1;
-          }
-          
-        }
-        else if (arr.job_name === "Billing") {
-          if ((deadline.setHours(0, 0, 0, 0) < today.setHours(0, 0, 0, 0) || (deadline.setHours(0, 0, 0, 0) < today.setHours(0, 0, 0, 0) && (yearEnd.setHours(0, 0, 0, 0) < today.setHours(0, 0, 0, 0))) )) {
-            billingOverDue = billingOverDue + 1;
-          }
-         
-          else if ( (deadline.setHours(0, 0, 0, 0) === today.setHours(0, 0, 0, 0)) || ( (yearEnd.setHours(0, 0, 0, 0) <= today.setHours(0, 0, 0, 0)) && !(deadline.setHours(0, 0, 0, 0) <= today.setHours(0, 0, 0, 0)) ) ) {
-            billingDue = billingDue + 1;
-          }
-          
-        }
-
-
-      }
-    }
-
-
     setDepartmentSummaryValue(prevState => ({
       ...prevState,
       bookkeepingDue,
@@ -769,7 +680,99 @@ export default function JobPlanning(props) {
           }
         });
       }
+      
     }
+
+
+    if (filteredArray) {
+      for (var arr of filteredArray) {
+        var deadline = new Date(arr.job_deadline)
+        var yearEnd = new Date(arr.year_end)
+
+        if (arr.job_name === "Bookkeeping") {
+          if ((deadline.setHours(0, 0, 0, 0) < today.setHours(0, 0, 0, 0) || (deadline.setHours(0, 0, 0, 0) < today.setHours(0, 0, 0, 0) && (yearEnd.setHours(0, 0, 0, 0) < today.setHours(0, 0, 0, 0))) )) {
+            bookkeepingOverDue = bookkeepingOverDue + 1;
+          }
+          else if ( (deadline.setHours(0, 0, 0, 0) === today.setHours(0, 0, 0, 0)) || ( (yearEnd.setHours(0, 0, 0, 0) <= today.setHours(0, 0, 0, 0)) && !(deadline.setHours(0, 0, 0, 0) <= today.setHours(0, 0, 0, 0)) ) ) {
+            bookkeepingDue = bookkeepingDue + 1;
+          }
+        }
+        else if (arr.job_name === "Payroll") {
+          if ((deadline.setHours(0, 0, 0, 0) < today.setHours(0, 0, 0, 0) || (deadline.setHours(0, 0, 0, 0) < today.setHours(0, 0, 0, 0) && (yearEnd.setHours(0, 0, 0, 0) < today.setHours(0, 0, 0, 0))) )) {
+            PayrollOverDue = PayrollOverDue + 1;
+          }
+         
+          else if ( (deadline.setHours(0, 0, 0, 0) === today.setHours(0, 0, 0, 0)) || ( (yearEnd.setHours(0, 0, 0, 0) <= today.setHours(0, 0, 0, 0)) && !(deadline.setHours(0, 0, 0, 0) <= today.setHours(0, 0, 0, 0)) ) ) {
+            PayrollDue = PayrollDue + 1;
+          }
+          
+        }
+        else if (arr.job_name === "Vat Return") {
+          if ((deadline.setHours(0, 0, 0, 0) < today.setHours(0, 0, 0, 0) || (deadline.setHours(0, 0, 0, 0) < today.setHours(0, 0, 0, 0) && (yearEnd.setHours(0, 0, 0, 0) < today.setHours(0, 0, 0, 0))) )) {
+            vatreturnOverDue = vatreturnOverDue + 1;
+          }
+          
+          else if ( (deadline.setHours(0, 0, 0, 0) === today.setHours(0, 0, 0, 0)) || ( (yearEnd.setHours(0, 0, 0, 0) <= today.setHours(0, 0, 0, 0)) && !(deadline.setHours(0, 0, 0, 0) <= today.setHours(0, 0, 0, 0)) ) ) {
+            vatreturnDue = vatreturnDue + 1;
+          }
+          
+        }
+        else if (arr.job_name === "Accounts") {
+          if ((deadline.setHours(0, 0, 0, 0) < today.setHours(0, 0, 0, 0) || (deadline.setHours(0, 0, 0, 0) < today.setHours(0, 0, 0, 0) && (yearEnd.setHours(0, 0, 0, 0) < today.setHours(0, 0, 0, 0))) )) {
+            accountsOverDue = accountsOverDue + 1;
+          }
+         
+          else if ( (deadline.setHours(0, 0, 0, 0) === today.setHours(0, 0, 0, 0)) || ( (yearEnd.setHours(0, 0, 0, 0) <= today.setHours(0, 0, 0, 0)) && !(deadline.setHours(0, 0, 0, 0) <= today.setHours(0, 0, 0, 0)) ) ) {
+            accountsDue = accountsDue + 1;
+          }
+          
+        }
+        else if (arr.job_name === "Personal Tax") {
+          if ((deadline.setHours(0, 0, 0, 0) < today.setHours(0, 0, 0, 0) || (deadline.setHours(0, 0, 0, 0) < today.setHours(0, 0, 0, 0) && (yearEnd.setHours(0, 0, 0, 0) < today.setHours(0, 0, 0, 0))) )) {
+            personaltaxOverDue = personaltaxOverDue + 1;
+          }
+         
+          else if ( (deadline.setHours(0, 0, 0, 0) === today.setHours(0, 0, 0, 0)) || ( (yearEnd.setHours(0, 0, 0, 0) <= today.setHours(0, 0, 0, 0)) && !(deadline.setHours(0, 0, 0, 0) <= today.setHours(0, 0, 0, 0)) ) ) {
+            personaltaxDue = personaltaxDue + 1;
+          }
+          
+        }
+        else if (arr.job_name === "Company Sec") {
+          if ((deadline.setHours(0, 0, 0, 0) < today.setHours(0, 0, 0, 0) || (deadline.setHours(0, 0, 0, 0) < today.setHours(0, 0, 0, 0) && (yearEnd.setHours(0, 0, 0, 0) < today.setHours(0, 0, 0, 0))) )) {
+            companysecOverDue = companysecOverDue + 1;
+          }
+          
+          else if ( (deadline.setHours(0, 0, 0, 0) === today.setHours(0, 0, 0, 0)) || ( (yearEnd.setHours(0, 0, 0, 0) <= today.setHours(0, 0, 0, 0)) && !(deadline.setHours(0, 0, 0, 0) <= today.setHours(0, 0, 0, 0)) ) ) {
+            companysecDue = companysecDue + 1;
+          }
+          
+        }
+        else if (arr.job_name === "Address") {
+          if ((deadline.setHours(0, 0, 0, 0) < today.setHours(0, 0, 0, 0) || (deadline.setHours(0, 0, 0, 0) < today.setHours(0, 0, 0, 0) && (yearEnd.setHours(0, 0, 0, 0) < today.setHours(0, 0, 0, 0))) )) {
+            addressOverDue = addressOverDue + 1;
+          }
+          
+          else if ( (deadline.setHours(0, 0, 0, 0) === today.setHours(0, 0, 0, 0)) || ( (yearEnd.setHours(0, 0, 0, 0) <= today.setHours(0, 0, 0, 0)) && !(deadline.setHours(0, 0, 0, 0) <= today.setHours(0, 0, 0, 0)) ) ) {
+            addressDue = addressDue + 1;
+          }
+          
+        }
+        else if (arr.job_name === "Billing") {
+          if ((deadline.setHours(0, 0, 0, 0) < today.setHours(0, 0, 0, 0) || (deadline.setHours(0, 0, 0, 0) < today.setHours(0, 0, 0, 0) && (yearEnd.setHours(0, 0, 0, 0) < today.setHours(0, 0, 0, 0))) )) {
+            billingOverDue = billingOverDue + 1;
+          }
+         
+          else if ( (deadline.setHours(0, 0, 0, 0) === today.setHours(0, 0, 0, 0)) || ( (yearEnd.setHours(0, 0, 0, 0) <= today.setHours(0, 0, 0, 0)) && !(deadline.setHours(0, 0, 0, 0) <= today.setHours(0, 0, 0, 0)) ) ) {
+            billingDue = billingDue + 1;
+          }
+          
+        }
+
+
+      }
+    }
+
+
 
     if (filteredArray) {
       var summ = 0;
