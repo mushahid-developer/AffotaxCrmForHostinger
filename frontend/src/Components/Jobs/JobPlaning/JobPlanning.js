@@ -228,11 +228,6 @@ export default function JobPlanning(props) {
       filteredArray = await filteredArray.filter(obj => obj.client_id && obj.client_id.isActive === true);
     }
 
-    if (filteredArray) {
-      if (filteredArray != undefined) {
-        filteredArray = await filteredArray.filter(obj => obj.job_name && obj.job_name !== 'Billing');
-      }
-    }
 
     if (filteredArray) {
       for (var arr of filteredArray) {
@@ -320,6 +315,13 @@ export default function JobPlanning(props) {
     }
 
 
+    if (filteredArray) {
+      if (filteredArray != undefined) {
+        filteredArray = await filteredArray.filter(obj => obj.job_name && obj.job_name !== 'Billing');
+      }
+    }
+
+
     setDepartmentSummaryValue(prevState => ({
       ...prevState,
       bookkeepingDue,
@@ -339,6 +341,8 @@ export default function JobPlanning(props) {
       billingDue,
       billingOverDue
     }));
+
+    
 
     // Source Filter
     if (filteredArray != undefined && sourceFValue != null && sourceFValue !== "") {
