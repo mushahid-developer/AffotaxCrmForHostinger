@@ -2195,7 +2195,7 @@ export default function JobPlanning(props) {
 
                       </div>
 
-                      <div className='col-3'>
+                      {/* <div className='col-3'>
                         <p className='mb-1'>
                           Billing
                         </p>
@@ -2213,7 +2213,7 @@ export default function JobPlanning(props) {
                           </p>
                         </Link>
 
-                      </div>
+                      </div> */}
 
                     </div>
                   </div>
