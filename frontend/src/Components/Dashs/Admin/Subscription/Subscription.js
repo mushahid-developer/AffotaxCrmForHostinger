@@ -227,7 +227,7 @@ const filter = async ()=>{
             weeklyOverDue = weeklyOverDue + 1;
           }
         else if ( (deadline.setHours(0, 0, 0, 0) === today.setHours(0, 0, 0, 0)) || ( (yearEnd.setHours(0, 0, 0, 0) <= today.setHours(0, 0, 0, 0)) && !(deadline.setHours(0, 0, 0, 0) <= today.setHours(0, 0, 0, 0)) ) ) {
-            weeklyOverDue = weeklyOverDue + 1;
+            weeklyDue = weeklyDue + 1;
           }
       }
       else if(arr.subscription === "Monthly")
@@ -1746,14 +1746,14 @@ else{
                         Quartelry
                       </p>
 
-                      <Link style={{textDecoration: 'none'}} onClick={()=>{handleDepartmentFilterSet('Quartelry', 'Overdue')}}>
+                      <Link style={{textDecoration: 'none'}} onClick={()=>{handleDepartmentFilterSet('Quarterly', 'Overdue')}}>
                         <p>
                           <span style={{fontWeight: "700"}}>{departmentSummaryValue.quarterlyOverDue}</span> Overdue
                         </p>
                       </Link>
 
 
-                      <Link style={{textDecoration: 'none'}} onClick={()=>{handleDepartmentFilterSet('Quartelry', 'Due')}}>
+                      <Link style={{textDecoration: 'none'}} onClick={()=>{handleDepartmentFilterSet('Quarterly', 'Due')}}>
                         <p>
                           <span style={{fontWeight: "700"}}>{departmentSummaryValue.quarterlyDue}</span> Due
                         </p>
