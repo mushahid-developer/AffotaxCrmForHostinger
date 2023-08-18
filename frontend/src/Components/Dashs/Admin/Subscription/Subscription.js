@@ -219,7 +219,7 @@ const filter = async ()=>{
   if(filteredArray){
     for(var arr of filteredArray){
       var deadline = new Date(arr.job_deadline)
-      var yearEnd = new Date(arr.year_end)
+      var yearEnd = new Date(arr.work_deadline)
   
       if(arr.subscription === "Weekly")
       {        
@@ -1700,6 +1700,7 @@ else{
                 Department Summary
               </p>
               <div className='row' style={{textAlign: 'center',}}>
+
                     
                     <div className='col-3'>
                       <p className='mb-1'>
@@ -1721,7 +1722,7 @@ else{
 
                     </div>
                     
-                    <div className='col-3'>
+                    <div className='col-2'>
                       <p className='mb-1'>
                         Monthly
                       </p>
@@ -1741,7 +1742,7 @@ else{
 
                     </div>
                     
-                    <div className='col-3'>
+                    <div className='col-2'>
                       <p className='mb-1'>
                         Quartelry
                       </p>
@@ -1761,7 +1762,7 @@ else{
 
                     </div>
                     
-                    <div className='col-3'>
+                    <div className='col-2'>
                       <p className='mb-1'>
                         Yearly
                       </p>
@@ -1776,6 +1777,26 @@ else{
                       <Link style={{textDecoration: 'none'}} onClick={()=>{handleDepartmentFilterSet('Yearly', 'Due')}}>
                         <p>
                           <span style={{fontWeight: "700"}}>{departmentSummaryValue.yearlyDue}</span> Due
+                        </p>
+                      </Link>
+
+                    </div>
+                    
+                    <div className='col-3'>
+                      <p className='mb-1'>
+                        Total
+                      </p>
+
+                      <Link style={{textDecoration: 'none'}} onClick={()=>{handleDepartmentFilterSet('', 'Overdue')}}>
+                        <p>
+                          <span style={{fontWeight: "700"}}>{departmentSummaryValue.yearlyOverDue + departmentSummaryValue.quarterlyOverDue + departmentSummaryValue.monthlyOverDue + departmentSummaryValue.weeklyOverDue}</span> Overdue
+                        </p>
+                      </Link>
+
+
+                      <Link style={{textDecoration: 'none'}} onClick={()=>{handleDepartmentFilterSet('', 'Due')}}>
+                        <p>
+                          <span style={{fontWeight: "700"}}>{departmentSummaryValue.yearlyDue + departmentSummaryValue.quarterlyDue + departmentSummaryValue.monthlyDue + departmentSummaryValue.weeklyDue}</span> Due
                         </p>
                       </Link>
 
