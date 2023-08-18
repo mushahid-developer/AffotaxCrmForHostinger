@@ -167,22 +167,14 @@ const [jHolderFvalue, setJHolderFvalue] = useState(null);
 const [subscriptionFvalue, setSubscriptionFvalue] = useState(null);
 
 const [departmentSummaryValue, setDepartmentSummaryValue] = useState({
-  bookkeepingDue: 0,
-  bookkeepingOverDue: 0,
-  PayrollDue: 0,
-  PayrollOverDue: 0,
-  vatreturnDue: 0,
-  vatreturnOverDue: 0,
-  accountsDue: 0,
-  accountsOverDue: 0,
-  personaltaxDue: 0,
-  personaltaxOverDue: 0,
-  companysecDue: 0,
-  companysecOverDue: 0,
-  addressDue: 0,
-  addressOverDue: 0,
-  billingDue: 0,
-  billingOverDue: 0
+  weeklyDue: 0,
+  weeklyOverDue: 0,
+  monthlyDue: 0,
+  monthlyOverDue: 0,
+  quarterlyDue: 0,
+  quarterlyOverDue: 0,
+  yearlyDue: 0,
+  yearlyOverDue: 0,
 });
 
 const [sumOfMarks, setSumOfMarks] = useState(0);
@@ -202,28 +194,25 @@ const filter = async ()=>{
   // const roo = mainrowData; 
   var filteredArray = mainrowData
 
-  var bookkeepingDue = 0 ;
-  var bookkeepingOverDue = 0 ;
-  var PayrollDue = 0 ;
-  var PayrollOverDue = 0 ;
-  var vatreturnDue = 0 ;
-  var vatreturnOverDue = 0 ;
-  var accountsDue = 0 ;
-  var accountsOverDue = 0 ;
-  var personaltaxDue = 0 ;
-  var personaltaxOverDue = 0 ;
-  var companysecDue = 0 ;
-  var companysecOverDue = 0 ;
-  var addressDue = 0 ;
-  var addressOverDue = 0 ;
-  var billingDue = 0 ;
-  var billingOverDue = 0 ;
+  var weeklyDue = 0;
+  var weeklyOverDue = 0;
+  var monthlyDue = 0;
+  var monthlyOverDue = 0;
+  var quarterlyDue = 0;
+  var quarterlyOverDue = 0;
+  var yearlyDue = 0;
+  var yearlyOverDue = 0;
+
 
   var today = new Date();
 
+  if(filteredArray != undefined){
+    filteredArray = await filteredArray.filter(obj => obj.client_id && obj.client_id.isActive);
+  }
+
   if(filteredArray){
     if(filteredArray != undefined){
-        filteredArray = await filteredArray.filter(obj => obj.job_name && obj.job_name === 'Billing');
+        filteredArray = filteredArray.filter(obj => obj.job_name && obj.job_name === 'Billing');
       }
   }
 
@@ -232,143 +221,45 @@ const filter = async ()=>{
       var deadline = new Date(arr.job_deadline)
       var yearEnd = new Date(arr.year_end)
   
-      if(arr.job_name === "Bookkeeping")
+      if(arr.subscription === "Weekly")
       {        
-          if ((deadline.setHours(0, 0, 0, 0) < today.setHours(0, 0, 0, 0) && (yearEnd.setHours(0, 0, 0, 0) < today.setHours(0, 0, 0, 0)))) {
-            bookkeepingOverDue = bookkeepingOverDue + 1;
+        if ((deadline.setHours(0, 0, 0, 0) < today.setHours(0, 0, 0, 0) || (deadline.setHours(0, 0, 0, 0) < today.setHours(0, 0, 0, 0) && (yearEnd.setHours(0, 0, 0, 0) < today.setHours(0, 0, 0, 0))) )) {
+            weeklyOverDue = weeklyOverDue + 1;
           }
-          else if (deadline.setHours(0, 0, 0, 0) < today.setHours(0, 0, 0, 0))  {
-            bookkeepingOverDue = bookkeepingOverDue + 1;
-          }
-          else if(((yearEnd.setHours(0, 0, 0, 0) <= today.setHours(0, 0, 0, 0)) && !(deadline.setHours(0, 0, 0, 0) <= today.setHours(0, 0, 0, 0))))
-          {
-            bookkeepingDue = bookkeepingDue + 1;
-          }
-          else if(( (deadline.setHours(0, 0, 0, 0) === today.setHours(0, 0, 0, 0))))
-          {
-            bookkeepingDue = bookkeepingDue + 1;
+        else if ( (deadline.setHours(0, 0, 0, 0) === today.setHours(0, 0, 0, 0)) || ( (yearEnd.setHours(0, 0, 0, 0) <= today.setHours(0, 0, 0, 0)) && !(deadline.setHours(0, 0, 0, 0) <= today.setHours(0, 0, 0, 0)) ) ) {
+            weeklyOverDue = weeklyOverDue + 1;
           }
       }
-      else if(arr.job_name === "Payroll")
+      else if(arr.subscription === "Monthly")
       {        
-        if ((deadline.setHours(0, 0, 0, 0) < today.setHours(0, 0, 0, 0) && (yearEnd.setHours(0, 0, 0, 0) < today.setHours(0, 0, 0, 0)))) {
-          PayrollOverDue = PayrollOverDue + 1;
+        if ((deadline.setHours(0, 0, 0, 0) < today.setHours(0, 0, 0, 0) || (deadline.setHours(0, 0, 0, 0) < today.setHours(0, 0, 0, 0) && (yearEnd.setHours(0, 0, 0, 0) < today.setHours(0, 0, 0, 0))) )) {
+          monthlyOverDue = monthlyOverDue + 1;
         }
-        else if (deadline.setHours(0, 0, 0, 0) < today.setHours(0, 0, 0, 0))  {
-          PayrollOverDue = PayrollOverDue + 1;
-        }
-        else if(((yearEnd.setHours(0, 0, 0, 0) <= today.setHours(0, 0, 0, 0)) && !(deadline.setHours(0, 0, 0, 0) <= today.setHours(0, 0, 0, 0))))
+        else if ( (deadline.setHours(0, 0, 0, 0) === today.setHours(0, 0, 0, 0)) || ( (yearEnd.setHours(0, 0, 0, 0) <= today.setHours(0, 0, 0, 0)) && !(deadline.setHours(0, 0, 0, 0) <= today.setHours(0, 0, 0, 0)) ) )
         {
-          PayrollDue = PayrollDue + 1;
-        }
-        else if(( (deadline.setHours(0, 0, 0, 0) === today.setHours(0, 0, 0, 0))))
-        {
-          PayrollDue = PayrollDue + 1;
+          monthlyDue = monthlyDue + 1;
         }
       }
-      else if(arr.job_name === "Vat Return")
+      else if(arr.subscription === "Quarterly")
       {        
-        if ((deadline.setHours(0, 0, 0, 0) < today.setHours(0, 0, 0, 0) && (yearEnd.setHours(0, 0, 0, 0) < today.setHours(0, 0, 0, 0)))) {
-          vatreturnOverDue = vatreturnOverDue + 1;
+        if ((deadline.setHours(0, 0, 0, 0) < today.setHours(0, 0, 0, 0) || (deadline.setHours(0, 0, 0, 0) < today.setHours(0, 0, 0, 0) && (yearEnd.setHours(0, 0, 0, 0) < today.setHours(0, 0, 0, 0))) )) {
+          quarterlyOverDue = quarterlyOverDue + 1;
         }
-        else if (deadline.setHours(0, 0, 0, 0) < today.setHours(0, 0, 0, 0))  {
-          vatreturnOverDue = vatreturnOverDue + 1;
-        }
-        else if(((yearEnd.setHours(0, 0, 0, 0) <= today.setHours(0, 0, 0, 0)) && !(deadline.setHours(0, 0, 0, 0) <= today.setHours(0, 0, 0, 0))))
+        else if ( (deadline.setHours(0, 0, 0, 0) === today.setHours(0, 0, 0, 0)) || ( (yearEnd.setHours(0, 0, 0, 0) <= today.setHours(0, 0, 0, 0)) && !(deadline.setHours(0, 0, 0, 0) <= today.setHours(0, 0, 0, 0)) ) )
         {
-          vatreturnDue = vatreturnDue + 1;
-        }
-        else if(( (deadline.setHours(0, 0, 0, 0) === today.setHours(0, 0, 0, 0))))
-        {
-          vatreturnDue = vatreturnDue + 1;
+          quarterlyDue = quarterlyDue + 1;
         }
       }
-      else if(arr.job_name === "Accounts")
+      else if(arr.subscription === "Yearly")
       {        
-        if ((deadline.setHours(0, 0, 0, 0) < today.setHours(0, 0, 0, 0) && (yearEnd.setHours(0, 0, 0, 0) < today.setHours(0, 0, 0, 0)))) {
-          accountsOverDue = accountsOverDue + 1;
+        if ((deadline.setHours(0, 0, 0, 0) < today.setHours(0, 0, 0, 0) || (deadline.setHours(0, 0, 0, 0) < today.setHours(0, 0, 0, 0) && (yearEnd.setHours(0, 0, 0, 0) < today.setHours(0, 0, 0, 0))) )) {
+          yearlyOverDue = yearlyOverDue + 1;
         }
-        else if (deadline.setHours(0, 0, 0, 0) < today.setHours(0, 0, 0, 0))  {
-          accountsOverDue = accountsOverDue + 1;
-        }
-        else if(((yearEnd.setHours(0, 0, 0, 0) <= today.setHours(0, 0, 0, 0)) && !(deadline.setHours(0, 0, 0, 0) <= today.setHours(0, 0, 0, 0))))
+       else if ( (deadline.setHours(0, 0, 0, 0) === today.setHours(0, 0, 0, 0)) || ( (yearEnd.setHours(0, 0, 0, 0) <= today.setHours(0, 0, 0, 0)) && !(deadline.setHours(0, 0, 0, 0) <= today.setHours(0, 0, 0, 0)) ) )
         {
-          accountsDue = accountsDue + 1;
-        }
-        else if(( (deadline.setHours(0, 0, 0, 0) === today.setHours(0, 0, 0, 0))))
-        {
-          accountsDue = accountsDue + 1;
+          yearlyDue = yearlyDue + 1;
         }
       }
-      else if(arr.job_name === "Personal Tax")
-      {        
-        if ((deadline.setHours(0, 0, 0, 0) < today.setHours(0, 0, 0, 0) && (yearEnd.setHours(0, 0, 0, 0) < today.setHours(0, 0, 0, 0)))) {
-          personaltaxOverDue = personaltaxOverDue + 1;
-        }
-        else if (deadline.setHours(0, 0, 0, 0) < today.setHours(0, 0, 0, 0))  {
-          personaltaxOverDue = personaltaxOverDue + 1;
-        }
-        else if(((yearEnd.setHours(0, 0, 0, 0) <= today.setHours(0, 0, 0, 0)) && !(deadline.setHours(0, 0, 0, 0) <= today.setHours(0, 0, 0, 0))))
-        {
-          personaltaxDue = personaltaxDue + 1;
-        }
-        else if(( (deadline.setHours(0, 0, 0, 0) === today.setHours(0, 0, 0, 0))))
-        {
-          personaltaxDue = personaltaxDue + 1;
-        }
-      }
-      else if(arr.job_name === "Company Sec")
-      {        
-        if ((deadline.setHours(0, 0, 0, 0) < today.setHours(0, 0, 0, 0) && (yearEnd.setHours(0, 0, 0, 0) < today.setHours(0, 0, 0, 0)))) {
-          companysecOverDue = companysecOverDue + 1;
-        }
-        else if (deadline.setHours(0, 0, 0, 0) < today.setHours(0, 0, 0, 0))  {
-          companysecOverDue = companysecOverDue + 1;
-        }
-        else if(((yearEnd.setHours(0, 0, 0, 0) <= today.setHours(0, 0, 0, 0)) && !(deadline.setHours(0, 0, 0, 0) <= today.setHours(0, 0, 0, 0))))
-        {
-          companysecDue = companysecDue + 1;
-        }
-        else if(( (deadline.setHours(0, 0, 0, 0) === today.setHours(0, 0, 0, 0))))
-        {
-          companysecDue = companysecDue + 1;
-        }
-      }
-      else if(arr.job_name === "Address")
-      {        
-        if ((deadline.setHours(0, 0, 0, 0) < today.setHours(0, 0, 0, 0) && (yearEnd.setHours(0, 0, 0, 0) < today.setHours(0, 0, 0, 0)))) {
-          addressOverDue = addressOverDue + 1;
-        }
-        else if (deadline.setHours(0, 0, 0, 0) < today.setHours(0, 0, 0, 0))  {
-          addressOverDue = addressOverDue + 1;
-        }
-        else if(((yearEnd.setHours(0, 0, 0, 0) <= today.setHours(0, 0, 0, 0)) && !(deadline.setHours(0, 0, 0, 0) <= today.setHours(0, 0, 0, 0))))
-        {
-          addressDue = addressDue + 1;
-        }
-        else if(( (deadline.setHours(0, 0, 0, 0) === today.setHours(0, 0, 0, 0))))
-        {
-          addressDue = addressDue + 1;
-        }
-      }
-      else if(arr.job_name === "Billing")
-      {        
-        if ((deadline.setHours(0, 0, 0, 0) < today.setHours(0, 0, 0, 0) && (yearEnd.setHours(0, 0, 0, 0) < today.setHours(0, 0, 0, 0)))) {
-          billingOverDue = billingOverDue + 1;
-        }
-        else if (deadline.setHours(0, 0, 0, 0) < today.setHours(0, 0, 0, 0))  {
-          billingOverDue = billingOverDue + 1;
-        }
-        else if(((yearEnd.setHours(0, 0, 0, 0) <= today.setHours(0, 0, 0, 0)) && !(deadline.setHours(0, 0, 0, 0) <= today.setHours(0, 0, 0, 0))))
-        {
-          billingDue = billingDue + 1;
-        }
-        else if(( (deadline.setHours(0, 0, 0, 0) === today.setHours(0, 0, 0, 0))))
-        {
-          billingDue = billingDue + 1;
-        }
-      }
-  
   
     }
   }
@@ -376,28 +267,15 @@ const filter = async ()=>{
 
   setDepartmentSummaryValue(prevState => ({
     ...prevState,
-    bookkeepingDue,
-    bookkeepingOverDue,
-    PayrollDue,
-    PayrollOverDue,
-    vatreturnDue,
-    vatreturnOverDue,
-    accountsDue,
-    accountsOverDue,
-    personaltaxDue,
-    personaltaxOverDue,
-    companysecDue,
-    companysecOverDue,
-    addressDue,
-    addressOverDue,
-    billingDue,
-    billingOverDue
+    weeklyDue,
+    weeklyOverDue,
+    monthlyDue,
+    monthlyOverDue,
+    quarterlyDue,
+    quarterlyOverDue,
+    yearlyDue,
+    yearlyOverDue
 }));
-
-
-  if(filteredArray != undefined){
-    filteredArray = await filteredArray.filter(obj => obj.client_id && obj.client_id.isActive === true);
-  }
 
   // JobStatus Filter
   if(filteredArray != undefined && jStatusFvalue != null && jStatusFvalue !== ""){
@@ -420,12 +298,11 @@ const filter = async ()=>{
         var today = new Date();
 
 
-        if(((yearEnd.setHours(0, 0, 0, 0) < today.setHours(0, 0, 0, 0)) && (deadline.setHours(0, 0, 0, 0) < today.setHours(0, 0, 0, 0))))
-          {
+        if ((deadline.setHours(0, 0, 0, 0) < today.setHours(0, 0, 0, 0) || (deadline.setHours(0, 0, 0, 0) < today.setHours(0, 0, 0, 0) && (yearEnd.setHours(0, 0, 0, 0) < today.setHours(0, 0, 0, 0))) )) {
             if(statusFvalue === "Overdue")
             return obj;
           }
-          else if (!(yearEnd.setHours(0, 0, 0, 0) > today.setHours(0, 0, 0, 0) && (deadline.setHours(0, 0, 0, 0) > today.setHours(0, 0, 0, 0)))) {
+          else if ( (deadline.setHours(0, 0, 0, 0) === today.setHours(0, 0, 0, 0)) || ( (yearEnd.setHours(0, 0, 0, 0) <= today.setHours(0, 0, 0, 0)) && !(deadline.setHours(0, 0, 0, 0) <= today.setHours(0, 0, 0, 0)) ) ) {
             if(statusFvalue === "Due")
             return obj;
           }
@@ -896,7 +773,7 @@ const handleDepartmentFilterSet = (department, status)=>{
     setJobDateFvalueDate(null)
     // gridApi.api.setFilterModel({});
     // gridApi.api.refreshHeader();
-    setDepartmentFvalue(department)
+    setSubscriptionFvalue(department)
     setStatusFvalue(status)
   }
 }
@@ -1130,14 +1007,11 @@ useEffect(()=>{
           return " "
         }
         else{
-          if(((yearEnd.setHours(0, 0, 0, 0) < today.setHours(0, 0, 0, 0)) && (deadline.setHours(0, 0, 0, 0) < today.setHours(0, 0, 0, 0))))
-          {
+          if ((deadline.setHours(0, 0, 0, 0) < today.setHours(0, 0, 0, 0) || (deadline.setHours(0, 0, 0, 0) < today.setHours(0, 0, 0, 0) && (yearEnd.setHours(0, 0, 0, 0) < today.setHours(0, 0, 0, 0))) )) {
             return "Overdue"
           }
-          else if (!(yearEnd.setHours(0, 0, 0, 0) > today.setHours(0, 0, 0, 0) && (deadline.setHours(0, 0, 0, 0) > today.setHours(0, 0, 0, 0)))) {
+          else if ( (deadline.setHours(0, 0, 0, 0) === today.setHours(0, 0, 0, 0)) || ( (yearEnd.setHours(0, 0, 0, 0) <= today.setHours(0, 0, 0, 0)) && !(deadline.setHours(0, 0, 0, 0) <= today.setHours(0, 0, 0, 0)) ) ) {
             return "Due";
-          } else {
-            return "";
           }
 
         }
@@ -1599,7 +1473,7 @@ else{
               </button>
             </div> */}
 
-            {/* <div  className='table-col-numbers mx-2'>
+            <div  className='table-col-numbers mx-2'>
               <button 
               onClick={(e)=>{e.preventDefault(); setDepartmentSummaryToggle(!departmentSummaryToggle)}} 
               className='form-control'>
@@ -1607,7 +1481,7 @@ else{
                   <path d="M21 21H6.2C5.07989 21 4.51984 21 4.09202 20.782C3.71569 20.5903 3.40973 20.2843 3.21799 19.908C3 19.4802 3 18.9201 3 17.8V3M7 10.5V17.5M11.5 5.5V17.5M16 10.5V17.5M20.5 5.5V17.5" stroke="#000000" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
                 </svg>
               </button>
-            </div> */}
+            </div>
             
             
             {/* <div  className='table-col-numbers mx-2'>
@@ -1825,42 +1699,23 @@ else{
               <p style={{fontWeight: '500',}} className='mb-3'>
                 Department Summary
               </p>
-              <div className='row'>
-
-                <div className = 'col-6'>
-                  <div className='row'>
+              <div className='row' style={{textAlign: 'center',}}>
                     
                     <div className='col-3'>
-                    <p className='mb-1'>
-                        Bookkeeping
+                      <p className='mb-1'>
+                        Weekly
                       </p>
-                      <Link style={{textDecoration: 'none'}} onClick={()=>{handleDepartmentFilterSet('Bookkeeping', 'Overdue')}}>
-                        <p>
-                          <span style={{fontWeight: "700"}}>{departmentSummaryValue.bookkeepingOverDue}</span> Overdue
-                        </p>
-                      </Link>
-                      
-                      <Link style={{textDecoration: 'none'}} onClick={()=>{handleDepartmentFilterSet('Bookkeeping', 'Due')}}>
-                        <p>
-                          <span style={{fontWeight: "700"}}>{departmentSummaryValue.bookkeepingDue}</span> Due
-                        </p>
-                      </Link>
-                    </div>
-                    
-                    <div className='col-3'>
-                        <p className='mb-1'>
-                          Payroll
-                        </p>
 
-                      <Link style={{textDecoration: 'none'}} onClick={()=>{handleDepartmentFilterSet('Payroll', 'Overdue')}}>
+                      <Link style={{textDecoration: 'none'}} onClick={()=>{handleDepartmentFilterSet('Weekly', 'Overdue')}}>
                         <p>
-                          <span style={{fontWeight: "700"}}>{departmentSummaryValue.PayrollOverDue}</span> Overdue
+                          <span style={{fontWeight: "700"}}>{departmentSummaryValue.weeklyOverDue}</span> Overdue
                         </p>
                       </Link>
 
-                      <Link style={{textDecoration: 'none'}} onClick={()=>{handleDepartmentFilterSet('Payroll', 'Due')}}>
+
+                      <Link style={{textDecoration: 'none'}} onClick={()=>{handleDepartmentFilterSet('Weekly', 'Due')}}>
                         <p>
-                          <span style={{fontWeight: "700"}}>{departmentSummaryValue.PayrollDue}</span> Due
+                          <span style={{fontWeight: "700"}}>{departmentSummaryValue.weeklyDue}</span> Due
                         </p>
                       </Link>
 
@@ -1868,63 +1723,19 @@ else{
                     
                     <div className='col-3'>
                       <p className='mb-1'>
-                        Vat Return
+                        Monthly
                       </p>
 
-                      <Link style={{textDecoration: 'none'}} onClick={()=>{handleDepartmentFilterSet('Vat Return', 'Overdue')}}>
+                      <Link style={{textDecoration: 'none'}} onClick={()=>{handleDepartmentFilterSet('Monthly', 'Overdue')}}>
                         <p>
-                          <span style={{fontWeight: "700"}}>{departmentSummaryValue.vatreturnOverDue}</span> Overdue
-                        </p>
-                      </Link>
-
-                      <Link style={{textDecoration: 'none'}} onClick={()=>{handleDepartmentFilterSet('Vat Return', 'Due')}}>
-                        <p>
-                          <span style={{fontWeight: "700"}}>{departmentSummaryValue.vatreturnDue}</span> Due
-                        </p>
-                      </Link>
-                    </div>
-                    
-                    <div className='col-3'>
-                      <p className='mb-1'>
-                        Accounts
-                      </p>
-
-                      <Link style={{textDecoration: 'none'}} onClick={()=>{handleDepartmentFilterSet('Accounts', 'Overdue')}}>
-                        <p>
-                          <span style={{fontWeight: "700"}}>{departmentSummaryValue.accountsOverDue}</span> Overdue
+                          <span style={{fontWeight: "700"}}>{departmentSummaryValue.monthlyOverDue}</span> Overdue
                         </p>
                       </Link>
 
 
-                      <Link style={{textDecoration: 'none'}} onClick={()=>{handleDepartmentFilterSet('Accounts', 'Due')}}>
+                      <Link style={{textDecoration: 'none'}} onClick={()=>{handleDepartmentFilterSet('Monthly', 'Due')}}>
                         <p>
-                          <span style={{fontWeight: "700"}}>{departmentSummaryValue.accountsDue}</span> Due
-                        </p>
-                      </Link>
-
-                    </div>
-
-                  </div>
-                </div>
-
-                <div className = 'col-6'>
-                  <div className='row'>
-                    
-                    <div className='col-3'>
-                      <p className='mb-1'>
-                        Personal Tax
-                      </p>
-
-                      <Link style={{textDecoration: 'none'}} onClick={()=>{handleDepartmentFilterSet('Personal Tax', 'Overdue')}}>
-                        <p>
-                          <span style={{fontWeight: "700"}}>{departmentSummaryValue.personaltaxOverDue}</span> Overdue
-                        </p>
-                      </Link>
-
-
-                      <Link style={{textDecoration: 'none'}} onClick={()=>{handleDepartmentFilterSet('Personal Tax', 'Due')}}>
-                        <p>
-                          <span style={{fontWeight: "700"}}>{departmentSummaryValue.personaltaxDue}</span> Due
+                          <span style={{fontWeight: "700"}}>{departmentSummaryValue.monthlyDue}</span> Due
                         </p>
                       </Link>
 
@@ -1932,19 +1743,19 @@ else{
                     
                     <div className='col-3'>
                       <p className='mb-1'>
-                        Company Sec
+                        Quartelry
                       </p>
 
-                      <Link style={{textDecoration: 'none'}} onClick={()=>{handleDepartmentFilterSet('Company Sec', 'Overdue')}}>
+                      <Link style={{textDecoration: 'none'}} onClick={()=>{handleDepartmentFilterSet('Quartelry', 'Overdue')}}>
                         <p>
-                          <span style={{fontWeight: "700"}}>{departmentSummaryValue.companysecOverDue}</span> Overdue
+                          <span style={{fontWeight: "700"}}>{departmentSummaryValue.quarterlyOverDue}</span> Overdue
                         </p>
                       </Link>
 
 
-                      <Link style={{textDecoration: 'none'}} onClick={()=>{handleDepartmentFilterSet('Company Sec', 'Due')}}>
+                      <Link style={{textDecoration: 'none'}} onClick={()=>{handleDepartmentFilterSet('Quartelry', 'Due')}}>
                         <p>
-                          <span style={{fontWeight: "700"}}>{departmentSummaryValue.companysecDue}</span> Due
+                          <span style={{fontWeight: "700"}}>{departmentSummaryValue.quarterlyDue}</span> Due
                         </p>
                       </Link>
 
@@ -1952,46 +1763,24 @@ else{
                     
                     <div className='col-3'>
                       <p className='mb-1'>
-                        Address
+                        Yearly
                       </p>
 
-                      <Link style={{textDecoration: 'none'}} onClick={()=>{handleDepartmentFilterSet('Address', 'Overdue')}}>
+                      <Link style={{textDecoration: 'none'}} onClick={()=>{handleDepartmentFilterSet('Yearly', 'Overdue')}}>
                         <p>
-                          <span style={{fontWeight: "700"}}>{departmentSummaryValue.addressOverDue}</span> Overdue
+                          <span style={{fontWeight: "700"}}>{departmentSummaryValue.yearlyOverDue}</span> Overdue
                         </p>
                       </Link>
 
 
-                      <Link style={{textDecoration: 'none'}} onClick={()=>{handleDepartmentFilterSet('Address', 'Due')}}>
+                      <Link style={{textDecoration: 'none'}} onClick={()=>{handleDepartmentFilterSet('Yearly', 'Due')}}>
                         <p>
-                          <span style={{fontWeight: "700"}}>{departmentSummaryValue.addressDue}</span> Due
-                        </p>
-                      </Link>
-
-                    </div>
-                    
-                    <div className='col-3'>
-                      <p className='mb-1'>
-                        Billing
-                      </p>
-
-                      <Link style={{textDecoration: 'none'}} onClick={()=>{handleDepartmentFilterSet('Billing', 'Overdue')}}>
-                        <p>
-                          <span style={{fontWeight: "700"}}>{departmentSummaryValue.billingOverDue}</span> Overdue
-                        </p>
-                      </Link>
-
-
-                      <Link style={{textDecoration: 'none'}} onClick={()=>{handleDepartmentFilterSet('Billing', 'Due')}}>
-                        <p>
-                          <span style={{fontWeight: "700"}}>{departmentSummaryValue.billingDue}</span> Due
+                          <span style={{fontWeight: "700"}}>{departmentSummaryValue.yearlyDue}</span> Due
                         </p>
                       </Link>
 
                     </div>
 
-                  </div>
-                </div>
                 
               </div>
 
