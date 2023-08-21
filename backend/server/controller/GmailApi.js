@@ -320,7 +320,7 @@ class GmailApi {
                 unreadCount: unreadCount
               };
         } catch (error) {
-            throw new Error(error.message);
+            throw new Error(error.stack);
         }
     }
 
