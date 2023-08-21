@@ -147,7 +147,9 @@ class GmailApi {
 
                 if (message.payload.body && message.payload.body.data) {
                     encodedText = message.payload.body.data;
-                    decodedMessage = Buffer.from(encodedText, "base64").toString('utf-8');
+                    if(encodedText){
+                        decodedMessage = Buffer.from(encodedText, "base64").toString('utf-8');
+                    }
 
                     const onIndex = decodedMessage.indexOf('On ');
                     if (onIndex !== -1) {
@@ -225,7 +227,7 @@ class GmailApi {
         } catch (error) {
             if (error.response && error.response.status === 404) {
                 // Mail not found, skip this thread ID
-                return null;
+                return [];
             } else {
                 throw new Error(error.message);
             }
@@ -318,7 +320,7 @@ class GmailApi {
                 unreadCount: unreadCount
               };
         } catch (error) {
-            throw new Error(error.stack);
+            throw new Error(error.message);
         }
     }
 
@@ -625,10 +627,3 @@ class GmailApi {
 }
 
 module.exports = new GmailApi();
-
-
-
-
-// <p class=MsoNormal><o:p>&nbsp;</o:p></p><div style='border:none;border-top:solid #E1E1E1 1.0pt;padding:3.0pt 0cm 0cm 0cm'><p class=MsoNormal><b>From:</b> Affotax &lt;info@affotax.com&gt; <br><b>Sent:</b> Friday, July 7, 2023 8:04 PM<br><b>To:</b> rashid@affotax.com<br><b>Subject:</b> Bank Statements Request<o:p></o:p></p></div><p class=MsoNormal><o:p>&nbsp;</o:p></p><p>Hi Jon<o:p></o:p></p><p>please can you send us your bank statemnets?<o:p></o:p></p><p>do you have invoices as well?<o:p></o:p></p><p>Thanks<o:p></o:p></p></div></body></html>
-
-// (/<p class=MsoNormal><o:p>&nbsp;<\/o:p><\/p><div style='border:none;border-top:solid #E1E1E1 1.0pt;padding:3.0pt 0cm 0cm 0cm'>[\s\S]*?<\/div><p class=MsoNormal>[\s\S]*?<o:p><\/o:p><\/p><\/div>/gs, '');
