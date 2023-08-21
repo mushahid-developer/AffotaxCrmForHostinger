@@ -34,22 +34,20 @@ exports.getEmails = async (req, res) => {
         var templatesList = [];
 
         if( User.role_id.name === 'Admin'){
-            try {
+            try{
                 Tickets = await Ticketsdb.find().populate('client_id').populate("user_id");
-            } catch (error) {
-                console.error("Error fetching tickets:", error);
-            }
-            
-            try {
                 const User_all = await Userdb.find().populate('role_id');
-            } catch (error) {
-                console.error("Error fetching users:", error);
-            }
-            
-            try {
                 templatesList = await Templatesdb.find();
-            } catch (error) {
-                console.error("Error fetching templates:", error);
+                UsersList = User_all.filter((user) => {
+                    return user.role_id && user.role_id.pages.some((page) => {
+                      return page.name === 'Tickets Page' && page.isChecked;
+                    });
+                  });
+            } catch(err){
+                res.status(500).json({
+                    message: "Fail 2",
+                    data: err
+                })
             }
         }
         else{
