@@ -229,7 +229,7 @@ class GmailApi {
                 // Mail not found, skip this thread ID
                 return [];
             } else {
-                throw new Error(error.message);
+                throw new Error(error.stack);
             }
         }
     }
