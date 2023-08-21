@@ -159,8 +159,10 @@ class GmailApi {
 
                 } else if (message.payload.parts && message.payload.parts.length > 0) {
                     await processParts(message.payload.parts);
-                    decodedMessage = Buffer.from(encodedHtml, "base64").toString('utf-8');
-                    decodedMessage = decodedMessage.replace(/<p class=MsoNormal><o:p>&nbsp;<\/o:p><\/p><div style='border:none;border-top:solid #E1E1E1 1.0pt;padding:3.0pt 0cm 0cm 0cm'>[\s\S]*?<\/div><p class=MsoNormal>[\s\S]*?<o:p><\/o:p><\/p><\/div>/gs, '');
+                    if(encodedHtml){
+                        decodedMessage = Buffer.from(encodedHtml, "base64").toString('utf-8');
+                        decodedMessage = decodedMessage.replace(/<p class=MsoNormal><o:p>&nbsp;<\/o:p><\/p><div style='border:none;border-top:solid #E1E1E1 1.0pt;padding:3.0pt 0cm 0cm 0cm'>[\s\S]*?<\/div><p class=MsoNormal>[\s\S]*?<o:p><\/o:p><\/p><\/div>/gs, '');
+                    }
                     
                 }
                 
