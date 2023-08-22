@@ -82,6 +82,9 @@ export default function Tickets(props) {
     // const roo = mainrowData; 
     var filteredArray = mainRowData
 
+    filteredArray = filteredArray.filter(obj => obj._id);
+
+
 
     if (filteredArray !== undefined && activeFilter !== null && activeFilter !== "") {
       if (activeFilter === 'Active') {
