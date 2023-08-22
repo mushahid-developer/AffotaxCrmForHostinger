@@ -319,15 +319,38 @@ export default function Templates() {
       
   }, [reRender]);
 
-  const handleCopyClick = (data) => {
-    // Create a temporary DOM element (a div element).
-    const tempElement = document.createElement('div');
-    
-    // Set the innerHTML of the temporary element to your HTML content.
-    tempElement.innerHTML = data;
 
-    // Extract the plain text content from the temporary element.
-    const plainText = tempElement.textContent || tempElement.innerText;
+
+
+  function convertQuillHtmlToPlainText(html) {
+    // Replace <strong> and <b> tags with asterisks for bold.
+    html = html.replace(/<strong>|<b>/g, '**');
+    html = html.replace(/<\/strong>|<\/b>/g, '**');
+  
+    // Replace <em> and <i> tags with underscores for italics.
+    html = html.replace(/<em>|<i>/g, '_');
+    html = html.replace(/<\/em>|<\/i>/g, '_');
+  
+    // Replace <u> tags with underscores for underlined text.
+    html = html.replace(/<u>/g, '__');
+    html = html.replace(/<\/u>/g, '__');
+  
+    // Replace <a> tags with the link text in parentheses.
+    html = html.replace(/<a.*?href="(.*?)".*?>(.*?)<\/a>/g, '[$2]($1)');
+  
+    // Replace <br> tags with newlines.
+    html = html.replace(/<br\s*\/?>/g, '\n');
+  
+    // Remove other HTML tags.
+    html = html.replace(/<[^>]*>/g, '');
+  
+    return html;
+  }
+
+
+  const handleCopyClick = (data) => {
+    
+    const plainText = convertQuillHtmlToPlainText(data);
 
     // Use the Clipboard API to copy the plainText to the clipboard.
     navigator.clipboard.writeText(plainText).then(function() {
