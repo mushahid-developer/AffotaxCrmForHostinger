@@ -88,10 +88,10 @@ export default function Tickets(props) {
 
     if (filteredArray !== undefined && activeFilter !== null && activeFilter !== "") {
       if (activeFilter === 'Active') {
-        filteredArray = filteredArray.filter(obj => obj.ticketInfo && obj.ticketInfo.isOpen);
+        filteredArray = filteredArray.filter(obj =>  obj.ticketInfo.isOpen);
       }
       else if (activeFilter === 'Inactive') {
-        filteredArray = filteredArray.filter(obj => !(obj.ticketInfo && obj.ticketInfo.isOpen));
+        filteredArray = filteredArray.filter(obj => !(obj.ticketInfo.isOpen));
       }
     }
 
