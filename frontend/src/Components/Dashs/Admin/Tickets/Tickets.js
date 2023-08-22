@@ -82,7 +82,7 @@ export default function Tickets(props) {
     // const roo = mainrowData; 
     var filteredArray = mainRowData
 
-    filteredArray = filteredArray.filter(obj => obj._id);
+    filteredArray = filteredArray.filter(obj => obj.ticketInfo._id);
 
 
 
