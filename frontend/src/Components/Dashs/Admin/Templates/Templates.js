@@ -318,6 +318,23 @@ export default function Templates() {
       getData();
       
   }, [reRender]);
+
+  const handleCopyClick = (data) => {
+    // Create a temporary DOM element (a div element).
+    const tempElement = document.createElement('div');
+    
+    // Set the innerHTML of the temporary element to your HTML content.
+    tempElement.innerHTML = data;
+
+    // Extract the plain text content from the temporary element.
+    const plainText = tempElement.textContent || tempElement.innerText;
+
+    // Use the Clipboard API to copy the plainText to the clipboard.
+    navigator.clipboard.writeText(plainText).then(function() {
+    }).catch(function(err) {
+      console.error('Unable to copy text: ', err);
+    });
+  };
   
   
   
@@ -370,7 +387,7 @@ export default function Templates() {
             </svg>
           </Link>
 
-          <Link onClick={()=>{navigator.clipboard.writeText(params.data.template);}} style={{all: 'unset', cursor: 'pointer', textAlign: 'center !important'}}>
+          <Link onClick={()=>{handleCopyClick(params.data.template);}} style={{all: 'unset', cursor: 'pointer', textAlign: 'center !important'}}>
             <svg className='mx-1' xmlns="http://www.w3.org/2000/svg" fill="#000000" width="16px" height="16px" viewBox="0 0 32 32" version="1.1">
               <title>Copy Template</title>
               <path d="M0 30.016h20v-4h-20v4zM0 22.016h28v-4h-28v4zM0 14.016h24v-4h-24v4zM0 6.016h32v-4h-32v4z"/>
@@ -421,7 +438,7 @@ export default function Templates() {
         ['bold', 'italic', 'underline', 'strike', 'blockquote'],
         [{ 'list': 'ordered' }, { 'list': 'bullet' }, { 'indent': '-1' }, { 'indent': '+1' }],
         ['link', 'image'],
-        ['clean']
+        ['clean'],
       ],
   
     };

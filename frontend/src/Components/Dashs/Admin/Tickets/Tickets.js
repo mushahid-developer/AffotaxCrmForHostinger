@@ -82,8 +82,6 @@ export default function Tickets(props) {
     // const roo = mainrowData; 
     var filteredArray = mainRowData
 
-    console.log(filteredArray)
-    console.log(filteredArray[0])
 
     filteredArray = filteredArray.filter(obj => obj != [] && obj.ticketInfo);
 
