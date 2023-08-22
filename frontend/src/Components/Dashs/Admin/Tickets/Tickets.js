@@ -348,21 +348,21 @@ export default function Tickets(props) {
       field: "a",
       flex: 1.5,
       editable: false,
-      valueGetter: (params) => params.data.ticketInfo.client_id && params.data.ticketInfo.client_id.company_name,
+      valueGetter: (params) => params.data.ticketInfo && params.data.ticketInfo.client_id && params.data.ticketInfo.client_id.company_name,
     },
     {
       headerName: "Client Name",
       field: "b",
       flex: 1,
       editable: false,
-      valueGetter: (params) => params.data.ticketInfo.client_id && params.data.ticketInfo.client_id.client_name,
+      valueGetter: (params) => params.data.ticketInfo && params.data.ticketInfo.client_id && params.data.ticketInfo.client_id.client_name,
     },
     {
       headerName: "Company",
       field: "c",
       flex: 1,
       editable: false,
-      valueGetter: (params) => params.data.ticketInfo.company_name,
+      valueGetter: (params) => params.data.ticketInfo && params.data.ticketInfo.company_name,
       floatingFilterComponent: 'selectFloatingFilter',
       floatingFilterComponentParams: {
         options: ["Affotax", "Outsource", 'Online Taxation'],
@@ -376,7 +376,7 @@ export default function Tickets(props) {
       headerName: "Job Holder",
       field: "user_id",
       flex: 1,
-      valueGetter: (params) => params.data.ticketInfo.user_id.name,
+      valueGetter: (params) => params.data.ticketInfo && params.data.ticketInfo.user_id.name,
       // valueGetter: (params) => params.data.ticketInfo.user_id ? params.data.ticketInfo.user_id.name ? params.data.ticketInfo.user_id.name : params.data.Jobholder_id_name :params.data.Jobholder_id_name,
       cellEditor: 'agSelectCellEditor',
       cellEditorParams: {
@@ -402,7 +402,7 @@ export default function Tickets(props) {
           color: 'blue',
           cursor: 'pointer',
         }}
-          onClick={() => { toDetailedMail(params.data, params.data.threadData.messages[params.data.threadData.messages.length - 1].id, params.data.ticketInfo.company_name) }}
+          onClick={() => { toDetailedMail(params.data, params.data.threadData.messages[params.data.threadData.messages.length - 1].id, params.data.ticketInfo && params.data.ticketInfo.company_name) }}
         // to={{pathname: '/tickets/mail',  state: {data: params.data.threadData} }} 
         >
           {params.data.subject}
@@ -458,8 +458,8 @@ export default function Tickets(props) {
       flex: 1,
       editable: true,
       valueGetter: (params) => {
-        if (params.data.ticketInfo.job_date && params.data.ticketInfo.job_date !== "Invalid Date") {
-          const deadline = new Date(params.data.ticketInfo.job_date)
+        if (params.data.ticketInfo && params.data.ticketInfo.job_date && params.data.ticketInfo.job_date !== "Invalid Date") {
+          const deadline = new Date(params.data.ticketInfo && params.data.ticketInfo.job_date)
           let ye = new Intl.DateTimeFormat('en', { year: 'numeric' }).format(deadline);
           let mo = new Intl.DateTimeFormat('en', { month: 'short' }).format(deadline);
           let da = new Intl.DateTimeFormat('en', { day: '2-digit' }).format(deadline);
@@ -486,7 +486,7 @@ export default function Tickets(props) {
       flex: 3,
       editable: true,
       valueGetter: (params) => {
-        return params.data.ticketInfo.note
+        return params.data.ticketInfo && params.data.ticketInfo.note
       }
     },
     {
@@ -498,16 +498,16 @@ export default function Tickets(props) {
       cellRendererFramework: (params) =>
         <>
           <div>
-            {params.data.ticketInfo.isOpen &&
+            {params.data.ticketInfo && params.data.ticketInfo.isOpen &&
               <Link
-                onClick={(e) => { handleActionButtons(e, 'Complete', params.data.ticketInfo._id) }}
+                onClick={(e) => { handleActionButtons(e, 'Complete', params.data.ticketInfo && params.data.ticketInfo._id) }}
                 className='mx-1' >
                 <svg xmlns="http://www.w3.org/2000/svg" width="20px" height="20px" viewBox="0 0 24 24">
                   <title /><g id="Complete"><g id="tick"><polyline fill="none" points="3.7 14.3 9.6 19 20.3 5" stroke="#000000" stroke-linecap="round" stroke-linejoin="round" stroke-width="2" /></g></g>
                 </svg>
               </Link>
             }
-            <Link onClick={(e) => { handleActionButtons(e, 'Delete', params.data.ticketInfo._id) }} className='mx-1'>
+            <Link onClick={(e) => { handleActionButtons(e, 'Delete', params.data.ticketInfo && params.data.ticketInfo._id) }} className='mx-1'>
               <svg xmlns="http://www.w3.org/2000/svg" width="20px" height="20px" viewBox="0 0 24 24" fill="none">
                 <path d="M19 5L4.99998 19M5.00001 5L19 19" stroke="#000000" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" />
               </svg>
