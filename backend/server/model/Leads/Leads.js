@@ -25,7 +25,7 @@ var LeadSchema = new mongoose.Schema({
     followUpDate: {
         type: String
     },
-    proposalTemplate: {
+    jobDate: {
         type: String
     },
     email: {

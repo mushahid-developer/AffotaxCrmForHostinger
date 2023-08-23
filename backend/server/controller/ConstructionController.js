@@ -165,7 +165,7 @@ exports.CopyOneConstruction = async (req, res) => {
 
     await ConstructionDb.create({
         houseNoList_id: projects.houseNoList_id,
-        Task: projects.Task,
+        Task: "",
         hrs: projects.hrs,
         Jobholder_id: projects.Jobholder_id,
         startDate: projects.startDate,

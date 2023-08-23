@@ -25,6 +25,7 @@ exports.addUpdateLead = async (req, res) => {
 
     const time_now = new Date();
     const followUpDate = req.body.data.followUpDate ? new Date(req.body.data.followUpDate) : null
+    const jobDate = req.body.data.jobDate ? new Date(req.body.data.jobDate) : null
 
     console.log(req.body.data)
 
@@ -41,7 +42,7 @@ exports.addUpdateLead = async (req, res) => {
             followUpDate: followUpDate ? followUpDate != 'Invalid Date' && followUpDate : time_now,
             // manager_id: req.body.data.manager_id && req.body.data.manager_id,
             Jobholder_id: req.body.data.Jobholder_id ? req.body.data.Jobholder_id : null,
-            proposalTemplate: req.body.data.proposalTemplate && req.body.data.proposalTemplate,
+            jobDate: jobDate ? jobDate != 'Invalid Date' && jobDate : time_now,
             email: req.body.data.email && req.body.data.email,
             note: req.body.data.note && req.body.data.note,
             stage: req.body.data.stage && req.body.data.stage,
@@ -63,7 +64,7 @@ exports.addUpdateLead = async (req, res) => {
             followUpDate: followUpDate && followUpDate != 'Invalid Date' && followUpDate,
             // manager_id: req.body.data.manager_id && req.body.data.manager_id,
             Jobholder_id: req.body.data.Jobholder_id ? req.body.data.Jobholder_id : null,
-            proposalTemplate: req.body.data.proposalTemplate && req.body.data.proposalTemplate,
+            jobDate: jobDate ? jobDate != 'Invalid Date' && jobDate : time_now,
             email: req.body.data.email && req.body.data.email,
             note: req.body.data.note && req.body.data.note,
             stage: req.body.data.stage && req.body.data.stage,
@@ -122,8 +123,8 @@ exports.CopyOneLead = async (req, res) => {
     const Lead = await LeadDb.findById( id );
 
     await LeadDb.create({
-        companyName: Lead && Lead.companyName,
-        clientName:  Lead && Lead.clientName,
+        companyName: "",
+        clientName:  "",
         department: Lead && Lead.department,
         source: Lead && Lead.source,
         brand: Lead && Lead.brand,
@@ -131,7 +132,7 @@ exports.CopyOneLead = async (req, res) => {
         createDate: Lead && Lead.createDate,
         followUpDate: Lead && Lead.followUpDate,
         // manager_id: req.body.data.manager_id && req.body.data.manager_id,
-        proposalTemplate: Lead && Lead.proposalTemplate,
+        jobDate: Lead && Lead.jobDate,
         email: Lead && Lead.email,
         note: Lead && Lead.note,
         stage: Lead && Lead.stage,

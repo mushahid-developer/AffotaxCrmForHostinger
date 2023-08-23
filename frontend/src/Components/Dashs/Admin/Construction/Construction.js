@@ -801,7 +801,7 @@ const Construction = (props) => {
 
       const copiedProj = {
         houseNoList_id: projData.houseNoList_id,
-        Task: projData.Task,
+        Task: "",
         hrs: projData.hrs,
         Jobholder_id: projData.Jobholder_id,
         startDate: projData.startDate,
