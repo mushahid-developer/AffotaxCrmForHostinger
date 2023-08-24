@@ -4,8 +4,6 @@ import 'ag-grid-community/styles/ag-grid.css'; // Core grid CSS, always needed
 import 'ag-grid-community/styles/ag-theme-alpine.css'; // Optional theme CSS
 import { Link, useLocation, useNavigate } from 'react-router-dom';
 import Select from 'react-select';
-
-import ReactQuill, { Quill } from 'react-quill';
 import 'react-quill/dist/quill.snow.css';
 
 import axios from '../../../../Api/Axios';
@@ -18,6 +16,7 @@ import secureLocalStorage from 'react-secure-storage';
 import TicketsContext from './TicketsContext';
 import { FileUploader } from 'react-drag-drop-files';
 import Loader from '../../../Common/Loader/Loader';
+import NewReactQuill from './NewReactQuill';
 
 var markMailAsRead = axiosURL.markMailAsRead;
 var createNewTicket = axiosURL.createNewTicket;
@@ -271,6 +270,7 @@ export default function Tickets(props) {
         axios.get(`${markMailAsDeleted}/${Id}`, {
           headers: { 'Content-Type': 'application/json' }
         })
+        console.log(data)
         data = data.filter(obj => obj.ticketInfo._id !== Id);
       }
     }
@@ -611,32 +611,7 @@ export default function Tickets(props) {
 
 
 
-  const modules = {
-
-    toolbar: [
-      [{ 'header': [1, 2, false] }],
-      ['bold', 'italic', 'underline', 'strike', 'blockquote'],
-      [{ 'list': 'ordered' }, { 'list': 'bullet' }, { 'indent': '-1' }, { 'indent': '+1' }],
-      ['link', 'image'],
-      ['clean']
-    ],
-
-  };
-
-  const formats = [
-    'header',
-    'bold', 'italic', 'underline', 'strike', 'blockquote',
-    'list', 'bullet', 'indent',
-    'link', 'image'
-  ];
-
-
-
-
-  const editorStyle = {
-    backgroundColor: 'white',
-    borderRadius: '5px',
-  };
+  
 
   const setSelectedClientFunct = (value) => {
     if (value !== "") {
@@ -1011,7 +986,10 @@ export default function Tickets(props) {
 
                 <div>
                   <Form.Group className=' mt-2'>
-                    <ReactQuill
+
+                    <NewReactQuill quillRef={quillRef} handleNewTicketDataChange={handleNewTicketDataChange} newTicketFormData={newTicketFormData}/>
+
+                    {/* <ReactQuill
                       ref={quillRef}
                       name="message"
                       theme="snow"
@@ -1020,7 +998,7 @@ export default function Tickets(props) {
                       style={editorStyle}
                       onChange={(e) => { handleNewTicketDataChange(e, "~~~~") }}
                       value={newTicketFormData.message}
-                    />
+                    /> */}
                   </Form.Group>
                 </div>
 
