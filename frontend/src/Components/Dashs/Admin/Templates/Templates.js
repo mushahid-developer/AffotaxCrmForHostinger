@@ -339,7 +339,7 @@ export default function Templates() {
     html = html.replace(/<a.*?href="(.*?)".*?>(.*?)<\/a>/g, '[$2]($1)');
   
     // Replace <br> tags with newlines.
-    html = html.replace(/<br\s*\/?>/g, '\n \n');
+    html = html.replace(/<br\s*\/?>/g, '\n');
 
     // Replace <p> tags with newlines.
     html = html.replace(/<\/p>/g, '\n');
