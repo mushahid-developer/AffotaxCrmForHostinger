@@ -339,7 +339,7 @@ export default function Templates() {
     html = html.replace(/<a.*?href="(.*?)".*?>(.*?)<\/a>/g, '[$2]($1)');
   
     // Replace <br> tags with newlines.
-    html = html.replace(/<br\s*\/?>/g, '\n');
+    html = html.replace(/<br\s*\/?>/g, '\n \n');
   
     // Remove other HTML tags.
     html = html.replace(/<[^>]*>/g, '');
@@ -938,7 +938,7 @@ const exportToExcel = (e) => {
         </Modal.Body>
         <Modal.Footer>
           <Button onClick={()=>{setShowTemplateModal(!showTemplateModal)}}>Close</Button>
-          <Button onClick={()=>{navigator.clipboard.writeText(showTemplateModalData);}} className='btn btn-success' >Copy</Button>
+          <Button onClick={()=>{handleCopyClick(showTemplateModalData);}} className='btn btn-success' >Copy</Button>
         </Modal.Footer>
       </Modal>
 
