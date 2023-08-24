@@ -340,6 +340,9 @@ export default function Templates() {
   
     // Replace <br> tags with newlines.
     html = html.replace(/<br\s*\/?>/g, '\n \n');
+
+    // Replace <p> tags with newlines.
+    html = html.replace(/<\/p>/g, '\n');
   
     // Remove other HTML tags.
     html = html.replace(/<[^>]*>/g, '');
