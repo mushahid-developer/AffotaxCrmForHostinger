@@ -1258,24 +1258,30 @@ const Sales = () => {
 
               <div className='col-4'>
 
-                <div className='col-6'>
-                  <div class="form-group">
-                    <label style={{fontSize: '12px'}} for="exampleFormControlInput1">Invoice #</label>
-                    <input disabled style={{fontSize: '12px'}} onChange={handleFormChange} name='invoiceNo' value={saleData.invoiceNo} type="text" class="form-control" id="exampleFormControlInput1"/>
+                <div className='row'>
+                
+                  <div className='col-6'>
+                    <div class="form-group">
+                      <label style={{fontSize: '12px'}} for="exampleFormControlInput1">Invoice #</label>
+                      <input disabled style={{fontSize: '12px'}} onChange={handleFormChange} name='invoiceNo' value={saleData.invoiceNo} type="text" class="form-control" id="exampleFormControlInput1"/>
+                    </div>
                   </div>
+
+                  <div className='col-6'>
+                    <div class="form-group">
+                      <label style={{fontSize: '12px'}} for="exampleFormControlInput1">Status</label>
+                      <select style={{fontSize: '12px'}} className='form-control' name='status' value={saleData.status} onChange={handleFormChange}>
+                        <option value="Paid"> Paid </option>
+                        <option value="Due"> Due </option>
+                        <option value="Overdue"> Overdue </option>
+                      </select>
+                      {/* <input disabled style={{fontSize: '12px'}} onChange={handleFormChange} name='invoiceNo' value={saleData.invoiceNo} type="text" class="form-control" id="exampleFormControlInput1"/> */}
+                    </div>
+                  </div>  
+
                 </div>
 
-                <div className='col-6'>
-                  <div class="form-group">
-                    <label style={{fontSize: '12px'}} for="exampleFormControlInput1">Status</label>
-                    <select style={{fontSize: '12px'}} className='form-control' name='status' value={saleData.status} onChange={handleFormChange}>
-                      <option value="Paid"> Paid </option>
-                      <option value="Due"> Due </option>
-                      <option value="Overdue"> Overdue </option>
-                    </select>
-                    {/* <input disabled style={{fontSize: '12px'}} onChange={handleFormChange} name='invoiceNo' value={saleData.invoiceNo} type="text" class="form-control" id="exampleFormControlInput1"/> */}
-                  </div>
-                </div>    
+
               </div>
             </div>
 
