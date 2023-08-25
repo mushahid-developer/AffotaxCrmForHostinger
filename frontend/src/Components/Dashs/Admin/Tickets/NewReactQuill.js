@@ -6,6 +6,10 @@ import debounce from 'lodash/debounce';
 export default function NewReactQuill(props) {
   const [value, setValue] = useState(props.newTicketFormData.message);
 
+  useEffect(()=>{
+    setValue(props.newTicketFormData.message)
+  }, [props.newTicketFormData.templateId])
+
   const modules = {
     toolbar: [
       [{ 'header': [1, 2, false] }],
