@@ -7,6 +7,9 @@ var SalesSchema = new mongoose.Schema({
     due_date: {
         type: String
     },
+    jobDate: {
+        type: String
+    },
     invoice_no: {
         type: String
     },
