@@ -33,6 +33,9 @@ var SalesSchema = new mongoose.Schema({
         type: mongoose.Types.ObjectId,
         ref: 'client'
     },
+    status: {
+        type: String
+    }
 });
 
 const Salesdb = mongoose.model('sales', SalesSchema);

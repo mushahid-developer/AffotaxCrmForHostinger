@@ -16,7 +16,7 @@ import secureLocalStorage from 'react-secure-storage';
 import TicketsContext from './TicketsContext';
 import { FileUploader } from 'react-drag-drop-files';
 import Loader from '../../../Common/Loader/Loader';
-import NewReactQuill from './NewReactQuill';
+import NewReactQuill from './newReactQuill';
 
 var markMailAsRead = axiosURL.markMailAsRead;
 var createNewTicket = axiosURL.createNewTicket;
@@ -677,6 +677,7 @@ export default function Tickets(props) {
     } else {
       const templateData = templatesList.find(template => template._id === value);
       const htmlString = templateData.template.replace(/\n/g, '<br>');
+      console.log(htmlString)
       setNewTicketFormData(prevState => ({
         ...prevState,
         message: htmlString,
@@ -989,16 +990,7 @@ export default function Tickets(props) {
 
                     <NewReactQuill quillRef={quillRef} handleNewTicketDataChange={handleNewTicketDataChange} newTicketFormData={newTicketFormData}/>
 
-                    {/* <ReactQuill
-                      ref={quillRef}
-                      name="message"
-                      theme="snow"
-                      modules={modules}
-                      formats={formats}
-                      style={editorStyle}
-                      onChange={(e) => { handleNewTicketDataChange(e, "~~~~") }}
-                      value={newTicketFormData.message}
-                    /> */}
+                   
                   </Form.Group>
                 </div>
 

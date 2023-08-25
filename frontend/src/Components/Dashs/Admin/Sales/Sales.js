@@ -44,7 +44,8 @@ const Sales = () => {
       date: "", 
       dueDate: "",
       invoiceNo: '1',
-      currency: "GBP"
+      currency: "GBP",
+      status: "Un paid"
 
     })
 
@@ -229,6 +230,11 @@ const Sales = () => {
               return p.data.client_id.client_name //to get value from obj inside obj
           },  
         },
+        { headerName: 'Company Name', field: 'company_name', flex:1,
+          valueGetter: p => {
+              return p.data.client_id.company_name //to get value from obj inside obj
+          },  
+        },
         { headerName: 'Date', field: 'date', flex:3,
         valueGetter: p => {
           if(p.data.date  && p.data.date !== "Invalid Date")
@@ -259,6 +265,7 @@ const Sales = () => {
         }
         },
         { headerName: 'Currency', field: 'currency', flex:1 },
+        { headerName: 'Status', field: 'status', flex:1 },
         {
             headerName: 'Action', 
             field: 'price',
@@ -821,7 +828,16 @@ const Sales = () => {
               </div>
 
               <div className='col-4'>
-
+                <div className='col-6'>
+                  <div class="form-group">
+                    <label style={{fontSize: '12px'}} for="exampleFormControlInput1">Status</label>
+                    <select style={{fontSize: '12px'}} className='form-control' name='status' value={saleData.status} onChange={handleFormChange}>
+                      <option value="Un paid"> Un paid </option>
+                      <option value="Paid"> Paid </option>
+                    </select>
+                    {/* <input disabled style={{fontSize: '12px'}} onChange={handleFormChange} name='invoiceNo' value={saleData.invoiceNo} type="text" class="form-control" id="exampleFormControlInput1"/> */}
+                  </div>
+                </div>    
               </div>
             </div>
 

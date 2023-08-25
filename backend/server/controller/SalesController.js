@@ -23,7 +23,6 @@ exports.addSale = async (req, res) => {
             items_id.push(save_item._id)
         }
         
-        console.log(items_id)
         Salesdb.create({
             client_id: req.body.saleData.to,
             date: req.body.saleData.date,
@@ -34,7 +33,8 @@ exports.addSale = async (req, res) => {
             tax: req.body.totalData.tax,
             discount: req.body.totalData.disc,
             total: req.body.totalData.total,
-            saleitem_id: items_id
+            saleitem_id: items_id,
+            status: req.body.saleData.status
         }).then(
             res.status(200).json({
                 message: "Sale Added Successfully"
@@ -84,7 +84,6 @@ exports.editSale = async (req, res) => {
             items_id.push(save_item._id)
         }
         
-        console.log(items_id)
         Salesdb.findByIdAndUpdate(id, {
             client_id: req.body.saleData.to,
             date: req.body.saleData.date,
@@ -95,7 +94,8 @@ exports.editSale = async (req, res) => {
             tax: req.body.totalData.tax,
             discount: req.body.totalData.disc,
             total: req.body.totalData.total,
-            saleitem_id: items_id
+            saleitem_id: items_id,
+            status: req.body.saleData.status
         }).then(
             res.status(200).json({
                 message: "Sale Edited Successfully"
