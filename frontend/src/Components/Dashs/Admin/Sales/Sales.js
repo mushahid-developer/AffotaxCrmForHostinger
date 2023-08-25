@@ -153,7 +153,8 @@ const Sales = () => {
         date: "", 
         dueDate: "",
         invoiceNo: invoiceNumber,
-        currency: "GBP"
+        currency: "GBP",
+        status: "Un paid"
   
       })
       setItemsRowData([
@@ -196,6 +197,7 @@ const Sales = () => {
         dueDate: data.due_date,
         invoiceNo: data.invoice_no,
         currency: data.currency,
+        status: data.status,
         _id: data._id
   
       })
@@ -423,7 +425,8 @@ const Sales = () => {
               date: "", 
               dueDate: "",
               invoiceNo: '1',
-              currency: "GBP"
+              currency: "GBP",
+              status: "Un paid"
         
             })
             setItemsRowData([
@@ -595,7 +598,8 @@ const Sales = () => {
                 date: "", 
                 dueDate: "",
                 invoiceNo: '1',
-                currency: "GBP"
+                currency: "GBP",
+                status: "Un paid"
           
               })
               setItemsRowData([
