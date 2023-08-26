@@ -92,6 +92,8 @@ export const SalesgetAllUrl = 'sales/get/all';
 export const SalesAddOneUrl = 'sales/add/one';
 export const SalesDeleteOneUrl = 'sales/delete/one';
 export const SalesEditOneUrl = 'sales/edit/one';
+export const SalesEditOneNoteUrl = 'sales/edit/one/note';
+export const SalesEditOneMarkPaidUrl = 'sales/edit/one/mark/paid';
 
 // Chart of Account
 export const ChartsOfAccountsGetAllUrl = 'chart_of_account/get/all';

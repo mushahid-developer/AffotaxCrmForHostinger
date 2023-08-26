@@ -116,10 +116,11 @@ route.get('/recurring/task/delete/one/category/:id', authMiddleware, DeleteOneTa
 
 //Sales
 route.get('/sales/get/all', SalesController.getAllSale)
-// route.get('/sales/get/one/:id', authMiddleware, SalesController.AddOneQuickNote)
 route.post('/sales/add/one', SalesController.addSale)
 route.post('/sales/edit/one/:id', SalesController.editSale)
 route.get('/sales/delete/one/:id', SalesController.deleteSale)
+route.post('/sales/edit/one/note/:id', SalesController.editOneSaleNote)
+route.get('/sales/edit/one/mark/paid/:id', SalesController.editOneSaleAsPaid)
 
 //Chart Of Accounts
 route.get('/chart_of_account/get/all', getAllChartOfAccounts)

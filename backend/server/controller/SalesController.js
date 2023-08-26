@@ -18,7 +18,8 @@ exports.addSale = async (req, res) => {
                 unit_price: saleItem.unit_price,
                 qty: saleItem.qty,
                 description: saleItem.description,
-                unique_id: saleItem.unique_id
+                unique_id: saleItem.unique_id,
+                product: saleItem.product
             })
             items_id.push(save_item._id)
         }
@@ -35,7 +36,8 @@ exports.addSale = async (req, res) => {
             discount: req.body.totalData.disc,
             total: req.body.totalData.total,
             saleitem_id: items_id,
-            status: req.body.saleData.status
+            status: req.body.saleData.status,
+            note: ""
         }).then(
             res.status(200).json({
                 message: "Sale Added Successfully"
@@ -80,7 +82,8 @@ exports.editSale = async (req, res) => {
                 unit_price: saleItem.unit_price,
                 qty: saleItem.qty,
                 description: saleItem.description,
-                unique_id: saleItem.unique_id
+                unique_id: saleItem.unique_id,
+                product: saleItem.product
             })
             items_id.push(save_item._id)
         }
@@ -172,6 +175,41 @@ exports.getOneSale = async (req, res) => {
                 message: "Project Name Created Successfully"
             })
         )
+    } catch (err) {
+        console.error('Error:', err)
+    }
+}
+
+exports.editOneSaleNote = async (req, res) => {
+    try{
+
+        const id = req.params.id;
+        await Salesdb.findByIdAndUpdate(id, {
+            note: req.body.note,
+        })
+
+        res.status(200).json({
+            message: "Sale Note Edited Successfully"
+        })
+
+    } catch (err) {
+        console.error('Error:', err)
+    }
+}
+
+exports.editOneSaleAsPaid = async (req, res) => {
+    try{
+
+        const id = req.params.id;
+        await Salesdb.findByIdAndUpdate(id, {
+            status: "Paid",
+            paidDate: new Date(),
+        })
+
+        res.status(200).json({
+            message: "Sale Note Edited Successfully"
+        })
+
     } catch (err) {
         console.error('Error:', err)
     }

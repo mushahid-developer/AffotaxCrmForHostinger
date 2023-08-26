@@ -10,6 +10,9 @@ var SalesSchema = new mongoose.Schema({
     jobDate: {
         type: String
     },
+    paidDate: {
+        type: String
+    },
     invoice_no: {
         type: String
     },
@@ -37,6 +40,9 @@ var SalesSchema = new mongoose.Schema({
         ref: 'client'
     },
     status: {
+        type: String
+    },
+    note: {
         type: String
     }
 });

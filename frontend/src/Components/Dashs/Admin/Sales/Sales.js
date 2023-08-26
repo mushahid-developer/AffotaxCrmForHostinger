@@ -15,11 +15,14 @@ import Loader from '../../../Common/Loader/Loader';
 import { Button, Modal } from 'react-bootstrap';
 import CustomAgSelectCellEditor from './CustomAgSelect';
 import DropdownFilterWithDate from '../../../Jobs/JobPlaning/DropDownFilterWithDate';
+import DropdownFilter from '../../../Jobs/JobPlaning/DropdownFilter';
 
 var SalesgetAllUrl = axiosURL.SalesgetAllUrl;
 var SalesAddOneUrl = axiosURL.SalesAddOneUrl;
 var SalesDeleteOneUrl = axiosURL.SalesDeleteOneUrl;
 var SalesEditOneUrl = axiosURL.SalesEditOneUrl;
+var SalesEditOneNoteUrl = axiosURL.SalesEditOneNoteUrl;
+var SalesEditOneMarkPaidUrl = axiosURL.SalesEditOneMarkPaidUrl;
 
 
 
@@ -47,7 +50,7 @@ const Sales = () => {
       jobDate: "",
       invoiceNo: '1',
       currency: "GBP",
-      status: "Paid"
+      status: "Due"
 
     })
 
@@ -61,6 +64,7 @@ const Sales = () => {
         account: '',
         tax_rate: '',
         amount: '',
+        product: ""
       }
     ]);
 
@@ -83,6 +87,9 @@ const Sales = () => {
     const [dueDateFvalueDate, setDueDateFvalueDate] = useState('')
     const [jobDateFvalue, setJobDateFvalue] = useState('')
     const [jobDateFvalueDate, setJobDateFvalueDate] = useState('')
+    const [paidDateFvalue, setPaidDateFvalue] = useState('')
+    const [paidDateFvalueDate, setPaidDateFvalueDate] = useState('')
+    const [statusFvalue, setStatusFvalue] = useState('')
 
 
     const gridRef = useRef();
@@ -103,6 +110,11 @@ const Sales = () => {
       // if(filteredArray != undefined && activeFilter != null && activeFilter !== "" && activeFilter === "Inactive"){
       //   filteredArray = filteredArray.filter(obj => obj.isActive === false);
       // }
+
+
+      if(filteredArray != undefined && statusFvalue != null && statusFvalue !== "" ){
+        filteredArray = filteredArray.filter(obj => obj.status === statusFvalue);
+      }
 
 
       //Date
@@ -457,6 +469,124 @@ const Sales = () => {
       
     }
 
+    //Paid Date
+    if (paidDateFvalue) {
+
+      //Job Date Expired Filter
+      if (filteredArray != undefined && paidDateFvalue != null && paidDateFvalue !== "" && paidDateFvalue === "Expired") {
+        filteredArray = await filteredArray.filter(obj => {
+          // obj.manager_id && obj.manager_id.name === cManagerFvalue
+          const today = new Date()
+          const deadline = new Date(obj.paidDate)
+          if (obj.paidDate && obj.paidDate !== 'Invalid Date') {
+            if (!(deadline.setHours(0, 0, 0, 0) >= today.setHours(0, 0, 0, 0))) {
+              return obj;
+            }
+          }
+        });
+      }
+
+      //Job Date Today Filter
+      if (filteredArray != undefined && paidDateFvalue != null && paidDateFvalue !== "" && paidDateFvalue === "Today") {
+        filteredArray = await filteredArray.filter(obj => {
+          // obj.manager_id && obj.manager_id.name === cManagerFvalue
+          const today = new Date()
+          const deadline = new Date(obj.paidDate)
+          if (obj.paidDate && obj.paidDate !== 'Invalid Date') {
+            if ((deadline.setHours(0, 0, 0, 0) === today.setHours(0, 0, 0, 0))) {
+              return obj;
+            }
+          }
+        });
+      }
+
+      //Job Date Tomorrow Filter
+      if (filteredArray != undefined && paidDateFvalue != null && paidDateFvalue !== "" && paidDateFvalue === "Tomorrow") {
+        filteredArray = await filteredArray.filter(obj => {
+          // obj.manager_id && obj.manager_id.name === cManagerFvalue
+          const today = new Date()
+          const tomorrow = new Date(today);
+          tomorrow.setDate(tomorrow.getDate() + 1);
+          const deadline = new Date(obj.paidDate)
+          if (obj.paidDate && obj.paidDate !== 'Invalid Date') {
+            if ((deadline.setHours(0, 0, 0, 0) === tomorrow.setHours(0, 0, 0, 0))) {
+              return obj;
+            }
+          }
+        });
+      }
+
+
+      //Job Date 7 days Filter
+      if (filteredArray != undefined && paidDateFvalue != null && paidDateFvalue !== "" && paidDateFvalue === "In 7 days") {
+        filteredArray = await filteredArray.filter(obj => {
+          // obj.manager_id && obj.manager_id.name === cManagerFvalue
+          const today = new Date()
+          const deadline = new Date(obj.paidDate)
+          const deadlineNextSevenDays = new Date(today.getTime() + (7 * 24 * 60 * 60 * 1000))
+          if (obj.paidDate && obj.paidDate !== 'Invalid Date') {
+            if ((deadline >= today.setHours(0, 0, 0, 0)) && (deadline <= deadlineNextSevenDays.setHours(0, 0, 0, 0))) {
+              return obj;
+            }
+          }
+        });
+      }
+
+      //Job Date 15 days Filter
+      if (filteredArray != undefined && paidDateFvalue != null && paidDateFvalue !== "" && paidDateFvalue === "In 15 days") {
+        filteredArray = await filteredArray.filter(obj => {
+          // obj.manager_id && obj.manager_id.name === cManagerFvalue
+          const today = new Date()
+          const deadline = new Date(obj.paidDate)
+          const deadlineNextSevenDays = new Date(today.getTime() + (15 * 24 * 60 * 60 * 1000))
+          if (obj.paidDate && obj.paidDate !== 'Invalid Date') {
+            if ((deadline >= today.setHours(0, 0, 0, 0)) && (deadline <= deadlineNextSevenDays.setHours(0, 0, 0, 0))) {
+              return obj;
+            }
+          }
+        });
+      }
+
+      //Job Date Month Wise Filter
+      if (filteredArray != undefined && paidDateFvalue != null && paidDateFvalue !== "" && paidDateFvalue === "Month Wise") {
+        filteredArray = await filteredArray.filter(obj => {
+          // obj.manager_id && obj.manager_id.name === cManagerFvalue
+          // const today = new Date()
+          var today = new Date(paidDateFvalueDate)
+          const deadline = new Date(obj.paidDate)
+          if (obj.paidDate && obj.paidDate !== 'Invalid Date') {
+            const todayMonth = today.getMonth();
+            const todayYear = today.getFullYear();
+            const deadlineMonth = deadline.getMonth();
+            const deadlineYear = deadline.getFullYear();
+
+            if ((deadlineYear === todayYear && deadlineMonth === todayMonth)) {
+              return obj;
+            }
+          }
+        });
+      }
+
+      //Job Date Custom Filter
+      if (filteredArray != undefined && paidDateFvalue != null && paidDateFvalue !== "" && paidDateFvalue === "Custom") {
+        filteredArray = await filteredArray.filter(obj => {
+          var cellDate = obj.paidDate !== "" && new Date(obj.paidDate);
+          var filterDate = new Date(paidDateFvalueDate)
+          if (cellDate && cellDate !== 'Invalid Date' && filterDate !== 'Invalid Date') {
+            // compare dates
+            if (cellDate.setHours(0, 0, 0, 0) <= filterDate.setHours(0, 0, 0, 0)) {
+              return 1; //exclude
+            } else if (cellDate.setHours(0, 0, 0, 0) > filterDate.setHours(0, 0, 0, 0)) {
+              return 0; //include 
+            } else {
+              return 1; //-1 include as exact match
+            }
+          }
+        });
+      }
+      
+    }
+
 
       setRowData(filteredArray)
 
@@ -466,7 +596,7 @@ const Sales = () => {
     useEffect(()=>{
       setRowData(mainRowData)
       handleFilters()
-    },[mainRowData, activeFilter, dateFvalue, dateFvalueDate, dueDateFvalue, dueDateFvalueDate, jobDateFvalue, jobDateFvalueDate])
+    },[mainRowData, activeFilter, dateFvalue, dateFvalueDate, dueDateFvalue, dueDateFvalueDate, jobDateFvalue, jobDateFvalueDate, statusFvalue, paidDateFvalue, paidDateFvalueDate])
 
 
     const getData = async ()=>{
@@ -520,7 +650,7 @@ const Sales = () => {
         jobDate: "",
         invoiceNo: invoiceNumber,
         currency: "GBP",
-        status: "Paid"
+        status: "Due"
   
       })
       setItemsRowData([
@@ -533,6 +663,7 @@ const Sales = () => {
           account: '',
           tax_rate: '',
           amount: '',
+          product: ""
         }
       ]);
       setItemsTotalSec({
@@ -565,7 +696,7 @@ const Sales = () => {
         invoiceNo: data.invoice_no,
         currency: data.currency,
         status: data.status,
-        _id: data._id
+        _id: data._id,
   
       })
   
@@ -593,7 +724,7 @@ const Sales = () => {
             editable: false,
             valueGetter: (params) => params.node.rowIndex + 1,
         },
-        { headerName: 'Invoice No', field: 'invoice_no', flex:1 },
+        { headerName: 'Invoice No', field: 'invoice_no', flex:0.8 },
         { headerName: 'Client Name', field: 'book_start_date', flex:1,
           valueGetter: p => {
               return p.data.client_id.client_name //to get value from obj inside obj
@@ -679,8 +810,62 @@ const Sales = () => {
           suppressInput: true
         },
         },
-        { headerName: 'Currency', field: 'currency', flex:1 },
-        { headerName: 'Status', field: 'status', flex:1 },
+        { headerName: 'Paid Date', field: 'paidDate', flex:2, 
+        valueGetter: p => {
+          if(p.data.status === "Paid")
+          {
+            if(p.data.paidDate  && p.data.paidDate !== "Invalid Date")
+            {
+              const deadline = new Date(p.data.paidDate)
+              let ye = new Intl.DateTimeFormat('en', { year: 'numeric' }).format(deadline);
+              let mo = new Intl.DateTimeFormat('en', { month: 'short' }).format(deadline);
+              let da = new Intl.DateTimeFormat('en', { day: '2-digit' }).format(deadline);
+              return(`${da}-${mo}-${ye}`);
+            }
+            else{
+              return ""
+            }
+          }
+          else{
+            return ""
+          }
+        },
+        floatingFilterComponent: 'selectFloatingFilterWthDate',
+        floatingFilterComponentParams: {
+          options: ["Expired", "Today", "Tomorrow", "In 7 days", "In 15 days", "Month Wise", "Custom"],
+          onValueChange: (value) => setPaidDateFvalue(value),
+          value: paidDateFvalue,
+          onDateValueChange: (value) => setPaidDateFvalueDate(value),
+          dateValue: paidDateFvalueDate,
+          suppressFilterButton: true,
+          suppressInput: true
+        },
+        },
+        { 
+          headerName: 'Note', 
+          field: 'note', 
+          flex:4,
+          editable: true,
+        },
+        { 
+          headerName: 'Amount', 
+          field: 'total', 
+          flex:1,
+          valueGetter: p => `${p.data.total} `
+        },
+        { 
+          headerName: 'Status', 
+          field: 'status', 
+          flex:1,
+          floatingFilterComponent: 'selectFloatingFilter',
+          floatingFilterComponentParams: {
+            options: ['Paid', 'Due', 'Overdue'],
+            onValueChange: (value) => setStatusFvalue(value),
+            value: statusFvalue,
+            suppressFilterButton: true,
+            suppressInput: true
+          }
+        },
         {
             headerName: 'Action', 
             field: 'price',
@@ -694,8 +879,13 @@ const Sales = () => {
             //     </div> 
             // </>
             <>
+              {params.data.status !== "Paid" && 
+                <Link onClick={()=>{handleActionButtons('MarkPaid', params.data._id)}} style={{all: 'unset', cursor: 'pointer', textAlign: 'center !important'}}>
+                  <svg width="20px" height="20px" viewBox="-2.4 -2.4 28.80 28.80" fill="none" xmlns="http://www.w3.org/2000/svg" stroke="#000000" transform="rotate(0)"><g id="SVGRepo_bgCarrier" stroke-width="0"></g><g id="SVGRepo_tracerCarrier" stroke-linecap="round" stroke-linejoin="round" stroke="#000000" stroke-width="4.8"> <path opacity="0.5" d="M16.755 2H7.24502C6.08614 2 5.50671 2 5.03939 2.16261C4.15322 2.47096 3.45748 3.18719 3.15795 4.09946C3 4.58055 3 5.17705 3 6.37006V20.3742C3 21.2324 3.985 21.6878 4.6081 21.1176C4.97417 20.7826 5.52583 20.7826 5.8919 21.1176L6.375 21.5597C7.01659 22.1468 7.98341 22.1468 8.625 21.5597C9.26659 20.9726 10.2334 20.9726 10.875 21.5597C11.5166 22.1468 12.4834 22.1468 13.125 21.5597C13.7666 20.9726 14.7334 20.9726 15.375 21.5597C16.0166 22.1468 16.9834 22.1468 17.625 21.5597L18.1081 21.1176C18.4742 20.7826 19.0258 20.7826 19.3919 21.1176C20.015 21.6878 21 21.2324 21 20.3742V6.37006C21 5.17705 21 4.58055 20.842 4.09946C20.5425 3.18719 19.8468 2.47096 18.9606 2.16261C18.4933 2 17.9139 2 16.755 2Z" stroke="#000000" stroke-width="0.624"></path> <path d="M9.5 10.4L10.9286 12L14.5 8" stroke="#000000" stroke-width="0.624" stroke-linecap="round" stroke-linejoin="round"></path> <path d="M7.5 15.5H16.5" stroke="#000000" stroke-width="0.624" stroke-linecap="round"></path> </g><g id="SVGRepo_iconCarrier"> <path opacity="0.5" d="M16.755 2H7.24502C6.08614 2 5.50671 2 5.03939 2.16261C4.15322 2.47096 3.45748 3.18719 3.15795 4.09946C3 4.58055 3 5.17705 3 6.37006V20.3742C3 21.2324 3.985 21.6878 4.6081 21.1176C4.97417 20.7826 5.52583 20.7826 5.8919 21.1176L6.375 21.5597C7.01659 22.1468 7.98341 22.1468 8.625 21.5597C9.26659 20.9726 10.2334 20.9726 10.875 21.5597C11.5166 22.1468 12.4834 22.1468 13.125 21.5597C13.7666 20.9726 14.7334 20.9726 15.375 21.5597C16.0166 22.1468 16.9834 22.1468 17.625 21.5597L18.1081 21.1176C18.4742 20.7826 19.0258 20.7826 19.3919 21.1176C20.015 21.6878 21 21.2324 21 20.3742V6.37006C21 5.17705 21 4.58055 20.842 4.09946C20.5425 3.18719 19.8468 2.47096 18.9606 2.16261C18.4933 2 17.9139 2 16.755 2Z" stroke="#000000" stroke-width="0.624"></path> <path d="M9.5 10.4L10.9286 12L14.5 8" stroke="#000000" stroke-width="0.624" stroke-linecap="round" stroke-linejoin="round"></path> <path d="M7.5 15.5H16.5" stroke="#000000" stroke-width="0.624" stroke-linecap="round"></path> </g></svg>
+                </Link>
+              }
 
-              <Link onClick={()=>{setModelType("View"); beforeEditModelHandler(params.data)}} style={{all: 'unset', cursor: 'pointer', textAlign: 'center !important'}}>
+              <Link onClick={()=>{setModelType("View"); beforeEditModelHandler(params.data)}} style={{all: 'unset', cursor: 'pointer', textAlign: 'center !important', marginLeft: '5px'}}>
                 <svg xmlns="http://www.w3.org/2000/svg" fill="#000000" width="20px" height="20px" viewBox="0 0 52 52" enable-background="new 0 0 52 52">
                   <g>
                     <path d="M51.8,25.1C47.1,15.6,37.3,9,26,9S4.9,15.6,0.2,25.1c-0.3,0.6-0.3,1.3,0,1.8C4.9,36.4,14.7,43,26,43   s21.1-6.6,25.8-16.1C52.1,26.3,52.1,25.7,51.8,25.1z M26,37c-6.1,0-11-4.9-11-11s4.9-11,11-11s11,4.9,11,11S32.1,37,26,37z"/>
@@ -742,6 +932,15 @@ const Sales = () => {
        }));
 
        const ItemsColSet = [
+        { 
+          headerName: 'Product', 
+          field: 'product', 
+          flex:2,
+          cellEditor: 'agSelectCellEditor',
+          cellEditorParams: {
+            values: ["Bookkeeping", "Payroll", "Vat Return", "Accounts", "Personal Tax", "Company Sec", "Address"],
+          },
+        },
         { headerName: 'Description', field: 'description', flex:4 },
         { headerName: 'Qty', field: 'qty', flex:1 },
         { headerName: 'Unit Price', field: 'unit_price', flex:1,
@@ -820,6 +1019,24 @@ const Sales = () => {
           }
         }
 
+        if(type === "MarkPaid"){
+
+          const confirmed = window.confirm('Are you sure you want to Mark this item as Paid?');
+
+          if (confirmed) {
+            const response = await axios.get(`${SalesEditOneMarkPaidUrl}/${id}`,
+            {
+                headers:{ 'Content-Type': 'application/json' }
+            }
+          );
+          if(response.status === 200){
+            setReRender(!reRender)
+          }
+          } else {
+            // user clicked Cancel, do nothing
+          }
+        }
+
         if(type === "Edit"){
   
           const response = await axios.post(`${SalesEditOneUrl}/${id}`,
@@ -840,7 +1057,7 @@ const Sales = () => {
               jobDate: "",
               invoiceNo: '1',
               currency: "GBP",
-              status: "Paid"
+              status: "Due"
         
             })
             setItemsRowData([
@@ -853,6 +1070,7 @@ const Sales = () => {
                 account: '',
                 tax_rate: '',
                 amount: '',
+                product: ""
               }
             ]);
             setItemsTotalSec({
@@ -880,6 +1098,7 @@ const Sales = () => {
           account: '',
           tax_rate: '',
           amount: '',
+          product: ""
         };
 
         setItemsRowData(prevItems => [...prevItems, newItem]);
@@ -1014,7 +1233,7 @@ const Sales = () => {
                 jobDate: "",
                 invoiceNo: '1',
                 currency: "GBP",
-                status: "Un paid"
+                status: "Due"
           
               })
               setItemsRowData([
@@ -1027,6 +1246,7 @@ const Sales = () => {
                   account: '',
                   tax_rate: '',
                   amount: '',
+                  product: ""
                 }
               ]);
               setItemsTotalSec({
@@ -1093,9 +1313,25 @@ const Sales = () => {
 
   const frameworkComponents = {
     // myFloatingFilter: MyFloatingFilter,
-    // selectFloatingFilter: DropdownFilter,
+    selectFloatingFilter: DropdownFilter,
     selectFloatingFilterWthDate: DropdownFilterWithDate,
   };
+
+  const onCellValueChanged = useCallback(async (event) => {
+    if (event.colDef.field === "note") {
+      const note = event.data.note;
+      await axios.post(`${SalesEditOneNoteUrl}/${event.data._id}`,
+        {
+          note: note,
+        },
+        {
+          headers:{ 
+            'Content-Type': 'application/json',
+          }
+        }
+      );
+    }
+  }, [gridApi]);
 
 
     if(loader)
@@ -1187,6 +1423,7 @@ const Sales = () => {
                 paginationPageSize = {25}
                 suppressDragLeaveHidesColumns={true}
                 frameworkComponents={frameworkComponents}
+                onCellValueChanged={onCellValueChanged}
             />
             
           </div>
@@ -1218,7 +1455,7 @@ const Sales = () => {
                     <div class="form-group">
                       <label style={{fontSize: '12px'}} for="exampleFormControlSelect1">To</label>
                       <select disabled = {modelType === "View" ? true : false} required value={saleData.to} onChange={handleFormChange} name='to' style={{fontSize: '12px'}} class="form-control" id="exampleFormControlSelect1">
-                        <option value={null} selected disabled>select Client</option>
+                        <option value="" selected disabled>Select Client</option>
                         {ClientsPreData && ClientsPreData.map((client, index)=>{
                           return(
                             <option key={index} value={client._id}>{client.company_name}</option>
@@ -1270,8 +1507,8 @@ const Sales = () => {
                   <div className='col-6'>
                     <div class="form-group">
                       <label style={{fontSize: '12px'}} for="exampleFormControlInput1">Status</label>
-                      <select style={{fontSize: '12px'}} className='form-control' name='status' value={saleData.status} onChange={handleFormChange}>
-                        <option value="Paid"> Paid </option>
+                      <select style={{fontSize: '12px'}} className='form-control' name='status' value={saleData.status === "Paid" ? "" : saleData.status} onChange={handleFormChange}>
+                        <option disabled value=""> Select </option>
                         <option value="Due"> Due </option>
                         <option value="Overdue"> Overdue </option>
                       </select>

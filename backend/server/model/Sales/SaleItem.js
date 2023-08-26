@@ -4,6 +4,9 @@ var SaleItemSchema = new mongoose.Schema({
     unique_id: {
         type: String
     },
+    product:{
+        type: String
+    },
     description: {
         type: String
     },
