@@ -1028,7 +1028,7 @@ exports.getDashboardData = async (req, res) => {
       const SalesGraph = {};
         
           // Assuming the partner type field is called 'partnerType'
-          const SalesTypes = ["Bookkeeping", "Payroll", "Vat Return", "Accounts", "Personal Tax", "Company Sec", "Address"]; // Add more partner types if needed
+          const SalesTypes = ["Bookkeeping", "Payroll", "Vat Return", "Accounts", "Personal Tax", "Company Sec", "Address", "Consultancy", "Others"]; // Add more partner types if needed
 
           const totalSales = Sales.length;
           const SalesCounts = {};

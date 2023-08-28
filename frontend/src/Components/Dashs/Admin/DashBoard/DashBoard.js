@@ -63,7 +63,7 @@ export default function Dashboard() {
     constructionCloseProjectDays: false,
     constructionOpenProjectBudget: false,
     constructionCloseProjectBudget: false,
-    SalesGraph: false,
+    SalesGraph: true,
   })
 
   useEffect(()=>{

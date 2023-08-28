@@ -969,7 +969,7 @@ const Sales = () => {
           flex:2,
           cellEditor: 'agSelectCellEditor',
           cellEditorParams: {
-            values: ["Bookkeeping", "Payroll", "Vat Return", "Accounts", "Personal Tax", "Company Sec", "Address"],
+            values: ["Bookkeeping", "Payroll", "Vat Return", "Accounts", "Personal Tax", "Company Sec", "Address", "Consultancy", "Others"],
           },
         },
         { headerName: 'Description', field: 'description', flex:4 },
