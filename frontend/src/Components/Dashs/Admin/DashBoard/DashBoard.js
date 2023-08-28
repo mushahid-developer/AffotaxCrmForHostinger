@@ -46,7 +46,9 @@ export default function Dashboard() {
     pieData1: [],
     pieOptions1: {},
     pieData2: [],
-    pieOtions2: {}
+    pieOptions2: {},
+    pieData: [],
+    pieOptions: {}
   });
 
   const [showHideCharts, setShowHideCharts] = useState({
@@ -61,6 +63,7 @@ export default function Dashboard() {
     constructionCloseProjectDays: false,
     constructionOpenProjectBudget: false,
     constructionCloseProjectBudget: false,
+    SalesGraph: false,
   })
 
   useEffect(()=>{
@@ -501,7 +504,7 @@ const data10 = {
         ],
         
         pieOptions1: {
-          title: "Partners Grpah",
+          title: "Partners Graph",
           legend: { 
             position: 'bottom', 
             alignment: 'center' ,
@@ -520,7 +523,27 @@ const data10 = {
         ],
         
         pieOptions2: {
-          title: "Sources Grpah",
+          title: "Sources Graph",
+          legend: { 
+            position: 'bottom', 
+            alignment: 'center' ,
+            orientation: 'vertical',
+          }
+        },
+
+        pieData: [
+          ["Sales", "Contributed"],
+          ["Bookkeeping", dashboardData && dashboardData.SalesGraph.Bookkeeping],
+          ["Payroll", dashboardData && dashboardData.SalesGraph.Payroll],
+          ["Vat Return", dashboardData && dashboardData.SalesGraph["Vat Return"]],
+          ["Accounts", dashboardData && dashboardData.SalesGraph.Accounts],
+          ["Personal Tax", dashboardData && dashboardData.SalesGraph["Personal Tax"]],
+          ["Company Sec", dashboardData && dashboardData.SalesGraph["Company Sec"]],
+          ["Address", dashboardData && dashboardData.SalesGraph.Address],
+        ],
+        
+        pieOptions: {
+          title: "Sales Graph",
           legend: { 
             position: 'bottom', 
             alignment: 'center' ,
@@ -530,6 +553,7 @@ const data10 = {
       })
     }
   }, [dashboardData])
+
 
   const getData = async ()=>{
     try {
@@ -625,6 +649,7 @@ if(!loader)
                         <li><button onClick={(e)=>{handleShowHideCharts(e, "clientsFeeGraph")}} className={`dropdown-item ${!showHideCharts.clientsFeeGraph? "active" : ""}`} >Clients Fee</button></li>
                         <li><button onClick={(e)=>{handleShowHideCharts(e, "departmentsOverDueGraph")}} className={`dropdown-item ${!showHideCharts.departmentsOverDueGraph? "active" : ""}`} >Departments Overdue Graph</button></li>
                         <li><button onClick={(e)=>{handleShowHideCharts(e, "departmentsDueGraph")}} className={`dropdown-item ${!showHideCharts.departmentsDueGraph? "active" : ""}`}  >Departments Due Graph</button></li>
+                        <li><button onClick={(e)=>{handleShowHideCharts(e, "SalesGraph")}} className={`dropdown-item ${!showHideCharts.SalesGraph? "active" : ""}`}  >Sales Graph</button></li>
                         </ul>
                     </div>
                     <div className="col-6">
@@ -778,6 +803,20 @@ if(!loader)
               <div className='col-6 mt-4'>
                   <div style={{padding: '10px', backgroundColor: 'white'}}>
                     <Bar options={options9} plugins={[ChartDataLabels]} data={data9} />
+                  </div>
+              </div> 
+            }
+
+            {showHideCharts.SalesGraph && 
+              <div className='col-6 mt-4'>
+                  <div style={{padding: '10px', backgroundColor: 'white'}}>
+                      <Chart
+                      chartType="PieChart"
+                      width="100%"
+                      height="400px"
+                      data={chartsData.pieData}
+                      options={chartsData.pieOptions}
+                      />
                   </div>
               </div> 
             }

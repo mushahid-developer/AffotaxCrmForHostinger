@@ -198,7 +198,7 @@ exports.editOneSaleNote = async (req, res) => {
         const id = req.params.id;
         await Salesdb.findByIdAndUpdate(id, {
             note: req.body.note,
-            jobHolder: req.body.jobHolder,
+            jobHolder: req.body.jobHoldersorry,
         })
 
         res.status(200).json({

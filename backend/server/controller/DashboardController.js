@@ -2,6 +2,7 @@ const Clientdb = require("../model/Client/client");
 const ConstructionDb = require("../model/Construction/Construction");
 const HosueNoDb = require("../model/Construction/HouseNoForList");
 const Jobsdb = require("../model/Jobs/jobs");
+const SaleItemdb = require("../model/Sales/SaleItem");
 
 exports.getDashboardData = async (req, res) => {
     try {
@@ -1019,7 +1020,42 @@ exports.getDashboardData = async (req, res) => {
         }
 
       //Construction Graph Ends
+      
+      //Sales Graph Ends
 
+      const Sales = await SaleItemdb.find();
+
+      const SalesGraph = {};
+        
+          // Assuming the partner type field is called 'partnerType'
+          const SalesTypes = ["Bookkeeping", "Payroll", "Vat Return", "Accounts", "Personal Tax", "Company Sec", "Address"]; // Add more partner types if needed
+
+          const totalSales = Sales.length;
+          const SalesCounts = {};
+
+          // Initialize SaleCounts object
+          SalesTypes.forEach(saleType => {
+            SalesCounts[saleType] = 0;
+          });
+
+          // Count the occurrences of each sale type
+          Sales.forEach(sale => {
+            const saleType = sale.product;
+            if (SalesCounts.hasOwnProperty(saleType)) {
+              SalesCounts[saleType]++;
+            }
+
+          // Calculate the percentage for each partner type
+          
+          SalesTypes.forEach(saleType => {
+            const count = SalesCounts[saleType];
+            const percentage = (count / totalSales) * 100;
+            SalesGraph[saleType] = percentage; // Keep two decimal places
+          });
+          
+        });
+
+      //Sales Graph Ends
 
 
         const response = {
@@ -1031,7 +1067,8 @@ exports.getDashboardData = async (req, res) => {
             PartnersGraph,
             SourcesGraph,
             ConstructionGraph,
-            SubscriptionGraph
+            SubscriptionGraph,
+            SalesGraph
         }
         res.json(response);
     } catch (err) {
