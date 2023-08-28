@@ -173,7 +173,9 @@ exports.login = async (req, res) => {
     }
 
     try {
-        const user = await Userdb.findOne({ email: email })
+      const user = await Userdb.findOne(
+          { email: { $regex: new RegExp('^' + email + '$', 'i') } }
+        );
         if (!user) {
           res.status(401).json({
             message: "Login not successful",
