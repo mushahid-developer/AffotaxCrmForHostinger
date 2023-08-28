@@ -44,6 +44,9 @@ var SalesSchema = new mongoose.Schema({
     },
     note: {
         type: String
+    },
+    jobHolder:{
+        type: String
     }
 });
 

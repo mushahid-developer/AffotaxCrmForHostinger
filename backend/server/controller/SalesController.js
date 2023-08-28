@@ -1,7 +1,8 @@
 const ChartOfAccountsdb = require("../model/ChartOfAccounts/ChartOfAccounts");
 const Clientdb = require("../model/Client/client");
 const SaleItemdb = require("../model/Sales/SaleItem")
-const Salesdb = require("../model/Sales/Sales")
+const Salesdb = require("../model/Sales/Sales");
+const Userdb = require("../model/Users/Users");
 
 exports.addSale = async (req, res) => {
 
@@ -19,7 +20,7 @@ exports.addSale = async (req, res) => {
                 qty: saleItem.qty,
                 description: saleItem.description,
                 unique_id: saleItem.unique_id,
-                product: saleItem.product
+                product: saleItem.product,
             })
             items_id.push(save_item._id)
         }
@@ -83,7 +84,8 @@ exports.editSale = async (req, res) => {
                 qty: saleItem.qty,
                 description: saleItem.description,
                 unique_id: saleItem.unique_id,
-                product: saleItem.product
+                product: saleItem.product,
+                jobHolder: saleItem.jobHolder
             })
             items_id.push(save_item._id)
         }
@@ -141,7 +143,16 @@ exports.getAllSale = async (req, res) => {
             else return { ...sale.toObject(), saleitem_id: null };
         });
       }
-      
+
+    
+    const users_all = await Userdb.find({ isActive: true }).populate('role_id');
+
+    const users = users_all.filter((user) => {
+        return user.role_id && user.role_id.pages.some((page) => {
+          return page.name === 'Sales Page' && page.isChecked;
+        });
+      });
+
     const clients = await Clientdb.find();
     const COA = await ChartOfAccountsdb.find();
     var invoice_no = '1';
@@ -159,6 +170,7 @@ exports.getAllSale = async (req, res) => {
         var response = {
             sales: modifiedSales,
             clients,
+            users,
             invoice_no,
             COA
         }
@@ -186,6 +198,7 @@ exports.editOneSaleNote = async (req, res) => {
         const id = req.params.id;
         await Salesdb.findByIdAndUpdate(id, {
             note: req.body.note,
+            jobHolder: req.body.jobHolder,
         })
 
         res.status(200).json({

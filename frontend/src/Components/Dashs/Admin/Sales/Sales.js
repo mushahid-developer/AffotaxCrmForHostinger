@@ -39,6 +39,7 @@ const Sales = () => {
     const [rowData, setRowData] = useState([ ]);
     const [ClientsPreData, setClientsPreData] = useState('');
     const [coaPreData, setCoaPreData] = useState('');
+    const [usersForJobHolder, setUsersForJobHolder] = useState([]);
     const [modelType, setModelType] = useState(null);
     const [invoiceNumber, setInvoiceNumber] = useState(null);
     const [selectedAccountId, setSelectedAccountId] = useState(null);
@@ -81,6 +82,7 @@ const Sales = () => {
     const [addSaleIsOpen, setAddSaleIsOpen] = useState(false)
     
     
+    const [jHolderFvalue, setJHolderFvalue] = useState('')
     const [dateFvalue, setDateFvalue] = useState('')
     const [dateFvalueDate, setDateFvalueDate] = useState('')
     const [dueDateFvalue, setDueDateFvalue] = useState('')
@@ -114,6 +116,10 @@ const Sales = () => {
 
       if(filteredArray != undefined && statusFvalue != null && statusFvalue !== "" ){
         filteredArray = filteredArray.filter(obj => obj.status === statusFvalue);
+      }
+
+      if(filteredArray != undefined && jHolderFvalue != null && jHolderFvalue !== "" ){
+        filteredArray = filteredArray.filter(obj => obj.jobHolder === jHolderFvalue);
       }
 
 
@@ -596,7 +602,7 @@ const Sales = () => {
     useEffect(()=>{
       setRowData(mainRowData)
       handleFilters()
-    },[mainRowData, activeFilter, dateFvalue, dateFvalueDate, dueDateFvalue, dueDateFvalueDate, jobDateFvalue, jobDateFvalueDate, statusFvalue, paidDateFvalue, paidDateFvalueDate])
+    },[mainRowData, activeFilter, dateFvalue, dateFvalueDate, dueDateFvalue, dueDateFvalueDate, jobDateFvalue, jobDateFvalueDate, statusFvalue, paidDateFvalue, paidDateFvalueDate, jHolderFvalue])
 
 
     const getData = async ()=>{
@@ -611,6 +617,7 @@ const Sales = () => {
                 setMainRowData(response.data.sales)
                 setClientsPreData(response.data.clients)
                 setCoaPreData(response.data.COA)
+                setUsersForJobHolder(response.data.users)
                 setSaleData(prevState => ({
                   ...prevState,
                   invoiceNo: response.data.invoice_no
@@ -730,12 +737,36 @@ const Sales = () => {
               return p.data.client_id.client_name //to get value from obj inside obj
           },  
         },
-        { headerName: 'Company Name', field: 'company_name', flex:1.5,
+        
+        { headerName: 'Company Name', field: 'company_name', flex:2,
           valueGetter: p => {
               return p.data.client_id.company_name //to get value from obj inside obj
           },  
         },
-        { headerName: 'Date', field: 'date', flex:2,
+        
+        
+        { 
+          headerName: 'Job Holder', 
+          field: 'jobHolder', 
+          flex:1.2,
+          editable: true,
+          cellEditor: 'agSelectCellEditor',
+          cellEditorParams: {
+            values: usersForJobHolder.map(option => option.name),
+          },
+          floatingFilterComponent: 'selectFloatingFilter',
+          floatingFilterComponentParams: {
+            options: usersForJobHolder.map(option => option.name),
+            onValueChange: (value) => setJHolderFvalue(value),
+            value: jHolderFvalue,
+            suppressFilterButton: true,
+            suppressInput: true
+          }
+           
+        },
+
+
+        { headerName: 'Date', field: 'date', flex:1.5,
         valueGetter: p => {
           if(p.data.date  && p.data.date !== "Invalid Date")
           {
@@ -760,7 +791,7 @@ const Sales = () => {
             suppressInput: true
           },
         },
-        { headerName: 'Due Date', field: 'due_date', flex:2, 
+        { headerName: 'Due Date', field: 'due_date', flex:1.5, 
         valueGetter: p => {
           if(p.data.due_date  && p.data.due_date !== "Invalid Date")
           {
@@ -785,7 +816,7 @@ const Sales = () => {
           suppressInput: true
         },
         },
-        { headerName: 'Job Date', field: 'jobDate', flex:2, 
+        { headerName: 'Job Date', field: 'jobDate', flex:1.5, 
         valueGetter: p => {
           if(p.data.jobDate  && p.data.jobDate !== "Invalid Date")
           {
@@ -810,7 +841,7 @@ const Sales = () => {
           suppressInput: true
         },
         },
-        { headerName: 'Paid Date', field: 'paidDate', flex:2, 
+        { headerName: 'Paid Date', field: 'paidDate', flex:1.5, 
         valueGetter: p => {
           if(p.data.status === "Paid")
           {
@@ -1318,11 +1349,14 @@ const Sales = () => {
   };
 
   const onCellValueChanged = useCallback(async (event) => {
+    const note = event.data.note;
+    const jobHolder = event.data.jobHolder;
+
     if (event.colDef.field === "note") {
-      const note = event.data.note;
       await axios.post(`${SalesEditOneNoteUrl}/${event.data._id}`,
         {
           note: note,
+          jobHolder: jobHolder,
         },
         {
           headers:{ 
@@ -1331,6 +1365,20 @@ const Sales = () => {
         }
       );
     }
+    if (event.colDef.field === "jobHolder") {
+      await axios.post(`${SalesEditOneNoteUrl}/${event.data._id}`,
+        {
+          note: note,
+          jobHolder: jobHolder,
+        },
+        {
+          headers:{ 
+            'Content-Type': 'application/json',
+          }
+        }
+      );
+    }
+
   }, [gridApi]);
 
 
