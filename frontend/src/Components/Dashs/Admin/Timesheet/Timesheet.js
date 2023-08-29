@@ -156,6 +156,7 @@ const Timesheet = (props) => {
         if(filter.company != null && filter.company != 'Company'){
             const filteredArray = rowData.filter(obj => obj.client_id && obj.client_id.company_name === filter.company);
             setRowData(filteredArray)
+            
         }
         if(filter.job != null && filter.job != 'Department'){
             const filteredArray = rowData.filter(obj => obj.job_id && obj.job_id.job_name === filter.job);
@@ -387,6 +388,7 @@ const Timesheet = (props) => {
             if(response.status === 200){
 
                 setMainRowData(response.data.timer)
+                console.log(response.data.timer)
                 setPreDataa(response.data)
                 setWeek(new Date())
                 setFilter(prevState => ({

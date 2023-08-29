@@ -43,6 +43,7 @@ const Sales = () => {
     const [modelType, setModelType] = useState(null);
     const [invoiceNumber, setInvoiceNumber] = useState(null);
     const [selectedAccountId, setSelectedAccountId] = useState(null);
+    const [totalSales, setTotalSales] = useState(0)
 
     const [ saleData, setSaleData ] = useState({
       to: "",
@@ -51,7 +52,8 @@ const Sales = () => {
       jobDate: "",
       invoiceNo: '1',
       currency: "GBP",
-      status: "Due"
+      status: "Due",
+      source: ""
 
     })
 
@@ -593,6 +595,12 @@ const Sales = () => {
       
     }
 
+      var totalSaleValue = 0;
+      filteredArray.forEach(val => {
+        totalSaleValue = totalSaleValue + +val.total;
+      })
+
+      setTotalSales(totalSaleValue);
 
       setRowData(filteredArray)
 
@@ -657,7 +665,8 @@ const Sales = () => {
         jobDate: "",
         invoiceNo: invoiceNumber,
         currency: "GBP",
-        status: "Due"
+        status: "Due",
+        source: ""
   
       })
       setItemsRowData([
@@ -704,6 +713,7 @@ const Sales = () => {
         currency: data.currency,
         status: data.status,
         _id: data._id,
+        source: data.source
   
       })
   
@@ -882,7 +892,6 @@ const Sales = () => {
           headerName: 'Amount', 
           field: 'total', 
           flex:1,
-          valueGetter: p => `${p.data.total} `
         },
         { 
           headerName: 'Status', 
@@ -891,6 +900,19 @@ const Sales = () => {
           floatingFilterComponent: 'selectFloatingFilter',
           floatingFilterComponentParams: {
             options: ['Paid', 'Due', 'Overdue'],
+            onValueChange: (value) => setStatusFvalue(value),
+            value: statusFvalue,
+            suppressFilterButton: true,
+            suppressInput: true
+          }
+        },
+        { 
+          headerName: 'Source', 
+          field: 'source', 
+          flex:1,
+          floatingFilterComponent: 'selectFloatingFilter',
+          floatingFilterComponentParams: {
+            options: ['FIV', 'UPW', 'PPH', 'Website', 'Referal', 'Partner'],
             onValueChange: (value) => setStatusFvalue(value),
             value: statusFvalue,
             suppressFilterButton: true,
@@ -969,7 +991,7 @@ const Sales = () => {
           flex:2,
           cellEditor: 'agSelectCellEditor',
           cellEditorParams: {
-            values: ["Bookkeeping", "Payroll", "Vat Return", "Accounts", "Personal Tax", "Company Sec", "Address", "Consultancy", "Others"],
+            values: ["Bookkeeping", "Payroll", "Vat Return", "Accounts", "Personal Tax", "Company Sec", "Address"],
           },
         },
         { headerName: 'Description', field: 'description', flex:4 },
@@ -1088,7 +1110,8 @@ const Sales = () => {
               jobDate: "",
               invoiceNo: '1',
               currency: "GBP",
-              status: "Due"
+              status: "Due",
+              source: ""
         
             })
             setItemsRowData([
@@ -1264,7 +1287,8 @@ const Sales = () => {
                 jobDate: "",
                 invoiceNo: '1',
                 currency: "GBP",
-                status: "Due"
+                status: "Due",
+                source: ""
           
               })
               setItemsRowData([
@@ -1473,6 +1497,12 @@ const Sales = () => {
                 frameworkComponents={frameworkComponents}
                 onCellValueChanged={onCellValueChanged}
             />
+
+                    <div className="fixed-row">
+                      <div className="fixed-row-cell">Total Sales: {totalSales.toFixed(1)}</div>
+                  
+                      {/* Add more cells or custom content as needed */}
+                    </div>
             
           </div>
         </div>
@@ -1562,6 +1592,7 @@ const Sales = () => {
                       </select>
                       {/* <input disabled style={{fontSize: '12px'}} onChange={handleFormChange} name='invoiceNo' value={saleData.invoiceNo} type="text" class="form-control" id="exampleFormControlInput1"/> */}
                     </div>
+
                   </div>  
 
                 </div>
@@ -1575,6 +1606,7 @@ const Sales = () => {
             <div className='row'>
               <div className='col-2'>
                 <div class="form-group">
+                <label style={{fontSize: '12px'}} for="exampleFormControlInput1">Currency</label>
                   <select disabled = {modelType === "View" ? true : false} defaultValue={saleData.currency} style={{fontSize: '12px'}} onChange={handleFormChange} name='currency' class="form-control" id="exampleFormControlSelect1">
                     <option value="AFN">Afghan Afghani - ؋</option>
                     <option value="ALL">Albanian Lek - Lek</option>
@@ -1743,6 +1775,20 @@ const Sales = () => {
                   </select>
                 </div>
               </div>
+
+
+              <div className='col-2'>
+                <div class="form-group">
+                    <label style={{fontSize: '12px'}} for="exampleFormControlInput1">Source</label>
+                    <select style={{fontSize: '12px'}} className='form-control' name='source' value={saleData.source} onChange={handleFormChange}>
+                      <option disabled value=""> Select </option>
+                      <option value="Fiv"> Fiv </option>
+                      <option value="Upwork"> Upwork </option>
+                    </select>
+                  </div>
+              </div>
+
+
             </div>
 
             <div className='my-3 salesTable'>

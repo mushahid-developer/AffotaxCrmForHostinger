@@ -38,7 +38,8 @@ exports.addSale = async (req, res) => {
             total: req.body.totalData.total,
             saleitem_id: items_id,
             status: req.body.saleData.status,
-            note: ""
+            note: "",
+            source: req.body.saleData.source
         }).then(
             res.status(200).json({
                 message: "Sale Added Successfully"
@@ -102,7 +103,8 @@ exports.editSale = async (req, res) => {
             discount: req.body.totalData.disc,
             total: req.body.totalData.total,
             saleitem_id: items_id,
-            status: req.body.saleData.status
+            status: req.body.saleData.status,
+            source: req.body.saleData.source
         }).then(
             res.status(200).json({
                 message: "Sale Edited Successfully"
