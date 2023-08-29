@@ -94,6 +94,7 @@ const Sales = () => {
     const [paidDateFvalue, setPaidDateFvalue] = useState('')
     const [paidDateFvalueDate, setPaidDateFvalueDate] = useState('')
     const [statusFvalue, setStatusFvalue] = useState('')
+    const [sourceFvalue, setSourceFvalue] = useState('')
 
 
     const gridRef = useRef();
@@ -122,6 +123,10 @@ const Sales = () => {
 
       if(filteredArray != undefined && jHolderFvalue != null && jHolderFvalue !== "" ){
         filteredArray = filteredArray.filter(obj => obj.jobHolder === jHolderFvalue);
+      }
+
+      if(filteredArray != undefined && sourceFvalue != null && sourceFvalue !== "" ){
+        filteredArray = filteredArray.filter(obj => obj.source === sourceFvalue);
       }
 
 
@@ -610,7 +615,7 @@ const Sales = () => {
     useEffect(()=>{
       setRowData(mainRowData)
       handleFilters()
-    },[mainRowData, activeFilter, dateFvalue, dateFvalueDate, dueDateFvalue, dueDateFvalueDate, jobDateFvalue, jobDateFvalueDate, statusFvalue, paidDateFvalue, paidDateFvalueDate, jHolderFvalue])
+    },[mainRowData, activeFilter, dateFvalue, dateFvalueDate, dueDateFvalue, dueDateFvalueDate, jobDateFvalue, jobDateFvalueDate, statusFvalue, paidDateFvalue, paidDateFvalueDate, jHolderFvalue, sourceFvalue])
 
 
     const getData = async ()=>{
@@ -913,8 +918,8 @@ const Sales = () => {
           floatingFilterComponent: 'selectFloatingFilter',
           floatingFilterComponentParams: {
             options: ['FIV', 'UPW', 'PPH', 'Website', 'Referal', 'Partner'],
-            onValueChange: (value) => setStatusFvalue(value),
-            value: statusFvalue,
+            onValueChange: (value) => setSourceFvalue(value),
+            value: sourceFvalue,
             suppressFilterButton: true,
             suppressInput: true
           }
