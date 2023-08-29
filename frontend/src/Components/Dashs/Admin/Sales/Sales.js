@@ -1787,12 +1787,15 @@ const Sales = () => {
                     <label style={{fontSize: '12px'}} for="exampleFormControlInput1">Source</label>
                     <select style={{fontSize: '12px'}} className='form-control' name='source' value={saleData.source} onChange={handleFormChange}>
                       <option disabled value=""> Select </option>
-                      <option value="Fiv"> Fiv </option>
-                      <option value="Upwork"> Upwork </option>
+                      <option value="FIV"> FIV </option>
+                      <option value="UPW"> UPW </option>
+                      <option value="PPH"> PPH </option>
+                      <option value="Website"> Website </option>
+                      <option value="Referal"> Referal </option>
+                      <option value="Partner"> Partner </option>
                     </select>
                   </div>
               </div>
-
 
             </div>
 
