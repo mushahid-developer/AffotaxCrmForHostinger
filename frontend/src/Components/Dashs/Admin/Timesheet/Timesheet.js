@@ -491,6 +491,14 @@ const Timesheet = (props) => {
                     const startFormattedTime = startDate.toLocaleTimeString([], { hour: '2-digit', minute: '2-digit', second: '2-digit', hour12: true });
                     const endFormattedTime = endDate.toLocaleTimeString([], { hour: '2-digit', minute: '2-digit', second: '2-digit', hour12: true });
 
+                    // Manually adjust "00" to "12" for 12 AM and 12 PM
+                    if (startFormattedTime.startsWith("00")) {
+                        startFormattedTime = startFormattedTime.replace("00", "12");
+                    }
+                    if (endFormattedTime.startsWith("00")) {
+                        endFormattedTime = endFormattedTime.replace("00", "12");
+                    }
+
                     return `${startFormattedTime} - ${endFormattedTime}`;
                 } else {
                     return " "; 

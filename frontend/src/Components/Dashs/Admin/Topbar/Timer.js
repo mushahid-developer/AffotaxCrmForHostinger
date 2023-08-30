@@ -32,7 +32,7 @@ function Timer(props) {
   const [data, setData] = useState({
     clientName: "",
     departmentName: "",
-    notes: ''
+    notes: secureLocalStorage.getItem("timerNote")
   });
 
   const hadleTimeSetValues = () => {
@@ -52,7 +52,7 @@ function Timer(props) {
       ...prevState,
       clientName: timerState.client,
       departmentName: timerState.department,
-      notes: timerState.note,
+      
   }));
     setTimerOn(true);
   }
@@ -114,6 +114,10 @@ function Timer(props) {
       [name]: value
     }));
 
+    if(timerOn){
+      secureLocalStorage.setItem('timerNote', value);
+    }
+
   }
 
   const handleChange = (name, option)=>{
@@ -169,6 +173,7 @@ function Timer(props) {
         if(response.status === 200 )
       {
         setTimerOn(true);
+        secureLocalStorage.setItem('timerNote', data.notes);
       }
       setLoader(false)
 
@@ -221,6 +226,7 @@ function Timer(props) {
             notes : ""
           }));
           setTime(0);
+          secureLocalStorage.removeItem("timerNote")
         }
         setLoader(false)
       }
