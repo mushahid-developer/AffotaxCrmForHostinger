@@ -388,7 +388,6 @@ const Timesheet = (props) => {
             if(response.status === 200){
 
                 setMainRowData(response.data.timer)
-                console.log(response.data.timer)
                 setPreDataa(response.data)
                 setWeek(new Date())
                 setFilter(prevState => ({
@@ -469,9 +468,33 @@ const Timesheet = (props) => {
         { 
             headerName: 'Department', 
             field: 'department', 
-            flex:1.5, 
+            flex:1, 
             valueGetter: p => {
                 return p.data.job_id ? p.data.job_id.job_name : "" //to get value from obj inside obj
+              }, 
+        },
+        { 
+            headerName: 'Time', 
+            field: 'time', 
+            flex:1.5, 
+            valueGetter: p => {
+
+                const startDateString = p.data.startTime;
+                const startDate = new Date(startDateString);
+                const endDateString = p.data.endTime;
+                const endDate = new Date(endDateString);
+
+                const currentDate = new Date("Wed Aug 30 2023 2:00:00 GMT+0500 (Pakistan Standard Time)"); // Get the current date and time
+
+                if (startDate > currentDate) {
+                    // If the start date is greater than today's date
+                    const startFormattedTime = startDate.toLocaleTimeString([], { hour: '2-digit', minute: '2-digit', second: '2-digit', hour12: true });
+                    const endFormattedTime = endDate.toLocaleTimeString([], { hour: '2-digit', minute: '2-digit', second: '2-digit', hour12: true });
+
+                    return `${startFormattedTime} - ${endFormattedTime}`;
+                } else {
+                    return " "; 
+                }
               }, 
         },
         { headerName: 'Mon', 
