@@ -292,6 +292,11 @@ export default function SideBar(props) {
                         <span style={{marginLeft: '10px'}}>User Roles</span>
                         </Link>
 
+                        <Link to='/companies' className={location.pathname === '/companies' ? 'sidebar_link_active' : 'sidebar_link'}>
+                        <svg style={{heigh: '12px', width: '15px'}} xmlns="http://www.w3.org/2000/svg" width="12" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" className="feather feather-minus"><line x1="5" y1="12" x2="19" y2="12"></line></svg>
+                        <span style={{marginLeft: '10px'}}>Companies</span>
+                        </Link>
+                        
                         <Link to='/finance/charts_of_accounts' className={location.pathname === '/finance/charts_of_accounts' ? 'sidebar_link_active' : 'sidebar_link'}>
                         <svg style={{heigh: '12px', width: '15px'}} xmlns="http://www.w3.org/2000/svg" width="12" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" className="feather feather-minus"><line x1="5" y1="12" x2="19" y2="12"></line></svg>
                         <span style={{marginLeft: '10px'}}>Chart Of Accounts</span>

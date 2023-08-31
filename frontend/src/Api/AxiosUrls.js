@@ -147,3 +147,8 @@ export const getAllNotificationsUrl = 'notifications/get/all';
 export const markAllNotificationsReadUrl = 'notifications/mark/all/read';
 export const markOneNotificationsReadUrl = 'notifications/mark/one/read';
 
+//Companies
+export const companiesGetAllUrl = 'companies/get/all';
+export const companiesAddOneUrl = 'companies/add/one';
+export const companiesEditOneUrl = 'companies/edit/one';
+export const companiesDeleteOneUrl = 'companies/delete/one';

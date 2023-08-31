@@ -29,6 +29,8 @@ const { getAttendanceSheet } = require('../controller/HrController');
 const { GetAllRecurringTasks, AddOneRecurringTasksCategory, AddOneRecurringTasks, CheckOneRecurringTasks, DeleteOneRecurringTasks, DeleteOneTaskCategory } = require('../controller/RecurringTasksController');
 const { getDashboardData } = require('../controller/DashboardController');
 const { GetAllNotifications, MarkAllAsRead, MarkOneAsRead } = require('../controller/NotificationsController');
+const { getAllCompanies, editCompany, addCompany, deleteCompany } = require('../controller/CompaniesController');
+const { addPageForRole } = require('../controller/RolesPermissionsController');
 
 // Api Routes
 route.get('/', (req, res)=>{
@@ -172,5 +174,16 @@ route.post('/tickets/edit/one/:id',authMiddleware, TicketsController.EditOneTick
 route.get('/notifications/get/all', authMiddleware, GetAllNotifications)
 route.get('/notifications/mark/all/read', authMiddleware, MarkAllAsRead)
 route.get('/notifications/mark/one/read/:id', MarkOneAsRead)
+
+//Companies
+route.get('/companies/get/all', getAllCompanies)
+route.post('/companies/add/one', addCompany)
+route.post('/companies/edit/one/:id', editCompany)
+route.post('/companies/delete/one/:id', deleteCompany)
+
+
+//AddPagesForRole
+route.get('/roles/page/add/:name', addPageForRole)
+
 
 module.exports = route
