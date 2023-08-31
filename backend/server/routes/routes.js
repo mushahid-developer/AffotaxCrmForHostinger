@@ -154,7 +154,7 @@ route.post('/template/users/list/add/:id', TemplateController.addUsersToList)
 
 //Goals
 route.post('/goals/add/one', GoalsController.addGoal)
-route.get('/goals/get/all', GoalsController.getAllGoal)
+route.get('/goals/get/all', authMiddleware, GoalsController.getAllGoal)
 route.post('/goals/edit/one/:id', GoalsController.editGoal)
 route.get('/goals/delete/one/:id', GoalsController.DeleteGoal)
 

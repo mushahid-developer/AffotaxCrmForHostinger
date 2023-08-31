@@ -2,6 +2,7 @@ const Clientdb = require("../model/Client/client")
 const Goalsdb = require("../model/Goals/Goals")
 const Jobsdb = require("../model/Jobs/jobs")
 const LeadDb = require("../model/Leads/Leads")
+const Userdb = require("../model/Users/Users")
 
 exports.addGoal = async (req, res) => {
     try{
@@ -15,6 +16,7 @@ exports.addGoal = async (req, res) => {
             startDate: startDate != 'Invalid Date' ? startDate : null,
             endDate: endDate != 'Invalid Date' ? endDate : null,
             goalType: req.body.formData.goalType,
+            jobHolder: req.body.formData.jobHolder
             
         })
 
@@ -41,7 +43,7 @@ exports.editGoal = async (req, res) => {
             startDate: startDate != 'Invalid Date' ? startDate : null,
             endDate: endDate != 'Invalid Date' ? endDate : null,
             goalType: req.body.formData.goalType,
-            
+            jobHolder: req.body.formData.jobHolder
         })
 
         res.status(200).json({message: "Success"})
@@ -57,8 +59,21 @@ exports.getAllGoal = async (req, res) => {
     try{
 
         const goalsFinalData = [];
+        var goalsPreData = []
+        var users = [];
 
-        const goalsPreData = await Goalsdb.find();
+        const userId = req.user._id
+        const User_Cur = await Userdb.findById(userId).populate('role_id');
+
+        if( User_Cur.role_id.name === 'Admin'){
+            goalsPreData = await Goalsdb.find();
+            users = await Userdb.find();
+        }else{
+            goalsPreData = await Goalsdb.find({jobHolder: User_Cur.name});
+            users = await Userdb.find({_id: User_Cur._id});
+        }
+
+
         const clientsPreData = await Clientdb.find();
         const departmentsPreData = await Jobsdb.find();
         const LeadsPreData = await LeadDb.find();
@@ -66,6 +81,11 @@ exports.getAllGoal = async (req, res) => {
         goalsPreData.forEach((goal)=>{
             const startDate = new Date(goal.startDate);
             const endDate = new Date(goal.endDate);
+
+            var jobholderVal = ""
+            if(goal.jobHolder){
+                jobholderVal = goal.jobHolder;
+            }
 
             if(goal.goalType === 'Increase Clients'){
                 const filteredClients = clientsPreData.filter((obj) =>{
@@ -89,7 +109,8 @@ exports.getAllGoal = async (req, res) => {
                     endDate: goal.endDate,
                     goalType: goal.goalType,
                     __v: goal.__v,
-                    percentage
+                    percentage,
+                    jobHolder: jobholderVal
                 })
 
             }
@@ -126,7 +147,8 @@ exports.getAllGoal = async (req, res) => {
                     endDate: goal.endDate,
                     goalType: goal.goalType,
                     __v: goal.__v,
-                    percentage
+                    percentage,
+                    jobHolder: jobholderVal
                 })
 
             }
@@ -154,7 +176,8 @@ exports.getAllGoal = async (req, res) => {
                     endDate: goal.endDate,
                     goalType: goal.goalType,
                     __v: goal.__v,
-                    percentage
+                    percentage,
+                    jobHolder: jobholderVal
                 })
 
             }
@@ -182,13 +205,18 @@ exports.getAllGoal = async (req, res) => {
                     endDate: goal.endDate,
                     goalType: goal.goalType,
                     __v: goal.__v,
-                    percentage
+                    percentage,
+                    jobHolder: jobholderVal
                 })
 
             }
         })
 
-        res.status(200).json({message: "Success", data: goalsFinalData})
+        
+
+
+
+        res.status(200).json({message: "Success", data: goalsFinalData, users: users})
         
         
     } catch (err) {

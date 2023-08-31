@@ -16,6 +16,7 @@ import { Button, Form, Modal } from 'react-bootstrap';
 import { CircularProgressbar, buildStyles } from 'react-circular-progressbar';
 import 'react-circular-progressbar/dist/styles.css';
 import GoalsDateFilter from './GoalsDateFilter';
+import secureLocalStorage from 'react-secure-storage';
 
 
 var GoalsGetAllUrl = axiosURL.GoalsGetAllUrl;
@@ -37,9 +38,13 @@ const Goals = () => {
     
     const [showAddGoalModal, setShowAddGoalModal] = useState(false);
 
+    const [users, setUsers] = useState();
+
     const [progressFValue, setProgressFValue] = useState("Progress")
     const [startDateFValue, setStartDateFValue] = useState("")
     const [endDateFValue, setEndDateFValue] = useState("")
+    const [jobHolderFValue, setJobHolderFValue] = useState("")
+    
     
     const [addGoalFormData, setAddGoalFormData] = useState({
       subject: "",
@@ -47,6 +52,7 @@ const Goals = () => {
       startDate: "",
       endDate: "",
       goalType: "",
+      jobHolder: ""
     })
     
     const gridRef = useRef();
@@ -71,6 +77,11 @@ const Goals = () => {
         return obj;
 
       })
+
+      if(jobHolderFValue ){
+        filteredArray = filteredArray.filter(obj => obj.jobHolder === jobHolderFValue);
+      }
+
 
       if(progressFValue === "Progress"){
         filteredArray = filteredArray.filter(obj => obj.status === "Progress");
@@ -113,19 +124,6 @@ const Goals = () => {
         });
       }
       
-
-
-    //   // total_fee
-    //   if(filteredArray){
-    //     var summ = 0;
-    //     filteredArray.forEach((item) => {
-    //       if(item.total_fee && item.total_fee !== ""){
-    //         summ = +summ + +item.total_fee
-    //       }
-    //     })
-    //     setFeeSum(summ);
-    //   }
-
       setRowData(filteredArray)
 
     }
@@ -133,19 +131,24 @@ const Goals = () => {
     useEffect(()=>{
       setRowData(mainRowData)
       handleFilters()
-    },[mainRowData, progressFValue, startDateFValue, endDateFValue])
+    },[mainRowData, progressFValue, startDateFValue, endDateFValue, jobHolderFValue])
 
 
     const getData = async ()=>{
         setLoader(true)
         try {
+            const token = secureLocalStorage.getItem('token')
             const response = await axios.get(GoalsGetAllUrl,
-                {
-                    headers:{ 'Content-Type': 'application/json' }
-                }
+              {
+                headers:{ 
+               'Content-Type': 'application/json',
+               'Authorization': 'Bearer ' + token
+              }
+             }
             );
             if(response.status === 200){
                 setMainRowData(response.data.data)
+                setUsers(response.data.users)
                 setLoader(false)
             }
             
@@ -197,6 +200,23 @@ const Goals = () => {
             headerCheckboxSelection: true,
             editable: false,
             valueGetter: (params) => params.node.rowIndex + 1,
+        },
+        { 
+          headerName: 'Job Holder', 
+          field: 'jobHolder', 
+          flex:1.5,
+          cellEditor: 'agSelectCellEditor',
+          cellEditorParams: {
+            values: users && users.map(option => option.name),
+          },
+          floatingFilterComponent: 'selectFloatingFilter', 
+          floatingFilterComponentParams: { 
+            options: users && users.map(option => option.name),
+            onValueChange:(value) => setJobHolderFValue(value),
+            value: jobHolderFValue,
+            suppressFilterButton: true, 
+            suppressInput: true 
+          },
         },
         { 
           headerName: 'Subject', 
@@ -621,6 +641,23 @@ async function onGridReady(params) {
                   onChange={handleAddFormDataChange}
                   value = {addGoalFormData.endDate}
               />
+            </Form.Group>
+
+            <Form.Group className='mt-2'>
+            <Form.Label>Job Holder</Form.Label>
+              <Form.Select 
+                name='jobHolder'
+                onChange={handleAddFormDataChange}
+                value = {addGoalFormData.jobHolder}
+              >
+
+                <option >Select Employee</option>
+                {users &&users.map( user => 
+                  <option value={user.name}>{user.name}</option>
+                  
+                  )}
+                  
+              </Form.Select>
             </Form.Group>
 
             <Form.Group className='mt-2'>

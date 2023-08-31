@@ -15,6 +15,9 @@ var GoalsSchema = new mongoose.Schema({
     },
     goalType: {
         type: String
+    },
+    jobHolder:{
+        type: String
     }
 });
 
