@@ -224,6 +224,7 @@ const Goals = () => {
           flex:2,
         },
         { headerName: 'Achievement', field: 'achievement', flex:0.7 },
+        { headerName: 'Achieved', field: 'achievedValue', flex:0.7 },
         { 
           headerName: 'Start Date', 
           field: 'startDate', 

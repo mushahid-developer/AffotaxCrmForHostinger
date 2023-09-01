@@ -67,7 +67,12 @@ exports.getAllGoal = async (req, res) => {
 
         if( User_Cur.role_id.name === 'Admin'){
             goalsPreData = await Goalsdb.find();
-            users = await Userdb.find();
+            const users_all = await Userdb.find().populate('role_id');
+            users = users_all.filter((user) => {
+                return user.role_id && user.role_id.pages.some((page) => {
+                    return page.name === 'Goals Page' && page.isChecked;
+                });
+            });
         }else{
             goalsPreData = await Goalsdb.find({jobHolder: User_Cur.name});
             users = await Userdb.find({_id: User_Cur._id});
@@ -110,7 +115,8 @@ exports.getAllGoal = async (req, res) => {
                     goalType: goal.goalType,
                     __v: goal.__v,
                     percentage,
-                    jobHolder: jobholderVal
+                    jobHolder: jobholderVal,
+                    achievedValue: noOfClients
                 })
 
             }
@@ -148,7 +154,8 @@ exports.getAllGoal = async (req, res) => {
                     goalType: goal.goalType,
                     __v: goal.__v,
                     percentage,
-                    jobHolder: jobholderVal
+                    jobHolder: jobholderVal,
+                    achievedValue: totalFee
                 })
 
             }
@@ -177,7 +184,8 @@ exports.getAllGoal = async (req, res) => {
                     goalType: goal.goalType,
                     __v: goal.__v,
                     percentage,
-                    jobHolder: jobholderVal
+                    jobHolder: jobholderVal,
+                    achievedValue: noOfLeads
                 })
 
             }
@@ -206,7 +214,8 @@ exports.getAllGoal = async (req, res) => {
                     goalType: goal.goalType,
                     __v: goal.__v,
                     percentage,
-                    jobHolder: jobholderVal
+                    jobHolder: jobholderVal,
+                    achievedValue: noOfLeadsWon
                 })
 
             }
