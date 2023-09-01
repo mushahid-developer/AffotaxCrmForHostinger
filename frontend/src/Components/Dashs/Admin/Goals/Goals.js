@@ -204,7 +204,7 @@ const Goals = () => {
         { 
           headerName: 'Job Holder', 
           field: 'jobHolder', 
-          flex:1.5,
+          flex:0.8,
           cellEditor: 'agSelectCellEditor',
           cellEditorParams: {
             values: users && users.map(option => option.name),

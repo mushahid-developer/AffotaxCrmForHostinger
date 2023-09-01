@@ -37,6 +37,7 @@ import secureLocalStorage from "react-secure-storage";
 import TicketsContext from "../Dashs/Admin/Tickets/TicketsContext";
 import MyList from "../Dashs/Admin/MyList/MyList";
 import Companies from "../Dashs/Admin/Companies/Companies";
+import Proposals from "../Dashs/Admin/Proposals/Proposals";
 var getAllTickets = axiosURL.getAllTickets;
 
 export default function AdminRoutes(props) {
@@ -188,6 +189,7 @@ export default function AdminRoutes(props) {
                   }></Route>
                   <Route path="/tickets/mail" element = {<DetailedMail setReFetchTickets = {setReFetchTickets}/>}></Route>
                   <Route path="/companies" element = {<Companies />}></Route>
+                  <Route path="/proposals" element = {<Proposals />}></Route>
                 </Routes>
                 </div>
               </div>

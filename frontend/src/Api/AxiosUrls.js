@@ -152,3 +152,10 @@ export const companiesGetAllUrl = 'companies/get/all';
 export const companiesAddOneUrl = 'companies/add/one';
 export const companiesEditOneUrl = 'companies/edit/one';
 export const companiesDeleteOneUrl = 'companies/delete/one';
+
+//Proposals
+export const proposalsGetAllUrl = 'proposals/get/all';
+export const proposalsAddOneUrl = 'proposals/add/one';
+export const proposalsUpdateOneUrl = 'proposals/edit/one';
+export const proposalsDeleteUrl = 'proposals/delete/one';
+export const proposalsCopyOneUrl = 'proposals/copy/one';

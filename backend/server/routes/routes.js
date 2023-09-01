@@ -31,6 +31,7 @@ const { getDashboardData } = require('../controller/DashboardController');
 const { GetAllNotifications, MarkAllAsRead, MarkOneAsRead } = require('../controller/NotificationsController');
 const { getAllCompanies, editCompany, addCompany, deleteCompany } = require('../controller/CompaniesController');
 const { addPageForRole } = require('../controller/RolesPermissionsController');
+const { getAllProposals, deleteProposals, editProposals, addProposals, copyProposals } = require('../controller/ProposalsController');
 
 // Api Routes
 route.get('/', (req, res)=>{
@@ -180,6 +181,13 @@ route.get('/companies/get/all', getAllCompanies)
 route.post('/companies/add/one', addCompany)
 route.post('/companies/edit/one/:id', editCompany)
 route.post('/companies/delete/one/:id', deleteCompany)
+
+//Proposals
+route.get('/proposals/get/all', getAllProposals)
+route.post('/proposals/add/one', addProposals)
+route.post('/proposals/edit/one/:id', editProposals)
+route.get('/proposals/delete/one/:id', deleteProposals)
+route.get('/proposals/copy/one/:id', copyProposals)
 
 
 //AddPagesForRole

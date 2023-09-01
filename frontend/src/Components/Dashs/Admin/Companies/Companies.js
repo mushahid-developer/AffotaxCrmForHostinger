@@ -229,7 +229,7 @@ useEffect(() => {
   ];
 
   const defaultColDef = useMemo( ()=> ({
-    sortable: false,
+    sortable: true,
     filter: true,
     floatingFilter: true,
     editable: false,
