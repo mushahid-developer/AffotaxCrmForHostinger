@@ -1,5 +1,6 @@
 const ChartOfAccountsdb = require("../model/ChartOfAccounts/ChartOfAccounts");
 const Clientdb = require("../model/Client/client");
+const Companiessdb = require("../model/Companies/Companies");
 const SaleItemdb = require("../model/Sales/SaleItem")
 const Salesdb = require("../model/Sales/Sales");
 const Userdb = require("../model/Users/Users");
@@ -39,7 +40,8 @@ exports.addSale = async (req, res) => {
             saleitem_id: items_id,
             status: req.body.saleData.status,
             note: "",
-            source: req.body.saleData.source
+            source: req.body.saleData.source,
+            company_id: req.body.saleData.company_id
         }).then(
             res.status(200).json({
                 message: "Sale Added Successfully"
@@ -104,7 +106,8 @@ exports.editSale = async (req, res) => {
             total: req.body.totalData.total,
             saleitem_id: items_id,
             status: req.body.saleData.status,
-            source: req.body.saleData.source
+            source: req.body.saleData.source,
+            company_id: req.body.saleData.company_id,
         }).then(
             res.status(200).json({
                 message: "Sale Edited Successfully"
@@ -163,21 +166,24 @@ exports.getAllSale = async (req, res) => {
         invoice_no = +invoice_no + +sales[0].invoice_no
     }
      
-        if (!sales) {
-            return res.status(400).json({
-                message: "Some Error, Please try again later",
-            })
-        }
+    if (!sales) {
+        return res.status(400).json({
+            message: "Some Error, Please try again later",
+        })
+    }
 
-        var response = {
-            sales: modifiedSales,
-            clients,
-            users,
-            invoice_no,
-            COA
-        }
+    var companies = await Companiessdb.find();
 
-        res.json(response);
+    var response = {
+        sales: modifiedSales,
+        clients,
+        users,
+        invoice_no,
+        COA,
+        companies
+    }
+
+    res.json(response);
 }
 
 exports.getOneSale = async (req, res) => {

@@ -39,6 +39,10 @@ var SalesSchema = new mongoose.Schema({
         type: mongoose.Types.ObjectId,
         ref: 'client'
     },
+    company_id: {
+        type: mongoose.Types.ObjectId,
+        ref: 'companies'
+    },
     status: {
         type: String
     },

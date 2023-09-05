@@ -55,6 +55,7 @@ export default function AdminRoutes(props) {
   const [ticketsPagePermissions, setTicketsPagePermissions] = useState(null);
   const [reFetchTickets, setReFetchTickets] = useState(false);
   const [unreadCounter, setUnreadCounter] = useState(0);
+  const [sideBarIsClosed, setSideBarIsClosed] = useState(false);
 
   var finalTicketData = {
     ticketsData,
@@ -150,13 +151,14 @@ export default function AdminRoutes(props) {
                 miniNoteIsOpen={miniNoteIsOpen} 
                 setRecurringNoteIsOpen={setRecurringNoteIsOpen} 
                 recurringNoteIsOpen={recurringNoteIsOpen}
+                setSideBarIsClosed={setSideBarIsClosed}
               />
             </div>
             <div className="Layout_bottom_screen">
-              <div className="layout_sidebar">
+              <div className={`layout_sidebar ${sideBarIsClosed && "close"}`}>
                 <SideBar setToken={setToken} pagesAccess={pagesAccess} unreadCounter={unreadCounter} />
               </div>
-              <div className="layout_main_screen">
+              <div className={`layout_main_screen ${sideBarIsClosed && "close"}`}>
                 <div className="layout_main_screen_content">
                 <Routes>
                   <Route path="/" element = {<PublicDash />}></Route>

@@ -661,14 +661,14 @@ useEffect(() => {
         headerName: 'Client Name', 
         field: 'clientName', 
         flex:1.5,
-        floatingFilterComponent: 'selectFloatingFilter', 
-        floatingFilterComponentParams: { 
-          options: clients && clients.map(option => option.client_name),
-          onValueChange:(value) => setClientFValue(value),
-          value: clientFValue,
-          suppressFilterButton: true, 
-          suppressInput: true 
-        },
+        // floatingFilterComponent: 'selectFloatingFilter', 
+        // floatingFilterComponentParams: { 
+        //   options: clients && clients.map(option => option.client_name),
+        //   onValueChange:(value) => setClientFValue(value),
+        //   value: clientFValue,
+        //   suppressFilterButton: true, 
+        //   suppressInput: true 
+        // },
     },
     { 
         headerName: 'Subject', 
@@ -868,21 +868,16 @@ return (
       >
         
                 <Form.Group className='mt-2'>
-                <Form.Label>Job Holder</Form.Label>
+                <Form.Label>Client Name</Form.Label>
 
-                <Form.Select 
-                  name='clientName'
-                  onChange={handleFormChange}
-                  value = {formData.clientName}
-                  >
-                      <option>Select Client Name</option>
-                      {clients && clients.map((proj, ind)=>{
-                        return(
-                          <option key={ind} value={proj.client_name}>{proj.client_name}</option>
-                        )
-                      })}
-                    
-                </Form.Select>
+                <Form.Control
+                    name='clientName'
+                    type="text"
+                    placeholder="Enter Client Name"
+                      onChange={handleFormChange}
+                      value = {formData.clientName}
+                />
+                
                 </Form.Group>
 
                 <Form.Group className='mt-2'>
@@ -890,7 +885,7 @@ return (
                 <Form.Select 
                   name='jobHolder'
                   onChange={handleFormChange}
-                  value = {formData.clientName}
+                  value = {formData.jobHolder}
                   >
                       <option>Select Job Holder</option>
                       {jobHolders && jobHolders.map((proj, ind)=>{

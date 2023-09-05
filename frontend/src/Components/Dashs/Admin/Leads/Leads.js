@@ -624,7 +624,6 @@ const Leads = () => {
 
         getPreData();
 
-        setLoader(false)
     }, []);
 
     useEffect(()=>{

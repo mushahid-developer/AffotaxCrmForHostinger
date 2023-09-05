@@ -44,6 +44,7 @@ const Sales = () => {
     const [invoiceNumber, setInvoiceNumber] = useState(null);
     const [selectedAccountId, setSelectedAccountId] = useState(null);
     const [totalSales, setTotalSales] = useState(0)
+    const [companiesNames, setCompaniesNames] = useState([])
 
     const [ saleData, setSaleData ] = useState({
       to: "",
@@ -53,7 +54,8 @@ const Sales = () => {
       invoiceNo: '1',
       currency: "GBP",
       status: "Due",
-      source: ""
+      source: "",
+      company_id: ""
 
     })
 
@@ -628,6 +630,7 @@ const Sales = () => {
             );
             if(response.status === 200){
                 setMainRowData(response.data.sales)
+                setCompaniesNames(response.data.companies)
                 setClientsPreData(response.data.clients)
                 setCoaPreData(response.data.COA)
                 setUsersForJobHolder(response.data.users)
@@ -671,7 +674,8 @@ const Sales = () => {
         invoiceNo: invoiceNumber,
         currency: "GBP",
         status: "Due",
-        source: ""
+        source: "",
+        company_id: ""
   
       })
       setItemsRowData([
@@ -718,7 +722,8 @@ const Sales = () => {
         currency: data.currency,
         status: data.status,
         _id: data._id,
-        source: data.source
+        source: data.source,
+        company_id: data.company_id
   
       })
   
@@ -1121,7 +1126,8 @@ const Sales = () => {
               invoiceNo: '1',
               currency: "GBP",
               status: "Due",
-              source: ""
+              source: "",
+              company_id: ""
         
             })
             setItemsRowData([
@@ -1298,7 +1304,8 @@ const Sales = () => {
                 invoiceNo: '1',
                 currency: "GBP",
                 status: "Due",
-                source: ""
+                source: "",
+                company_id: ""
           
               })
               setItemsRowData([
@@ -1798,6 +1805,23 @@ const Sales = () => {
                       <option value="Website"> Website </option>
                       <option value="Referal"> Referal </option>
                       <option value="Partner"> Partner </option>
+                    </select>
+                  </div>
+              </div>
+
+              <div className='col-2'>
+                <div class="form-group">
+                    <label style={{fontSize: '12px'}} for="exampleFormControlInput1">Company</label>
+                    <select style={{fontSize: '12px'}} className='form-control' name='company_id' value={saleData.company_id} onChange={handleFormChange}>
+                      <option disabled value=""> Select </option>
+
+                        {companiesNames.map((company, ind) =>{
+                          return(
+                            <option key={ind} value={company._id}> {company.name} </option>
+                          )
+                        })}
+
+                      
                     </select>
                   </div>
               </div>

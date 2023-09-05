@@ -113,6 +113,21 @@ h6{
   overflow-y: scroll;
   box-shadow: 0 0 10px rgb(0 0 0 / 5%) !important;
     -webkit-box-shadow: 0 0 10px rgb(0 0 0 / 5%) !important;
+  transition: width .3s ease-in-out;
+}
+
+.layout_sidebar.close {
+  width: 0px;
+}
+
+.sidebar_subtasks_settings {
+  height: 0;
+  overflow: hidden;
+  transition: height .3s ease-in-out;
+}
+
+.sidebar_subtasks_settings.open {
+  height: 200px;;
 }
 
 /* Hide scrollbar for Chrome, Safari and Opera */
@@ -129,6 +144,11 @@ h6{
 .layout_main_screen{
   width: calc(100% - 244px);
   background-color: #EEF1F9;
+  transition: width .3s ease-in-out;
+}
+
+.layout_main_screen.close {
+  width: 100%;
 }
 
 .layout_main_screen_content{
