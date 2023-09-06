@@ -44,10 +44,12 @@ export default function Proposals() {
     jobDate: "",
     note: "",
     source: "",
+    status: "",
   })
   const [jobHolderFValue, setJobHolderFValue] = useState("");
   const [clientFValue, setClientFValue] = useState("");
   const [sourceFValue, setSourceFValue] = useState("");
+  const [statusFValue, setStatusFValue] = useState("");
 
   const [dateFvalue, setDateFvalue] = useState("");
   const [dateFvalueDate, setDateFvalueDate] = useState("");
@@ -71,6 +73,7 @@ export default function Proposals() {
         jobDate: "",
         note: "",
         source: "",
+        status: "",
       })
       setModelType({
         type: "new",
@@ -89,6 +92,7 @@ export default function Proposals() {
         jobDate: data.jobDate,
         note: data.note,
         source: data.source,
+        status: data.status,
       })
       setModelType({
         type: "edit",
@@ -107,6 +111,7 @@ export default function Proposals() {
         jobDate: data.jobDate,
         note: data.note,
         source: data.source,
+        status: data.status,
       })
       setShowViewDetailedModel(true)
     }
@@ -146,6 +151,7 @@ export default function Proposals() {
           jobDate: "",
           note: "",
           source: "",
+          status: "",
         })
         setModelType({
           type: "",
@@ -176,6 +182,7 @@ export default function Proposals() {
           jobDate: "",
           note: "",
           source: "",
+          status: "",
         })
         setModelType({
           type: "",
@@ -228,6 +235,10 @@ export default function Proposals() {
 
     if(sourceFValue ){
       filteredArray = filteredArray.filter(obj => obj.source === sourceFValue);
+    }
+
+    if(statusFValue ){
+      filteredArray = filteredArray.filter(obj => obj.status === statusFValue);
     }
 
 
@@ -591,7 +602,7 @@ export default function Proposals() {
 
   useEffect(()=>{
     filter();
-  },[mainRowData, jobHolderFValue, clientFValue, sourceFValue, dateFvalue, dateFvalueDate, deadlineFvalue, deadlineFvalueDate, jobDateFvalue, jobDateFvalueDate])
+  },[mainRowData, jobHolderFValue, clientFValue, sourceFValue, dateFvalue, dateFvalueDate, deadlineFvalue, deadlineFvalueDate, jobDateFvalue, jobDateFvalueDate, statusFValue])
 
   
   const getData = async ()=>{
@@ -740,6 +751,19 @@ useEffect(() => {
           options: ['Email', 'UPW', 'PPH', 'Other'],
           onValueChange:(value) => setSourceFValue(value),
           value: sourceFValue,
+          suppressFilterButton: true, 
+          suppressInput: true 
+        },
+    },
+    { 
+        headerName: 'Status', 
+        field: 'status', 
+        flex:1,
+        floatingFilterComponent: 'selectFloatingFilter', 
+        floatingFilterComponentParams: { 
+          options: ['Proposal', 'Lead', 'Client'],
+          onValueChange:(value) => setStatusFValue(value),
+          value: statusFValue,
           suppressFilterButton: true, 
           suppressInput: true 
         },
@@ -979,6 +1003,22 @@ return (
                       onChange={handleFormChange}
                       value = {formData.note}
                 />
+                </Form.Group>
+        
+                <Form.Group className='mt-2'>
+                <Form.Label>Status</Form.Label>
+                <Form.Select 
+                  name='status'
+                  onChange={handleFormChange}
+                  value = {formData.status}
+                  >
+                      <option value="">Select Status</option>
+                      <option value="Proposal">Proposal</option>
+                      <option value="Lead">Lead</option>
+                      <option value="Client">Client</option>
+                    
+                    
+                </Form.Select>
                 </Form.Group>
 
 

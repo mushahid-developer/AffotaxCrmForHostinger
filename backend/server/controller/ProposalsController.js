@@ -16,7 +16,8 @@ exports.addProposals = async (req, res) => {
             deadline: req.body.formData.deadline,
             jobDate: req.body.formData.jobDate,
             note: req.body.formData.note,
-            source: req.body.formData.source
+            source: req.body.formData.source,
+            status: req.body.formData.status
         });
             
           res.json({
@@ -47,7 +48,8 @@ exports.editProposals = async (req, res) => {
             deadline: req.body.formData.deadline,
             jobDate: req.body.formData.jobDate,
             note: req.body.formData.note,
-            source: req.body.formData.source
+            source: req.body.formData.source,
+            status: req.body.formData.status
         });
             
           res.json({
@@ -78,7 +80,8 @@ exports.copyProposals = async (req, res) => {
             deadline: proposal.deadline,
             jobDate: proposal.jobDate,
             note: proposal.note,
-            source: proposal.source
+            source: proposal.source,
+            status: "Proposal"
         });
             
           res.json({
@@ -119,8 +122,13 @@ exports.getAllProposals = async (req, res) => {
     try {
 
         const proposals = await ProposalsDb.find();
-        const employees = await Userdb.find();
         const clients = await Clientdb.find();
+        const users_all = await Userdb.find().populate("role_id");
+        const employees = users_all.filter((user) => {
+            return user.role_id && user.role_id.pages.some((page) => {
+              return page.name === 'Proposals Page' && page.isChecked;
+            });
+          });
 
         const resp = {
             proposals,

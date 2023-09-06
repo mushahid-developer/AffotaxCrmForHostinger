@@ -31,6 +31,10 @@ var ProposalsSchema = new mongoose.Schema({
     source: {
         type: String,
     },
+    status: {
+        type: String,
+        default: "Proposal"
+    },
 });
 
 const ProposalsDb = mongoose.model('proposal', ProposalsSchema);

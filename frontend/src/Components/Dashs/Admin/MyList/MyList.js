@@ -4,6 +4,7 @@ import Tasks from '../Tasks/Tasks';
 import Construction from '../Construction/Construction';
 import Leads from "../Leads/Leads";
 import Accordion from 'react-bootstrap/Accordion';
+import Proposals from '../Proposals/Proposals';
 
 const MyTable = () => {
  
@@ -47,6 +48,17 @@ const MyTable = () => {
       </Accordion.Item>
       
       <Accordion.Item eventKey="3">
+        <Accordion.Header>Proposals</Accordion.Header>
+        <Accordion.Body>
+         
+          <div>
+            <Proposals fromPage="MyList" userNameFilter="Rashid"/>
+          </div>
+
+        </Accordion.Body>
+      </Accordion.Item>
+
+      <Accordion.Item eventKey="4">
         <Accordion.Header>Construction</Accordion.Header>
         <Accordion.Body>
          
