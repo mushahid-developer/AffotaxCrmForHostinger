@@ -183,7 +183,7 @@ route.post('/companies/edit/one/:id', editCompany)
 route.post('/companies/delete/one/:id', deleteCompany)
 
 //Proposals
-route.get('/proposals/get/all', getAllProposals)
+route.get('/proposals/get/all', authMiddleware, getAllProposals)
 route.post('/proposals/add/one', addProposals)
 route.post('/proposals/edit/one/:id', editProposals)
 route.get('/proposals/delete/one/:id', deleteProposals)

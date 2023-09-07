@@ -121,7 +121,20 @@ exports.deleteProposals = async (req, res) => {
 exports.getAllProposals = async (req, res) => {
     try {
 
-        const proposals = await ProposalsDb.find();
+        var proposals = [];
+        const userId = req.user._id;
+        const User = await Userdb.findById(userId).populate('role_id');
+
+        if( User.role_id.name === 'Admin'){
+            proposals = await ProposalsDb.find();
+        }else{
+            proposals = await ProposalsDb.find({jobHolder: User.name });
+
+        }
+
+
+
+
         const clients = await Clientdb.find();
         const users_all = await Userdb.find().populate("role_id");
         const employees = users_all.filter((user) => {

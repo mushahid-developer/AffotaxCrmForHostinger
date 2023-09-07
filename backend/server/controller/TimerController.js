@@ -65,7 +65,7 @@ exports.getTimerState = async (req, res) => {
 
 exports.startStopTimer = async (req, res) => {
     const time_now = new Date();
-    const test_timer = await Timerdb.findOne({user_id:req.user._id}).sort({_id: -1})
+    const test_timer = await Timerdb.findOne({user_id:req.user._id, type: "Timer"}).sort({_id: -1})
     if (test_timer && test_timer.startTime !== undefined && test_timer.endTime === undefined){
         await Timerdb.findOneAndUpdate({_id:req.body.data._id}, {
             endTime: time_now,

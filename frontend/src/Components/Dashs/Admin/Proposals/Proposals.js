@@ -1,4 +1,4 @@
-import React, { useState, useEffect, useMemo, useRef } from 'react';
+import React, { useState, useEffect, useMemo, useRef, useCallback } from 'react';
 import { AgGridReact } from 'ag-grid-react'; // the AG Grid React Component
 import 'ag-grid-community/styles/ag-grid.css'; // Core grid CSS, always needed
 import 'ag-grid-community/styles/ag-theme-alpine.css'; // Optional theme CSS
@@ -10,6 +10,7 @@ import { Link } from 'react-router-dom';
 import { Button, Form, Modal } from 'react-bootstrap';
 import DropdownFilter from '../../../Jobs/JobPlaning/DropdownFilter';
 import DropdownFilterWithDate from '../../../Jobs/JobPlaning/DropDownFilterWithDate';
+import secureLocalStorage from 'react-secure-storage';
 
 var proposalsGetAllUrl = axiosURL.proposalsGetAllUrl;
 var proposalsAddOneUrl = axiosURL.proposalsAddOneUrl;
@@ -594,9 +595,6 @@ export default function Proposals() {
       
     }
   
-
-
-
     setRowData(filteredArray)
   }
 
@@ -608,11 +606,13 @@ export default function Proposals() {
   const getData = async ()=>{
     setLoader(true)
     try {
+      const token = secureLocalStorage.getItem('token') 
         const response = await axios.get(proposalsGetAllUrl,
             {
-                headers:{ 
-                    'Content-Type': 'application/json'
-                }
+              headers:{ 
+                'Content-Type': 'application/json',
+                'Authorization': 'Bearer ' + token
+              }
             }
         );
         if(response.status === 200){
@@ -696,6 +696,19 @@ useEffect(() => {
         headerName: 'Date', 
         field: 'date', 
         flex:1,
+        valueGetter: p => {
+          if(p.data.date && p.data.date !== "Invalid Date")
+          {
+            const deadline = new Date(p.data.date)
+            let ye = new Intl.DateTimeFormat('en', { year: 'numeric' }).format(deadline);
+            let mo = new Intl.DateTimeFormat('en', { month: 'short' }).format(deadline);
+            let da = new Intl.DateTimeFormat('en', { day: '2-digit' }).format(deadline);
+            return(`${da}-${mo}-${ye}`);
+            }
+            else{
+              return ""
+          }    
+        },
         floatingFilterComponent: 'selectFloatingFilterWthDate',
         floatingFilterComponentParams: {
           options: ["Expired", "Today", "Tomorrow", "In 7 days", "In 15 days", "Month Wise", "Custom"],
@@ -711,6 +724,19 @@ useEffect(() => {
         headerName: 'Deadline', 
         field: 'deadline', 
         flex:1,
+        valueGetter: p => {
+          if(p.data.deadline && p.data.deadline !== "Invalid Date")
+          {
+            const deadline = new Date(p.data.deadline)
+            let ye = new Intl.DateTimeFormat('en', { year: 'numeric' }).format(deadline);
+            let mo = new Intl.DateTimeFormat('en', { month: 'short' }).format(deadline);
+            let da = new Intl.DateTimeFormat('en', { day: '2-digit' }).format(deadline);
+            return(`${da}-${mo}-${ye}`);
+            }
+            else{
+              return ""
+          }    
+        },
         floatingFilterComponent: 'selectFloatingFilterWthDate',
         floatingFilterComponentParams: {
           options: ["Expired", "Today", "Tomorrow", "In 7 days", "In 15 days", "Month Wise", "Custom"],
@@ -726,6 +752,19 @@ useEffect(() => {
         headerName: 'Job Date', 
         field: 'jobDate', 
         flex:1,
+        valueGetter: p => {
+          if(p.data.jobDate && p.data.jobDate !== "Invalid Date")
+          {
+            const deadline = new Date(p.data.jobDate)
+            let ye = new Intl.DateTimeFormat('en', { year: 'numeric' }).format(deadline);
+            let mo = new Intl.DateTimeFormat('en', { month: 'short' }).format(deadline);
+            let da = new Intl.DateTimeFormat('en', { day: '2-digit' }).format(deadline);
+            return(`${da}-${mo}-${ye}`);
+            }
+            else{
+              return ""
+          }    
+        },
         floatingFilterComponent: 'selectFloatingFilterWthDate',
         floatingFilterComponentParams: {
           options: ["Expired", "Today", "Tomorrow", "In 7 days", "In 15 days", "Month Wise", "Custom"],
@@ -746,6 +785,8 @@ useEffect(() => {
         headerName: 'Source', 
         field: 'source', 
         flex:1,
+        cellEditor: 'agSelectCellEditor',
+        cellEditorParams: { values: ['Email', 'UPW', 'PPH', 'Other'] },
         floatingFilterComponent: 'selectFloatingFilter', 
         floatingFilterComponentParams: { 
           options: ['Email', 'UPW', 'PPH', 'Other'],
@@ -759,6 +800,8 @@ useEffect(() => {
         headerName: 'Status', 
         field: 'status', 
         flex:1,
+        cellEditor: 'agSelectCellEditor',
+        cellEditorParams: { values: ['Proposal', 'Lead', 'Client'] },
         floatingFilterComponent: 'selectFloatingFilter', 
         floatingFilterComponentParams: { 
           options: ['Proposal', 'Lead', 'Client'],
@@ -772,6 +815,7 @@ useEffect(() => {
     headerName: 'Action', 
     field: 'actions', 
     flex:1,
+    editable: false,
     cellRendererFramework: (params)=>
     <>
     
@@ -799,7 +843,7 @@ useEffect(() => {
     sortable: true,
     filter: true,
     floatingFilter: true,
-    editable: false,
+    editable: true,
     resizable: true
    }));
 
@@ -812,7 +856,43 @@ useEffect(() => {
       selectFloatingFilter: DropdownFilter,
       selectFloatingFilterWthDate: DropdownFilterWithDate,
     };
+    
+    const onRowValueChanged = useCallback(async (event) => {
+      var data = event.data;
+      
+      try{
+          const response = await axios.post(`${proposalsUpdateOneUrl}/${data._id}`,
+            {
+              formData: data
+            },
+            {
+                headers:{ 'Content-Type': 'application/json' }
+            }
+          );
+          if(response.status === 200){
+            setFormData({
+              jobHolder: "",
+              clientName: "",
+              subject: "",
+              detailedSubject: "",
+              date: "",
+              deadline: "",
+              jobDate: "",
+              note: "",
+              source: "",
+              status: "",
+            })
+            setModelType({
+              type: "",
+              id: ""
+            })
+            setReRender(prev => !prev)
+          }
 
+      }catch(err){
+      }
+    
+    }, []);
 
 
      
@@ -871,9 +951,12 @@ return (
             ref={gridRef}
             animateRows={true} // Optional - set to 'true' to have rows animate when sorted
             rowSelection='multiple' // Options - allows click selection of rows
-            pagination = {false}
+            pagination = {true}
+            paginationPageSize = {25}
             suppressDragLeaveHidesColumns={true}
             frameworkComponents={frameworkComponents}
+            editType={'fullRow'}
+            onRowValueChanged={onRowValueChanged}
         />
         
       </div>
