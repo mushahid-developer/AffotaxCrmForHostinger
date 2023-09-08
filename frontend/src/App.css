@@ -369,7 +369,12 @@ h6{
   /* overflow: visible; */
 }
 
-.salesTable .ag-row .ag-cell{
+.salesTable .ag-row:not(.ag-row-editing) .ag-cell {
+  overflow: hidden;
+}
+
+/* Optionally, set overflow to visible for cells in edit mode rows */
+.salesTable .ag-row.ag-row-editing .ag-cell {
   overflow: visible;
 }
 
