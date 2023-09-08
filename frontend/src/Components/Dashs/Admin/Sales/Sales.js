@@ -855,31 +855,6 @@ const Sales = () => {
           suppressInput: true
         },
         },
-        { headerName: 'Job Date', field: 'jobDate', flex:1.5, 
-        valueGetter: p => {
-          if(p.data.jobDate  && p.data.jobDate !== "Invalid Date")
-          {
-            const deadline = new Date(p.data.jobDate)
-            let ye = new Intl.DateTimeFormat('en', { year: 'numeric' }).format(deadline);
-            let mo = new Intl.DateTimeFormat('en', { month: 'short' }).format(deadline);
-            let da = new Intl.DateTimeFormat('en', { day: '2-digit' }).format(deadline);
-            return(`${da}-${mo}-${ye}`);
-          }
-          else{
-            return ""
-          }
-        },
-        floatingFilterComponent: 'selectFloatingFilterWthDate',
-        floatingFilterComponentParams: {
-          options: ["Expired", "Today", "Tomorrow", "In 7 days", "In 15 days", "Month Wise", "Custom"],
-          onValueChange: (value) => setJobDateFvalue(value),
-          value: jobDateFvalue,
-          onDateValueChange: (value) => setJobDateFvalueDate(value),
-          dateValue: jobDateFvalueDate,
-          suppressFilterButton: true,
-          suppressInput: true
-        },
-        },
         { headerName: 'Paid Date', field: 'paidDate', flex:1.5, 
         valueGetter: p => {
           if(p.data.status === "Paid")
@@ -907,6 +882,31 @@ const Sales = () => {
           value: paidDateFvalue,
           onDateValueChange: (value) => setPaidDateFvalueDate(value),
           dateValue: paidDateFvalueDate,
+          suppressFilterButton: true,
+          suppressInput: true
+        },
+        },
+        { headerName: 'Job Date', field: 'jobDate', flex:1.5, 
+        valueGetter: p => {
+          if(p.data.jobDate  && p.data.jobDate !== "Invalid Date")
+          {
+            const deadline = new Date(p.data.jobDate)
+            let ye = new Intl.DateTimeFormat('en', { year: 'numeric' }).format(deadline);
+            let mo = new Intl.DateTimeFormat('en', { month: 'short' }).format(deadline);
+            let da = new Intl.DateTimeFormat('en', { day: '2-digit' }).format(deadline);
+            return(`${da}-${mo}-${ye}`);
+          }
+          else{
+            return ""
+          }
+        },
+        floatingFilterComponent: 'selectFloatingFilterWthDate',
+        floatingFilterComponentParams: {
+          options: ["Expired", "Today", "Tomorrow", "In 7 days", "In 15 days", "Month Wise", "Custom"],
+          onValueChange: (value) => setJobDateFvalue(value),
+          value: jobDateFvalue,
+          onDateValueChange: (value) => setJobDateFvalueDate(value),
+          dateValue: jobDateFvalueDate,
           suppressFilterButton: true,
           suppressInput: true
         },
@@ -1212,20 +1212,11 @@ const Sales = () => {
         deleteItem(itemIdToDelete);
       }
 
-      // const onCellValueChanged = (params) => {
-      //   const rowIndex = params.rowIndex;
-      //   const colId = params.column.getId();
-      //   const newValue = params.newValue;
-    
-      //   // Update the value in the data variable
-      //   const updatedData = [...itemsRowData];
-      //   updatedData[rowIndex][colId] = newValue;
-      //   setItemsData(updatedData);
-      // };
-
 
       const onItemsRowValueChanged = useCallback(async (event) => {
         var data = event.data;
+
+        console.log(data)
 
         var unitPrice = data.unit_price;
         var quantity = data.qty;
@@ -1237,12 +1228,12 @@ const Sales = () => {
         // 20% of 100 = 100 * .2
 
         if(unitPrice && quantity){
-          // taxAmt = (taxPerc * unitPrice) / 100;
+          taxAmt = (taxPerc * unitPrice) / 100;
           totalAmt = (+unitPrice * +quantity) - +discount;
         }
-        setSelectedAccountId(prev => prev)
-        var ac_id = selectedAccountId.value;
-        var ac_name = selectedAccountId.label;
+        // setSelectedAccountId(prev => prev)
+        var ac_id = selectedAccountId && selectedAccountId.value;
+        var ac_name = selectedAccountId && selectedAccountId.label;
 
       
         const itemIdToUpdate = data.unique_id;
@@ -1257,7 +1248,7 @@ const Sales = () => {
           amount: totalAmt,
         };
         setSelectedAccountId(null)
-          updateItem(itemIdToUpdate, updatedItem);
+        updateItem(itemIdToUpdate, updatedItem);
 
       
       }, [selectedAccountId]);
