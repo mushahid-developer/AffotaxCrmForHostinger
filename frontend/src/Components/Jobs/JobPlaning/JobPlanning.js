@@ -885,8 +885,6 @@ export default function JobPlanning(props) {
       setDeadlineFvalueDate(null)
       setJobDateFvalue(null)
       setJobDateFvalueDate(null)
-      // gridApi.api.setFilterModel({});
-      // gridApi.api.refreshHeader();
       setDepartmentFvalue(department)
       setStatusFvalue(status)
     }

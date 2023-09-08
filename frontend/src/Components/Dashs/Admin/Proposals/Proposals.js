@@ -22,7 +22,7 @@ var proposalsCopyOneUrl = axiosURL.proposalsCopyOneUrl;
 export default function Proposals() {
 
   const gridRef = useRef();
-  const [gridAPi, setGridApi] = useState();
+  const [gridApi, setGridApi] = useState();
   const [reRender, setReRender] = useState(true);
   const [loader, setLoader] = useState(false);
   const [mainRowData, setMainRowData] = useState("");
@@ -58,8 +58,6 @@ export default function Proposals() {
   const [deadlineFvalueDate, setDeadlineFvalueDate] = useState("");
   const [jobDateFvalue, setJobDateFvalue] = useState("");
   const [jobDateFvalueDate, setJobDateFvalueDate] = useState("");
-
-
   
   const handleOpenModel = (type, data) => {
 
@@ -602,6 +600,23 @@ export default function Proposals() {
     filter();
   },[mainRowData, jobHolderFValue, clientFValue, sourceFValue, dateFvalue, dateFvalueDate, deadlineFvalue, deadlineFvalueDate, jobDateFvalue, jobDateFvalueDate, statusFValue])
 
+  const handleFunClear = () => {
+    if (gridApi) {
+      gridApi.api.setFilterModel({});
+      gridApi.api.refreshHeader();
+    }
+    setJobHolderFValue(null); 
+    setClientFValue(null); 
+    setSourceFValue(null); 
+    setDateFvalue(null); 
+    setDateFvalueDate(null); 
+    setDeadlineFvalue(null); 
+    setDeadlineFvalueDate(null); 
+    setJobDateFvalue(null); 
+    setJobDateFvalueDate(null); 
+    setStatusFValue(null);
+  }
+
   
   const getData = async ()=>{
     setLoader(true)
@@ -918,6 +933,21 @@ return (
           <h4 style={{padding: '20px 16px',}}>
             Proposals
           </h4>
+        </div>
+
+        <div className='table-show-hide mx-2'>
+          <button type="button" onClick={handleFunClear}
+            className=' btn'
+            style={{
+              padding: '3px',
+              backgroundColor: 'rgb(255, 255, 255)',
+              border: '1px solid rgb(242, 244, 246)',
+              color: 'rgb(89, 89, 89)',
+            }}>
+            <svg xmlns="http://www.w3.org/2000/svg" width="30px" height="30px" viewBox="0 0 24 24" stroke='rgb(89, 89, 89)' fill="rgb(89, 89, 89)">
+              <path d="M16 8L8 16M8.00001 8L16 16" stroke="#000000" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" />
+            </svg>
+          </button>
         </div>
 
 
