@@ -186,7 +186,7 @@ exports.addNewClient = async (req, res) => {
                   redirectLink: `/clients/job-planning?job_id=${req.body._id}`,
                   user_id: req.body.job_holder_id
               })
-          }
+            }
 
 
             res.status(200).json({

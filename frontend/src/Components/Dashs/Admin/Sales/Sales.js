@@ -1225,8 +1225,6 @@ const Sales = () => {
         var taxAmt = 0;
         var totalAmt = 0;
 
-        // 20% of 100 = 100 * .2
-
         if(unitPrice && quantity){
           taxAmt = (taxPerc * unitPrice) / 100;
           totalAmt = (+unitPrice * +quantity) - +discount;

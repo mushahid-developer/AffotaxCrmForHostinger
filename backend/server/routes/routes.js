@@ -101,7 +101,7 @@ route.post('/tasks/subtask/change/iscompleted/:id', TasksController.updateSubTas
 route.post('/tasks/subtask/delete/one/:id', TasksController.deleteSubTaskofMainTask)
 route.post('/tasks/maintask/delete/one/:id', TasksController.deleteMainTaskOfProject)
 route.get('/tasks/project/delete/one/:id', TasksController.deleteOneProject)
-route.post('/tasks/project/edit/one/:id', TasksController.EditOneProject)
+route.post('/tasks/project/edit/one/:id', authMiddleware, TasksController.EditOneProject)
 route.get('/tasks/project/copy/one/:id', TasksController.CopyOneProject)
 
 //Quick Notes

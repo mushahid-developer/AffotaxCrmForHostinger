@@ -8,7 +8,7 @@ import axios from '../../../../Api/Axios';
 import * as axiosURL from '../../../../Api/AxiosUrls';
 import Loader from '../../../Common/Loader/Loader';
 import { Button, Form, Modal } from 'react-bootstrap';
-import { Link } from 'react-router-dom';
+import { Link, useLocation } from 'react-router-dom';
 import ViewTask from './ViewTask';
 import DropdownFilter from '../../../Jobs/JobPlaning/DropdownFilter';
 import SelectUnSelectFilter from '../../../Jobs/JobPlaning/SelectUnSelectFilter';
@@ -33,6 +33,10 @@ var ProjCopyUrl = axiosURL.ProjCopyUrl;
 
 
 const Tasks = (props) => {
+
+  const location = useLocation();
+  const queryParams = new URLSearchParams(location.search);
+  const taskIdFromUrl = queryParams.get('task_id');
 
   const formPage = props.fromPage;
   const userNameFilter = props.userNameFilter;
@@ -275,13 +279,17 @@ const Tasks = (props) => {
 
     const handleEditProjectForm = async ()=>{
       try {
+        const token = secureLocalStorage.getItem('token') 
         const response = await axios.post(`${editProjectName}/${editSelectedProject._id}`,
             {
               name: editProjectFormData,
               usersList: selectedEditUserListValue
             },
             {
-              headers:{ 'Content-Type': 'application/json' }
+              headers:{ 
+                'Content-Type': 'application/json',
+                'Authorization': 'Bearer ' + token
+              }
             }
         );
         
@@ -350,6 +358,11 @@ const Tasks = (props) => {
         if(filteredArray !== undefined && jHolderFvalue !== null && jHolderFvalue !== ""){
           filteredArray = filteredArray.filter(obj => obj.Jobholder_id && obj.Jobholder_id.name === jHolderFvalue);
         }
+      }
+
+      // Job Id Filter
+      if (filteredArray != undefined && taskIdFromUrl != null && taskIdFromUrl !== "") {
+        filteredArray = await filteredArray.filter(obj => obj._id && obj._id === taskIdFromUrl);
       }
       
       // Lead Filter
@@ -745,11 +758,11 @@ const Tasks = (props) => {
     useEffect(()=>{
       // setRowData(mainRowData)
       filter()
-    }, [mainRowData, statusFvalue, projectFvalue, jHolderFvalue, jHolderPreFvalue, leadFvalue, startDateFvalueDate, startDateFvalue, deadlineFvalueDate, deadlineFvalue, jobDateFvalueDate, jobDateFvalue])
+    }, [mainRowData, statusFvalue, projectFvalue, jHolderFvalue, jHolderPreFvalue, leadFvalue, startDateFvalueDate, startDateFvalue, deadlineFvalueDate, deadlineFvalue, jobDateFvalueDate, jobDateFvalue, taskIdFromUrl])
     
     useEffect(()=>{
       setLoad(2);
-    }, [statusFvalue, projectFvalue, jHolderFvalue, jHolderPreFvalue, leadFvalue, startDateFvalueDate, startDateFvalue, deadlineFvalueDate, deadlineFvalue, jobDateFvalueDate, jobDateFvalue])
+    }, [statusFvalue, projectFvalue, jHolderFvalue, jHolderPreFvalue, leadFvalue, startDateFvalueDate, startDateFvalue, deadlineFvalueDate, deadlineFvalue, jobDateFvalueDate, jobDateFvalue, taskIdFromUrl])
 
     useEffect(()=>{
       
@@ -1195,6 +1208,7 @@ const Tasks = (props) => {
 const onRowValueChanged = useCallback(async (event) => {
   var data = event.data;
   try{
+    const token = secureLocalStorage.getItem('token') 
     await axios.post(`${Tasks_Update_One_Url}/${data._id}`, 
       {
         name: data.projectname_id,
@@ -1209,7 +1223,10 @@ const onRowValueChanged = useCallback(async (event) => {
         notes: data.notes,
       },
       {
-        headers:{ 'Content-Type': 'application/json' }
+        headers:{ 
+          'Content-Type': 'application/json',
+          'Authorization': 'Bearer ' + token
+        }
       }
     );
       // setLoader(true)

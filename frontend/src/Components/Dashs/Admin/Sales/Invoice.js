@@ -87,7 +87,8 @@ const Invoice = ({ invoice }) => {
     <Document>
       <Page style={styles.page}>
         <View style={styles.header}>
-          <Image style={styles.logo} src={logoPng} />
+          {/* <Image style={styles.logo} src={logoPng} /> */}
+          <Text>{invoice.from}</Text>
           <Text style={styles.text}>Invoice Date: {invoice.date}</Text>
         </View>
         <Text style={styles.title}>Invoice</Text>
@@ -120,26 +121,26 @@ const Invoice = ({ invoice }) => {
             <View style={styles.tableRow}>
               <Text style={styles.tableCellDesc}>{item.description}</Text>
               <Text style={styles.tableCell}>{item.qty}</Text>
-              <Text style={styles.tableCell}>${item.unit_price}</Text>
-              <Text style={styles.tableCell}>${item.tax_rate}</Text>
-              <Text style={styles.tableCell}>${item.amount}</Text>
+              <Text style={styles.tableCell}>{invoice.currency}{" "}{item.unit_price}</Text>
+              <Text style={styles.tableCell}>{item.tax_rate}%</Text>
+              <Text style={styles.tableCell}>{invoice.currency}{" "}{item.amount}</Text>
 </View>
 ))}
 <View style={styles.totalsRow}>
   <Text style={styles.totalsLabel}>Subtotal:</Text>
-  <Text>${invoice.subtotal}</Text>
+  <Text>{invoice.currency}{" "}{invoice.subtotal}</Text>
 </View>
 <View style={styles.totalsRow}>
   <Text style={styles.totalsLabel}>Tax:</Text>
-  <Text>${invoice.tax}</Text>
+  <Text>{invoice.currency}{" "}{invoice.tax}</Text>
 </View>
 <View style={styles.totalsRow}>
   <Text style={styles.totalsLabel}>Discount:</Text>
-  <Text>${invoice.discount}</Text>
+  <Text>{invoice.currency}{" "}{invoice.discount}</Text>
 </View>
 <View style={styles.totalsRow}>
   <Text style={styles.totalsLabel}>Total:</Text>
-  <Text>${invoice.total}</Text>
+  <Text>{invoice.currency}{" "}{" "}{invoice.total}</Text>
 </View>
 </View>
           

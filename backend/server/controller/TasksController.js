@@ -1,3 +1,4 @@
+const Notidb = require("../model/Notifications/Notifications");
 const MainTaskdb = require("../model/Tasks/MainTasks");
 const ProjectDb = require("../model/Tasks/Projects");
 const ProjectNameDb = require("../model/Tasks/ProjNameForList");
@@ -135,6 +136,9 @@ exports.AddOneProject = async (req, res) => {
 exports.EditOneProject = async (req, res) => {
 
     const id = req.params.id
+    const curUserName = req.user.name;
+
+    
 
     const startDate = new Date(req.body.startDate)
     const deadline = new Date(req.body.deadline)
@@ -158,6 +162,21 @@ exports.EditOneProject = async (req, res) => {
     }
     if(req.body.Jobholder_id && req.body.Jobholder_id !== ''){
         data.Jobholder_id = req.body.Jobholder_id
+
+        const prevTask = await ProjectDb.findById(id);
+        const projectNameAll = await ProjectNameDb.findById(req.body.name);
+        const prevUserId = prevTask.Jobholder_id
+        const projectName = projectNameAll.name
+
+        if(prevUserId !== req.body.Jobholder_id){
+            await Notidb.create({
+                title: "New Task Assigned",
+                description: `${curUserName} Assigned you a new Task of "${projectName}"`,
+                redirectLink: `/tasks?task_id=${id}`,
+                user_id: req.body.Jobholder_id
+            })
+          }
+
     }
     
 

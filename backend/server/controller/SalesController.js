@@ -119,7 +119,7 @@ exports.editSale = async (req, res) => {
 }
 
 exports.getAllSale = async (req, res) => {
-    const sales = await Salesdb.find().sort({_id: -1}).populate('client_id').populate({
+    const sales = await Salesdb.find().sort({_id: -1}).populate('client_id').populate("company_id").populate({
         path: 'saleitem_id',
         populate: {
           path: 'account'

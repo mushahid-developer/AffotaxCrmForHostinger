@@ -14,8 +14,8 @@ const InvoiceViewer = () => {
   const invoice = {
     invoiceNumber: data.invoice_no,
     date: data.date,
-    from: 'AFFOTAX LTD',
-    fromAddress: '60 Gwendoline Avenue Upton Park, London England, E13 0RD',
+    from: data.company_id.name,
+    fromAddress: data.company_id.address,
     to: data.client_id.client_name,
     toAddress: data.client_id.address,
     items: data.saleitem_id,
@@ -23,6 +23,7 @@ const InvoiceViewer = () => {
     tax: data.tax,
     discount: data.discount,
     total: data.total,
+    currency: data.currency,
   };
 
 
