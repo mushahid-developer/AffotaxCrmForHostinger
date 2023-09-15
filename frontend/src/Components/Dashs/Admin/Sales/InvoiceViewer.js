@@ -15,7 +15,7 @@ const InvoiceViewer = () => {
     invoiceNumber: data.invoice_no,
     date: data.date,
     from: data.company_id && data.company_id.name,
-    fromAddress: data.company_id.address,
+    fromAddress: data.company_id && data.company_id.address,
     to: data.client_id.client_name,
     toAddress: data.client_id.address,
     items: data.saleitem_id,
