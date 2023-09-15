@@ -55,6 +55,13 @@ const styles = StyleSheet.create({
     // border: '1px solid red',
     width: '400%'
   },
+  tableCellDescData: {
+    margin: 'auto',
+    fontSize: 10,
+    padding: 5,
+    // border: '1px solid red',
+    width: '400%'
+  },
   tableCell: {
     margin: 'auto',
     fontSize: 10,
@@ -63,9 +70,14 @@ const styles = StyleSheet.create({
     // border: '1px solid red',
     width: '100%'
   },
+  totalBox: {
+    width: '100%',
+    display: "flex",
+    alignItems: "flex-end",
+    justifyContent: 'center',
+  },
   totalsRow: {
     flexDirection: 'row',
-    justifyContent: 'flex-end',
     alignItems: 'center',
     // borderTopWidth: 1,
     // borderTopColor: '#ccc',
@@ -76,6 +88,7 @@ const styles = StyleSheet.create({
     fontSize: 12,
     fontWeight: 'bold',
     marginRight: 10,
+    minWidth: "50px"
   },
   totalsValue: {
     fontSize: 12,
@@ -119,28 +132,34 @@ const Invoice = ({ invoice }) => {
           </View>
           {invoice.items.map((item) => (
             <View style={styles.tableRow}>
-              <Text style={styles.tableCellDesc}>{item.description}</Text>
+              <Text style={styles.tableCellDescData}>{item.description}</Text>
               <Text style={styles.tableCell}>{item.qty}</Text>
               <Text style={styles.tableCell}>{invoice.currency}{" "}{item.unit_price}</Text>
               <Text style={styles.tableCell}>{item.tax_rate}%</Text>
               <Text style={styles.tableCell}>{invoice.currency}{" "}{item.amount}</Text>
 </View>
 ))}
-<View style={styles.totalsRow}>
-  <Text style={styles.totalsLabel}>Subtotal:</Text>
-  <Text>{invoice.currency}{" "}{invoice.subtotal}</Text>
-</View>
-<View style={styles.totalsRow}>
-  <Text style={styles.totalsLabel}>Tax:</Text>
-  <Text>{invoice.currency}{" "}{invoice.tax}</Text>
-</View>
-<View style={styles.totalsRow}>
-  <Text style={styles.totalsLabel}>Discount:</Text>
-  <Text>{invoice.currency}{" "}{invoice.discount}</Text>
-</View>
-<View style={styles.totalsRow}>
-  <Text style={styles.totalsLabel}>Total:</Text>
-  <Text>{invoice.currency}{" "}{" "}{invoice.total}</Text>
+
+<View style={styles.totalBox}>
+  <View>
+    <View style={styles.totalsRow}>
+      <Text style={styles.totalsLabel}>Subtotal:</Text>
+      <Text>{invoice.currency}{" "}{invoice.subtotal}</Text>
+    </View>
+    <View style={styles.totalsRow}>
+      <Text style={styles.totalsLabel}>Tax:</Text>
+      <Text>{invoice.currency}{" "}{invoice.tax}</Text>
+    </View>
+    <View style={styles.totalsRow}>
+      <Text style={styles.totalsLabel}>Discount:</Text>
+      <Text>{invoice.currency}{" "}{invoice.discount}</Text>
+    </View>
+    <View style={styles.totalsRow}>
+      <Text style={styles.totalsLabel}>Total:</Text>
+      <Text>{invoice.currency}{" "}{" "}{invoice.total}</Text>
+    </View>
+  </View>
+
 </View>
 </View>
           
