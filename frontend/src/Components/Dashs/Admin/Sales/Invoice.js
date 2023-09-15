@@ -96,6 +96,9 @@ const styles = StyleSheet.create({
 });
 
 const Invoice = ({ invoice }) => {
+  function numberWithCommas(x) {
+    return x.toString().replace(/\B(?=(\d{3})+(?!\d))/g, ",");
+  }
   return (
     <Document>
       <Page style={styles.page}>
@@ -134,9 +137,9 @@ const Invoice = ({ invoice }) => {
             <View style={styles.tableRow}>
               <Text style={styles.tableCellDescData}>{item.description}</Text>
               <Text style={styles.tableCell}>{item.qty}</Text>
-              <Text style={styles.tableCell}>{invoice.currency}{" "}{item.unit_price}</Text>
+              <Text style={styles.tableCell}>{invoice.currency}{" "}{numberWithCommas(item.unit_price)}</Text>
               <Text style={styles.tableCell}>{item.tax_rate}%</Text>
-              <Text style={styles.tableCell}>{invoice.currency}{" "}{item.amount}</Text>
+              <Text style={styles.tableCell}>{invoice.currency}{" "}{numberWithCommas(item.amount)}</Text>
 </View>
 ))}
 
@@ -144,19 +147,21 @@ const Invoice = ({ invoice }) => {
   <View>
     <View style={styles.totalsRow}>
       <Text style={styles.totalsLabel}>Subtotal:</Text>
-      <Text>{invoice.currency}{" "}{invoice.subtotal}</Text>
+      <Text>{invoice.currency}{" "}{numberWithCommas(invoice.subtotal)}</Text>
     </View>
     <View style={styles.totalsRow}>
       <Text style={styles.totalsLabel}>Tax:</Text>
-      <Text>{invoice.currency}{" "}{invoice.tax}</Text>
+      <Text>{invoice.currency}{" "}{numberWithCommas(invoice.tax)}</Text>
     </View>
-    <View style={styles.totalsRow}>
-      <Text style={styles.totalsLabel}>Discount:</Text>
-      <Text>{invoice.currency}{" "}{invoice.discount}</Text>
-    </View>
+    {invoice.discount && (invoice.discount !== 0) && 
+      <View style={styles.totalsRow}>
+        <Text style={styles.totalsLabel}>Discount:</Text>
+        <Text>{invoice.currency}{" "}{numberWithCommas(invoice.discount)}</Text>
+      </View>
+    }
     <View style={styles.totalsRow}>
       <Text style={styles.totalsLabel}>Total:</Text>
-      <Text>{invoice.currency}{" "}{" "}{invoice.total}</Text>
+      <Text>{invoice.currency}{" "}{numberWithCommas(invoice.total)}</Text>
     </View>
   </View>
 
