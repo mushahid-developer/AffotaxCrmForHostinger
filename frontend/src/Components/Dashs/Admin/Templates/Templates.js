@@ -339,7 +339,7 @@ export default function Templates() {
     html = html.replace(/<a.*?href="(.*?)".*?>(.*?)<\/a>/g, '[$2]($1)');
   
     // Replace <br> tags with newlines.
-    html = html.replace(/<br\s*\/?>/g, '\n');
+    html = html.replace(/<br\s*\/?>/g, '');
 
     // Replace <p> tags with newlines.
     html = html.replace(/<\/p>/g, '\n');
@@ -369,7 +369,7 @@ export default function Templates() {
       { 
         headerName: 'Category', 
         field: 'category', 
-        flex:1,
+        flex:0.5,
         valueGetter: p => {
             return(p.data.category_id.name); 
         },
@@ -382,11 +382,11 @@ export default function Templates() {
             suppressInput: true 
           }
       },
-      { headerName: 'Template Name', field: 'name', flex:1 },
+      { headerName: 'Template Name', field: 'name', flex:0.5 },
       { 
         headerName: 'Description', 
         field: 'description', 
-        flex:4, 
+        flex:2, 
         cellRendererFramework: (params)=>
         <>
         <Link style={{textDecoration: 'none',}} onClick={(e)=>{ e.preventDefault(); setShowTemplateModalData(params.data.template); setShowTemplateModal(true);}}>
@@ -399,24 +399,16 @@ export default function Templates() {
 
       { headerName: 'Status', 
       field: 'status', 
-      flex:1,
+      flex:0.5,
       floatingFilter: false,
       cellRendererFramework: (params)=>
         <>
-          <Link 
-          onClick={(e)=>{openEditTemplateModel(e, params.data)}} style={{all: 'unset', cursor: 'pointer', textAlign: 'center !important'}}
-          >
-            <svg className='mx-1' xmlns="http://www.w3.org/2000/svg" width="20px" height="20px" viewBox="0 0 24 24" fill="none">
-              <g id="Edit / Edit_Pencil_01">
-              <title>Edit Template</title>
-              <path id="Vector" d="M12 8.00012L4 16.0001V20.0001L8 20.0001L16 12.0001M12 8.00012L14.8686 5.13146L14.8704 5.12976C15.2652 4.73488 15.463 4.53709 15.691 4.46301C15.8919 4.39775 16.1082 4.39775 16.3091 4.46301C16.5369 4.53704 16.7345 4.7346 17.1288 5.12892L18.8686 6.86872C19.2646 7.26474 19.4627 7.46284 19.5369 7.69117C19.6022 7.89201 19.6021 8.10835 19.5369 8.3092C19.4628 8.53736 19.265 8.73516 18.8695 9.13061L18.8686 9.13146L16 12.0001M12 8.00012L16 12.0001" stroke="#000000" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/></g>
-            </svg>
-          </Link>
+          
 
           <Link onClick={()=>{handleCopyClick(params.data.template);}} style={{all: 'unset', cursor: 'pointer', textAlign: 'center !important'}}>
-            <svg className='mx-1' xmlns="http://www.w3.org/2000/svg" fill="#000000" width="16px" height="16px" viewBox="0 0 32 32" version="1.1">
+            <svg className='mx-1' xmlns="http://www.w3.org/2000/svg" fill="#000000" width="50px" height="16px" viewBox="0 0 32 32" version="1.1">
               <title>Copy Template</title>
-              <path d="M0 30.016h20v-4h-20v4zM0 22.016h28v-4h-28v4zM0 14.016h24v-4h-24v4zM0 6.016h32v-4h-32v4z"/>
+              <path d="M0 30.016h20v-4h-40v4zM0 22.016h28v-4h-48v4zM0 14.016h24v-4h-44v4zM0 6.016h32v-4h-52v4z"/>
             </svg>
           </Link>
         </>
@@ -425,11 +417,21 @@ export default function Templates() {
           headerName: 'Action', 
           field: 'price',
           floatingFilter: false,
-          flex:2,
+          flex:4,
           cellRendererFramework: (params)=>
           <>
             <Link onClick={()=>{setSelectedTemplateId(params.data._id); setSelectedUserListValue(params.data.users_list); setShowSelectUserListModalIsOpen(!showSelectUserListModalIsOpen)}} style={{all: 'unset', cursor: 'pointer', textAlign: 'center !important'}}>
               <svg width="16px" height="16px" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg"><g id="SVGRepo_bgCarrier" stroke-width="0"></g><g id="SVGRepo_tracerCarrier" stroke-linecap="round" stroke-linejoin="round"></g><g id="SVGRepo_iconCarrier"> <circle cx="12" cy="6" r="4" stroke="#1C274C" stroke-width="1.5"></circle> <path d="M19.9975 18C20 17.8358 20 17.669 20 17.5C20 15.0147 16.4183 13 12 13C7.58172 13 4 15.0147 4 17.5C4 19.9853 4 22 12 22C14.231 22 15.8398 21.8433 17 21.5634" stroke="#1C274C" stroke-width="1.5" stroke-linecap="round"></path> </g></svg>
+            </Link>
+
+            <Link 
+            onClick={(e)=>{openEditTemplateModel(e, params.data)}} style={{all: 'unset', cursor: 'pointer', textAlign: 'center !important'}}
+            >
+              <svg className='mx-1' xmlns="http://www.w3.org/2000/svg" width="20px" height="20px" viewBox="0 0 24 24" fill="none">
+                <g id="Edit / Edit_Pencil_01">
+                <title>Edit Template</title>
+                <path id="Vector" d="M12 8.00012L4 16.0001V20.0001L8 20.0001L16 12.0001M12 8.00012L14.8686 5.13146L14.8704 5.12976C15.2652 4.73488 15.463 4.53709 15.691 4.46301C15.8919 4.39775 16.1082 4.39775 16.3091 4.46301C16.5369 4.53704 16.7345 4.7346 17.1288 5.12892L18.8686 6.86872C19.2646 7.26474 19.4627 7.46284 19.5369 7.69117C19.6022 7.89201 19.6021 8.10835 19.5369 8.3092C19.4628 8.53736 19.265 8.73516 18.8695 9.13061L18.8686 9.13146L16 12.0001M12 8.00012L16 12.0001" stroke="#000000" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/></g>
+              </svg>
             </Link>
 
             <Link onClick={()=>{handleActionButtons("Copy", params.data._id)}} style={{all: 'unset', cursor: 'pointer', textAlign: 'center !important'}}>
