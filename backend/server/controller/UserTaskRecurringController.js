@@ -121,7 +121,11 @@ exports.editOneUserRecurringTasks = async (req, res) => {
       const dates = oldDates.map(item => {
         const checkDate = new Date(item.date) ;
 
-        if(checkDate.getDate() === today.getDate()){
+        if(
+          checkDate.getDate() === today.getDate() &&
+          checkDate.getMonth() === today.getMonth() &&
+          checkDate.getFullYear() === today.getFullYear()
+        ){
           item.notes = req.body.note;
         }
         return item;
@@ -157,7 +161,11 @@ exports.markCompleteOneUserRecurringTasks = async (req, res) => {
       const dates = oldDates.map(item => {
         const checkDate = new Date(item.date) ;
 
-        if(checkDate.getDate() === today.getDate()){
+        if(
+          checkDate.getDate() === today.getDate() &&
+          checkDate.getMonth() === today.getMonth() &&
+          checkDate.getFullYear() === today.getFullYear()
+        ){
           item.isCompleted = req.body.isChecked;
           console.log(item)
         }
