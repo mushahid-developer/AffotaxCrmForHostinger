@@ -32,6 +32,7 @@ const { GetAllNotifications, MarkAllAsRead, MarkOneAsRead } = require('../contro
 const { getAllCompanies, editCompany, addCompany, deleteCompany } = require('../controller/CompaniesController');
 const { addPageForRole } = require('../controller/RolesPermissionsController');
 const { getAllProposals, deleteProposals, editProposals, addProposals, copyProposals } = require('../controller/ProposalsController');
+const { getAllUserRecurringTasks, addOneUserRecurringTasks, editOneUserRecurringTasks, deleteOneUserRecurringTasks, copyOneUserRecurringTasks, markCompleteOneUserRecurringTasks } = require('../controller/UserTaskRecurringController');
 
 // Api Routes
 route.get('/', (req, res)=>{
@@ -188,6 +189,14 @@ route.post('/proposals/add/one', addProposals)
 route.post('/proposals/edit/one/:id', editProposals)
 route.get('/proposals/delete/one/:id', deleteProposals)
 route.get('/proposals/copy/one/:id', copyProposals)
+
+//User Recurring Tasks
+route.get('/user/recurring/tasks/get/all', authMiddleware, getAllUserRecurringTasks)
+route.post('/user/recurring/tasks/add/one', addOneUserRecurringTasks)
+route.post('/user/recurring/tasks/edit/one/:id', editOneUserRecurringTasks)
+route.get('/user/recurring/tasks/delete/one/:id', deleteOneUserRecurringTasks)
+route.get('/user/recurring/tasks/copy/one/:id', copyOneUserRecurringTasks)
+route.post('/user/recurring/tasks/mark_complete/one/:id', markCompleteOneUserRecurringTasks)
 
 
 //AddPagesForRole

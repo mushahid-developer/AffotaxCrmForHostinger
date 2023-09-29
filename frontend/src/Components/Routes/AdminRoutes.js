@@ -38,6 +38,7 @@ import TicketsContext from "../Dashs/Admin/Tickets/TicketsContext";
 import MyList from "../Dashs/Admin/MyList/MyList";
 import Companies from "../Dashs/Admin/Companies/Companies";
 import Proposals from "../Dashs/Admin/Proposals/Proposals";
+import UserRecurringTasks from "../Dashs/Admin/UserRecurringTasks/UserRecurringTasks";
 var getAllTickets = axiosURL.getAllTickets;
 
 export default function AdminRoutes(props) {
@@ -184,6 +185,7 @@ export default function AdminRoutes(props) {
                   <Route path="/templates" element = {<Templates />}></Route>
                   <Route path="/goals" element = {<Goals />}></Route>
                   <Route path="/my_list" element = {<MyList />}></Route>
+                  <Route path="/userrecurringtasks" element = {<UserRecurringTasks />}></Route>
                   <Route path="/tickets" element = {
                     <TicketsContext.Provider value = {finalTicketData}>
                       <Tickets  setReFetchTickets = {setReFetchTickets} roleName={roleName} ticketsPagePermissions={ticketsPagePermissions} />

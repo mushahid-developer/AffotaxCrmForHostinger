@@ -153,6 +153,14 @@ export const companiesAddOneUrl = 'companies/add/one';
 export const companiesEditOneUrl = 'companies/edit/one';
 export const companiesDeleteOneUrl = 'companies/delete/one';
 
+//User Recurring Task
+export const UserRecurringTasksGetAllUrl = 'user/recurring/tasks/get/all';
+export const UserRecurringTasksAddOneUrl = 'user/recurring/tasks/add/one';
+export const UserRecurringTasksEditOneUrl = 'user/recurring/tasks/edit/one';
+export const UserRecurringTasksDeleteOneUrl = 'user/recurring/tasks/delete/one';
+export const UserRecurringTasksCopyOneUrl = 'user/recurring/tasks/copy/one';
+export const UserRecurringTasksMarkCompleteOneUrl = 'user/recurring/tasks/mark_complete/one';
+
 //Proposals
 export const proposalsGetAllUrl = 'proposals/get/all';
 export const proposalsAddOneUrl = 'proposals/add/one';
