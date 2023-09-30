@@ -1279,6 +1279,7 @@ export default function JobPlanning(props) {
       headerName: "Auth Code",
       field: "auth_code",
       flex: 2,
+      editable: false,
       valueGetter: p => {
         return p.data.client_id.auth_code //to get value from obj inside obj
       },
