@@ -39,6 +39,7 @@ import MyList from "../Dashs/Admin/MyList/MyList";
 import Companies from "../Dashs/Admin/Companies/Companies";
 import Proposals from "../Dashs/Admin/Proposals/Proposals";
 import UserRecurringTasks from "../Dashs/Admin/UserRecurringTasks/UserRecurringTasks";
+import Absents from "../Dashs/Admin/Hr/Absents/Absents";
 var getAllTickets = axiosURL.getAllTickets;
 
 export default function AdminRoutes(props) {
@@ -181,6 +182,7 @@ export default function AdminRoutes(props) {
                   <Route path="/view/invoice" element = {<InvoiceViewer />}></Route>
                   <Route path="/finance/charts_of_accounts" element = {<ChartsOfAccounts />}></Route>
                   <Route path="/hr/attendance" element = {<Attendance />}></Route>
+                  <Route path="/hr/absents" element = {<Absents />}></Route>
                   <Route path="/construction" element = {<Construction />}></Route>
                   <Route path="/templates" element = {<Templates />}></Route>
                   <Route path="/goals" element = {<Goals />}></Route>
