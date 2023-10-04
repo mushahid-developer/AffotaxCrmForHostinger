@@ -110,74 +110,43 @@ export default function Absents() {
     },[])
     
 
-    useEffect(()=>{
-        if(tableData)
-        {
-
-            const curDate = new Date();
-            const curYear = curDate.getFullYear();
-            const curMonth = curDate.getMonth();
-            const selYear = selectedDate.getFullYear();
-
-            if(selYear < curYear){
-                var columnDefs = [
-                    { headerName: 'Employee Name', field: 'name', flex: 4 },
-                    { headerName: 'Jan', field: '0', flex: 4 },
-                    { headerName: 'Feb', field: '1', flex: 4 },
-                    { headerName: 'March', field: '2', flex: 4 },
-                    { headerName: 'April', field: '3', flex: 4 },
-                    { headerName: 'May', field: '4', flex: 4 },
-                    { headerName: 'June', field: '5', flex: 4 },
-                    { headerName: 'July', field: '6', flex: 4 },
-                    { headerName: 'Aug', field: '7', flex: 4 },
-                    { headerName: 'Sept', field: '8', flex: 4 },
-                    { headerName: 'Oct', field: '9', flex: 4 },
-                    { headerName: 'Nov', field: '10', flex: 4 },
-                    { headerName: 'Dec', field: '11', flex: 4 },
-                    { headerName: 'Total', field: 'total', flex:1, valueGetter: p => {
-                        return +p.data['0'] + +p.data['1'] + +p.data['2'] + +p.data['3'] + +p.data['4'] + +p.data['5'] + +p.data['6'] + +p.data['7'] + +p.data['8'] + +p.data['9'] + +p.data['10'] + +p.data['11']  //to get value from obj inside obj
-                        }
-                    }
-                ];
-                setFinalColDef(columnDefs);
-            } else if( selYear === curYear ) {
-                const months = ["Jan", "Feb", "March", "April", "May", "June", "July", "Aug", "Sept", "Oct", "Nov", "Dec", ]
-                var columnDefs = [
-                    { headerName: 'Employee Name', field: 'name', flex: 4 },
-
-                    
-                ];
-                
-                for(var w = 0; w <= 11; w++){
-                    var tempObj = null
-                    if(w <= curMonth){
-                        tempObj= { headerName: months[`${w}`], field: `${w}`, flex: 2 };
-                    } else {
-                        tempObj= { headerName: months[`${w}`], field: `${w}`, flex: 2, valueGetter: p => { return "-"} }; 
-                    }
-                    columnDefs.push(tempObj);
-                };
-
-                const totalObj = { 
-                    headerName: 'Total', field: 'total', flex: 2, 
-                    valueGetter: p => {
-                        var total = 0;
-                        for(var w = 0; w <= 11; w++){
-                            if(w <= curMonth){
-                                total = total + +p.data[`${w}`]
-                            }
-                        };
-                    return  total
-                    }
-                }
-                columnDefs.push(totalObj);
-
-                setFinalColDef(columnDefs);
+    useEffect(() => {
+        if (tableData) {
+          const curDate = new Date();
+          const curYear = curDate.getFullYear();
+          const curMonth = curDate.getMonth();
+          const selYear = selectedDate.getFullYear();
+          const months = ["Jan", "Feb", "March", "April", "May", "June", "July", "Aug", "Sept", "Oct", "Nov", "Dec"];
+      
+          let columnDefs = [
+            { headerName: 'Employee Name', field: 'name', flex: 4 },
+          ];
+      
+          for (let w = 0; w <= 11; w++) {
+            if (selYear < curYear || (selYear === curYear && w <= curMonth)) {
+              columnDefs.push({ headerName: months[w], field: `${w}`, flex: 2 });
+            } else {
+              columnDefs.push({ headerName: months[w], field: `${w}`, flex: 2, valueGetter: () => "-" });
             }
-
+          }
+      
+          columnDefs.push({
+            headerName: 'Total',
+            field: 'total',
+            flex: 2,
+            valueGetter: (params) => {
+              if (selYear < curYear) {
+                return [...Array(12).keys()].reduce((total, month) => total + +params.data[`${month}`], 0);
+              } else if (selYear === curYear) {
+                return [...Array(curMonth + 1).keys()].reduce((total, month) => total + +params.data[`${month}`], 0);
+              }
+              return "-";
+            },
+          });
+      
+          setFinalColDef(columnDefs);
         }
-            
-    },[tableData])
+      }, [tableData, selectedDate]);
 
     
 
