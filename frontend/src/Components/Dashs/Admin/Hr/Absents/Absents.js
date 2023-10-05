@@ -1,4 +1,4 @@
-import React, { useEffect, useMemo, useState, useCallback } from 'react';
+import { useEffect, useMemo, useState, useCallback } from 'react';
 import axios from '../../../../../Api/Axios';
 import * as axiosURL from '../../../../../Api/AxiosUrls';
 import { AgGridReact } from 'ag-grid-react';
@@ -152,7 +152,6 @@ function Absents() {
     return (<Loader />);
   } else {
     return (
-      <>
       <div style={{
         border: 'none'
       }}
@@ -193,31 +192,22 @@ function Absents() {
         <hr style={{ marginBottom: "0px", marginTop: "0px", color: 'rgb(131 131 131)' }} />
 
         <div>
-          {/* On div wrapping Grid a) specify theme CSS Class Class and b) sets Grid size */}
-          <div className="ag-theme-alpine" style={{ height: '81vh'}}>
-
-
+          <div className="ag-theme-alpine" style={{ height: '81vh' }}>
             {finalColDef && <AgGridReact
-            //   onGridReady={onGridReady}
-                columnDefs={finalColDef}
-                rowData={tableData}
-                defaultColDef={defaultColDef}
-                // ref={gridRef}
-                animateRows={true} // Optional - set to 'true' to have rows animate when sorted
-                rowSelection='multiple' // Options - allows click selection of rows
-                pagination = {true}
-                paginationPageSize = {25}
-                suppressDragLeaveHidesColumns={true}
+              columnDefs={finalColDef}
+              rowData={tableData}
+              defaultColDef={defaultColDef}
+              animateRows={true}
+              rowSelection='multiple'
+              pagination={true}
+              paginationPageSize={25}
+              suppressDragLeaveHidesColumns={true}
             />}
-            
           </div>
         </div>
-    </div>
-
-
-        </>
-  )
-}
+      </div>
+    );
+  }
 }
 
-export default Absents();
+export default Absents;
