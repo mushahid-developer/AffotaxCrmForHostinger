@@ -9,9 +9,9 @@ import Loader from '../../../../Common/Loader/Loader';
 const GetAllAttendance = axiosURL.GetAllAttendance;
 
 function Absents() {
-  const [loader, setLoader] = useState(false);
-  const [mainData, setMainData] = useState(null);
-  const [tableData, setTableData] = useState(null);
+  const [loader, setLoader] = useState(true);
+  const [mainData, setMainData] = useState([]);
+  const [tableData, setTableData] = useState([]);
   const [usersList, setUsersList] = useState([]);
   const [finalColDef, setFinalColDef] = useState(null);
   const [month, setCurMonth] = useState({
@@ -21,7 +21,6 @@ function Absents() {
   const [selectedDate, setSelectedDate] = useState(new Date());
 
   const getData = useCallback(async () => {
-    setLoader(true);
     try {
       const response = await axios.get(GetAllAttendance, {
         headers: { 'Content-Type': 'application/json' }
@@ -29,8 +28,10 @@ function Absents() {
 
       if (response.status === 200 || response.status === 304) {
         setMainData(response.data);
+        setLoader(false);
       }
-    } finally {
+    } catch (error) {
+      console.error("Error fetching data:", error);
       setLoader(false);
     }
   }, []);
@@ -40,16 +41,14 @@ function Absents() {
   }, [getData]);
 
   useEffect(() => {
-    if (mainData) {
-      // Separate Users
+    if (mainData.length > 0) {
       const uniqueUsers = [...new Set(mainData.map(item => item.user_id && item.user_id !== null && item.user_id.name).filter(Boolean))];
       setUsersList(uniqueUsers);
     }
   }, [mainData]);
 
   useEffect(() => {
-    if (mainData) {
-      // Filter the array to only include objects with a startTime in the current month
+    if (mainData.length > 0) {
       const currentMonthData = mainData.filter(obj => {
         const yearr = new Date(obj.startTime).getFullYear();
         return (yearr === month.year);
@@ -103,7 +102,7 @@ function Absents() {
   }, [usersList, month, selectedDate, mainData]);
 
   useEffect(() => {
-    if (tableData) {
+    if (tableData.length > 0) {
       const curDate = new Date();
       const curYear = curDate.getFullYear();
       const curMonth = curDate.getMonth();
@@ -149,7 +148,7 @@ function Absents() {
   }), []);
 
   if (loader) {
-    return (<Loader />);
+    return <Loader />;
   } else {
     return (
       <div style={{
