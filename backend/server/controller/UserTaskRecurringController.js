@@ -17,26 +17,34 @@ exports.getAllUserRecurringTasks = async (req, res) => {
         projects = projects.filter(project => project.projectname_id !== null);
 
         projects = await Promise.all( projects.map(async (item) => {
+
           const today = new Date();
-          
-          const check = await item.dates.some(innerItem => {
-            const checkDate = new Date(innerItem.date);
-          
-            if (
-              checkDate.getDate() === today.getDate() &&
-              checkDate.getMonth() === today.getMonth() &&
-              checkDate.getFullYear() === today.getFullYear()
-            ) {
-              return true;
-            } else {
-              return false;
+          const nextDate = new Date(item.nextUpdate);
+          const checkDate = new Date(item.dates[0].date);
+          var check = false;
+
+          if ( today.setHours(0, 0, 0) > nextDate.setHours(0, 0, 0) ) {
+            check = true;
+          }
+
+
+        
+          if(check){
+            var nextUpdate = new Date(nextDate);
+            if (item.interval === "Daily") {
+              nextUpdate.setDate(nextUpdate.getDate() + 1);
+            } else if (item.interval === "Weekly") {
+              nextUpdate.setDate(nextUpdate.getDate() + 7);
+            } else if (item.interval === "Monthly") {
+              nextUpdate.setMonth(nextUpdate.getMonth() + 1);
+              nextUpdate.setDate(1);
+            } else if (item.interval === "Quarterly") {
+              nextUpdate.setMonth(nextUpdate.getMonth() + 3);
+              nextUpdate.setDate(1);
             }
-          });
-        
-        
-          if(!check){
+
             const newDate = {
-              date: today,
+              date: nextDate,
               isCompleted: false,
               notes: ""
             }
@@ -47,7 +55,7 @@ exports.getAllUserRecurringTasks = async (req, res) => {
     
         
             // Update the MongoDB document
-            await UserTaskRecurringDb.findByIdAndUpdate(item._id, { $push: { dates: newDate } } );
+            await UserTaskRecurringDb.findByIdAndUpdate(item._id, {nextUpdate , $push: { dates: newDate } } );
           };
           return item;
         })
@@ -82,19 +90,37 @@ exports.addOneUserRecurringTasks = async (req, res) => {
 
     try {
 
-      const today = new Date()
+      const today = new Date();
+
+      var nextUpdate = new Date();
+      if (req.body.formData.interval === "Daily") {
+        nextUpdate.setDate(nextUpdate.getDate() + 1);
+      } else if (req.body.formData.interval === "Weekly") {
+        nextUpdate.setDate(nextUpdate.getDate() + 7);
+      } else if (req.body.formData.interval === "Monthly") {
+        nextUpdate.setMonth(nextUpdate.getMonth() + 1);
+        nextUpdate.setDate(1);
+      } else if (req.body.formData.interval === "Quarterly") {
+        nextUpdate.setMonth(nextUpdate.getMonth() + 3);
+        nextUpdate.setDate(1);
+      }
 
       const datesObj = [{
         date: today,
         isCompleted: false,
         notes: "",
       }]
+
+
+      
   
       await UserTaskRecurringDb.create({
           projectname_id: req.body.formData.projectname_id,
           Jobholder: req.body.formData.Jobholder,
           description: req.body.formData.description,
           hrs: req.body.formData.hrs,
+          interval: req.body.formData.interval,
+          nextUpdate: nextUpdate,
           dates: datesObj,
           
       })

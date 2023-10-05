@@ -70,7 +70,8 @@ const UserRecurringTasks = () => {
         projectname_id: '',
         Jobholder: '',
         description: '',
-        hrs: ''
+        hrs: '',
+        interval: 'Daily'
     })
 
     const [mainRowData, setMainRowData] = useState([ ]);
@@ -114,7 +115,8 @@ const UserRecurringTasks = () => {
             projectname_id: '',
             Jobholder: '',
             description: '',
-            hrs: ''
+            hrs: '',
+            interval: 'Daily'
           })
           setShowAddTaskModal(false);
           setLoader(false);
@@ -144,7 +146,6 @@ const UserRecurringTasks = () => {
 
     const filter = (mainData)=>{
 
-      console.log(mainData);
 
       var filteredArray = [];
       filteredArray = [...mainData];
@@ -153,27 +154,20 @@ const UserRecurringTasks = () => {
       if(!historyMode){
         var secondArr = [];
         filteredArray.forEach(item => {
-          const today = new Date();
-          item.dates.forEach(innerItem => {
-              const checkDate = new Date(innerItem.date);
-              if (
-                checkDate.getDate() === today.getDate() &&
-                checkDate.getMonth() === today.getMonth() &&
-                checkDate.getFullYear() === today.getFullYear()
-              ) {
-                const object = {
-                  _id: item._id,
-                  projectname_id: item.projectname_id,
-                  Jobholder: item.Jobholder,
-                  description: item.description,
-                  hrs: item.hrs,
-                  dates:[innerItem]
-                }
-                secondArr.push(object)
-              }
-            });
+
+          const object = {
+            _id: item._id,
+            projectname_id: item.projectname_id,
+            Jobholder: item.Jobholder,
+            description: item.description,
+            hrs: item.hrs,
+            interval: item.interval,
+            dates: [ item.dates[ item.dates.length - 1 ] ]
+          }
+          secondArr.push(object)
         })
         filteredArray = secondArr;
+        console.log(secondArr)
         secondArr = [];
       } else if(historyMode) {
         var secondArr = [];
@@ -185,6 +179,7 @@ const UserRecurringTasks = () => {
                 Jobholder: item.Jobholder,
                 description: item.description,
                 hrs: item.hrs,
+                interval: item.interval,
                 dates:[{
                   date: innerItem.date,
                   isCompleted: innerItem.isCompleted,
@@ -513,6 +508,12 @@ const UserRecurringTasks = () => {
             suppressFilterButton: true, 
             suppressInput: true 
           },
+        },
+        
+        { 
+          headerName: 'Interval', 
+          field: 'interval', 
+          flex:1,
         },
 
         { headerName: 'Notes', 
@@ -851,6 +852,21 @@ useEffect(() => {
                       <option key={ind} value={proj._id}>{proj.name}</option>
                     )
                   })}
+                 
+              </Form.Select>
+            </Form.Group>
+
+            <Form.Group className='mt-2'>
+            <Form.Select 
+              name='interval'
+              onChange={handleAddFormDataChange}
+              value = {addTaskFormData.interval}
+              >
+                  <option value='Daily'>Daily</option>
+                  <option value='Weekly'>Weekly</option>
+                  <option value='Monthly'>Monthly</option>
+                  <option value='Quarterly'>Quarterly</option>
+                  
                  
               </Form.Select>
             </Form.Group>

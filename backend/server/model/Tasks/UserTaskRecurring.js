@@ -14,6 +14,12 @@ var UserTaskRecurringSchema = new mongoose.Schema({
     hrs: {
         type: String,
     },
+    interval: {
+        type: String
+    },
+    nextUpdate: {
+        type: String
+    },
     dates: [{
         date: {
             type: String,
