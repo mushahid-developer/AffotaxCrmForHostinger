@@ -514,6 +514,10 @@ const UserRecurringTasks = () => {
           headerName: 'Interval', 
           field: 'interval', 
           flex:1,
+          cellEditor: 'agSelectCellEditor',
+          cellEditorParams: {
+            values: ["Daily", "Weekly", "Monthly", "Quarterly"],
+          },
         },
 
         { headerName: 'Notes', 
@@ -659,6 +663,7 @@ const onRowValueChanged = useCallback(async (event) => {
         Jobholder: data.Jobholder,
         hrs: data.hrs,
         note: data.notes,
+        interval: data.interval,
       },
       {
         headers:{ 

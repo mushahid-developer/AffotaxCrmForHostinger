@@ -144,14 +144,27 @@ exports.editOneUserRecurringTasks = async (req, res) => {
       const oldData = await UserTaskRecurringDb.findById(id);
       const oldDates = oldData.dates;
 
+      var nextUpdate = oldData.nextUpdate;
+
+      if( oldData.interval !== req.body.interval ){
+        nextUpdate = new Date( oldData.dates[oldData.dates.length - 1].date );
+        if (req.body.interval === "Daily") {
+          nextUpdate.setDate(nextUpdate.getDate() + 1);
+        } else if (req.body.interval === "Weekly") {
+          nextUpdate.setDate(nextUpdate.getDate() + 7);
+        } else if (req.body.interval === "Monthly") {
+          nextUpdate.setMonth(nextUpdate.getMonth() + 1);
+          nextUpdate.setDate(1);
+        } else if (req.body.interval === "Quarterly") {
+          nextUpdate.setMonth(nextUpdate.getMonth() + 3);
+          nextUpdate.setDate(1);
+        }
+      }
+
       const dates = oldDates.map(item => {
         const checkDate = new Date(item.date) ;
 
-        if(
-          checkDate.getDate() === today.getDate() &&
-          checkDate.getMonth() === today.getMonth() &&
-          checkDate.getFullYear() === today.getFullYear()
-        ){
+        if( checkDate.setHours(0, 0, 0) === today.setHours(0, 0, 0) ){
           item.notes = req.body.note;
         }
         return item;
@@ -162,6 +175,8 @@ exports.editOneUserRecurringTasks = async (req, res) => {
           Jobholder: req.body.Jobholder,
           description: req.body.description,
           hrs: req.body.hrs,
+          interval: req.body.interval,
+          nextUpdate: nextUpdate,
           dates: dates
       })
 
@@ -237,18 +252,33 @@ exports.copyOneUserRecurringTasks = async (req, res) => {
 
       const today = new Date()
 
+      var nextUpdate = new Date();
+      if (oldData.interval === "Daily") {
+        nextUpdate.setDate(nextUpdate.getDate() + 1);
+      } else if (oldData.interval === "Weekly") {
+        nextUpdate.setDate(nextUpdate.getDate() + 7);
+      } else if (oldData.interval === "Monthly") {
+        nextUpdate.setMonth(nextUpdate.getMonth() + 1);
+        nextUpdate.setDate(1);
+      } else if (oldData.interval === "Quarterly") {
+        nextUpdate.setMonth(nextUpdate.getMonth() + 3);
+        nextUpdate.setDate(1);
+      }
+
       const datesObj = [{
         date: today,
         isCompleted: false,
         notes: "",
-      }]
+      }];
   
       await UserTaskRecurringDb.create({
           projectname_id: oldData.projectname_id,
           Jobholder: oldData.Jobholder,
           description: "",
           hrs: oldData.hrs,
+          interval: oldData.interval,
           dates: datesObj,
+          nextUpdate: nextUpdate
           
       })
 
