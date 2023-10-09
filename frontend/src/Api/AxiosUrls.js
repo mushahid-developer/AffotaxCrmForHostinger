@@ -13,7 +13,7 @@ export const UserGetOneUrl = 'users/get/one';
 export const UserEditOneUrl = 'users/edit/one';
 export const UserInactiveOneUrl = 'users/one/inactive';
 
-//Clients
+//Client
 export const getDashboardDataUrl = 'admin/dashoard/get';
 
 
