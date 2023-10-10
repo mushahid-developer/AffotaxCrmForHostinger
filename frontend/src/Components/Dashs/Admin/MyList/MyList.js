@@ -5,6 +5,7 @@ import Construction from '../Construction/Construction';
 import Leads from "../Leads/Leads";
 import Accordion from 'react-bootstrap/Accordion';
 import Proposals from '../Proposals/Proposals';
+import UserRecurringTasks from '../UserRecurringTasks/UserRecurringTasks';
 
 const MyTable = () => {
  
@@ -64,6 +65,17 @@ const MyTable = () => {
          
           <div>
             <Construction fromPage="MyList" userNameFilter="Rashid"/>
+          </div>
+
+        </Accordion.Body>
+      </Accordion.Item>
+
+      <Accordion.Item eventKey="5">
+        <Accordion.Header>Recurring Task</Accordion.Header>
+        <Accordion.Body>
+         
+          <div>
+            <UserRecurringTasks fromPage="MyList" userNameFilter="Rashid"/>
           </div>
 
         </Accordion.Body>

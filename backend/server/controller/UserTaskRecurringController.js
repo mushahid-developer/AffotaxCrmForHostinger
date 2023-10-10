@@ -26,8 +26,6 @@ exports.getAllUserRecurringTasks = async (req, res) => {
           if ( today.setHours(0, 0, 0) > nextDate.setHours(0, 0, 0) ) {
             check = true;
           }
-
-
         
           if(check){
             var nextUpdate = new Date(nextDate);

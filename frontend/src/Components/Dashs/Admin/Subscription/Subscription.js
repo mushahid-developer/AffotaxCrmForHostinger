@@ -956,6 +956,45 @@ useEffect(()=>{
       },
     },
     {
+      headerName: "Billing Period End",
+      field: 'year_end',
+      floatingFilterComponent: 'selectFloatingFilterWthDate', 
+      floatingFilterComponentParams: { 
+        options: ["Expired", "Today", "Tomorrow", "In 7 days", "In 15 days", "Month Wise", "Custom"],
+        onValueChange:(value) => setYearEndFvalue(value),
+        value: yearEndFvalue,
+        onDateValueChange:(value) => setYearEndFvalueDate(value),
+        dateValue: yearEndFvalueDate,
+        suppressFilterButton: true, 
+        suppressInput: true 
+      },
+      flex: 1.5,
+      cellEditorFramework: 'agCellEditorDatePicker',
+      valueGetter: p => {
+        if(p.data.year_end && p.data.year_end !== "Invalid Date")
+        {
+          const deadline = new Date(p.data.year_end)
+          let ye = new Intl.DateTimeFormat('en', { year: 'numeric' }).format(deadline);
+          let mo = new Intl.DateTimeFormat('en', { month: 'short' }).format(deadline);
+          let da = new Intl.DateTimeFormat('en', { day: '2-digit' }).format(deadline);
+          return(`${da}-${mo}-${ye}`);
+        }
+        else{
+          return ""
+        }
+      },
+      cellStyle:(params)=>{
+        const today = new Date()
+        const deadline = new Date(params.value)
+        if(!(deadline.setHours(0, 0, 0, 0) >= today.setHours(0, 0, 0, 0))){
+          return{color: "red"}
+        }
+        if((deadline.setHours(0, 0, 0, 0) >= today.setHours(0, 0, 0, 0))){
+          return{color: "black"}
+        }
+      },
+    },
+    {
       headerName: "Deadline",
       field: 'work_deadline',
       // filter: 'agDateColumnFilter',

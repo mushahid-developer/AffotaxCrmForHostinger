@@ -46,6 +46,8 @@ const UserRecurringTasks = () => {
     const [projectFvalue, setProjectFvalue] = useState(null);
     const [jHolderFvalue, setJHolderFvalue] = useState(null);
     const [jHolderPreFvalue, setJHolderPreFvalue] = useState(null);
+    const [intervalFvalue, setIntervalFvalue] = useState(null);
+    const [statusFvalue, setStatusFvalue] = useState(null);
     
     const [startDateFvalueDate, setStartDateFvalueDate] = useState('');
     const [startDateFvalue, setStartDateFvalue] = useState('');
@@ -199,10 +201,23 @@ const UserRecurringTasks = () => {
       if(filteredArray !== undefined && jHolderFvalue !== null && jHolderFvalue !== ""){
           filteredArray = filteredArray.filter(obj => obj.Jobholder && obj.Jobholder === jHolderFvalue);
       }
+
+      // Interval Filter
+      if(filteredArray !== undefined && intervalFvalue !== null && intervalFvalue !== ""){
+          filteredArray = filteredArray.filter(obj => obj.interval && obj.interval === intervalFvalue);
+      }
       
       //Project Filter
       if(filteredArray !== undefined && projectFvalue !== null && projectFvalue !== ""){
         filteredArray = filteredArray.filter(obj => obj.projectname_id && obj.projectname_id.name === projectFvalue);
+      }
+      
+      //Status Filter
+      if(filteredArray !== undefined && statusFvalue !== null && statusFvalue === "Completed"){
+        filteredArray = filteredArray.filter(obj => obj.dates && obj.dates[0].isChecked );
+      }
+      if(filteredArray !== undefined && statusFvalue !== null && statusFvalue === "In-Complete"){
+        filteredArray = filteredArray.filter(obj => obj.dates && !obj.dates[0].isChecked );
       }
 
       //startDate
@@ -275,7 +290,7 @@ const UserRecurringTasks = () => {
     useEffect(()=>{
       // setRowData(mainRowData)
       filter(mainRowData)
-    }, [mainRowData, projectFvalue, jHolderFvalue, jHolderPreFvalue, startDateFvalueDate, startDateFvalue, historyMode])
+    }, [mainRowData, projectFvalue, jHolderFvalue, jHolderPreFvalue, startDateFvalueDate, startDateFvalue, historyMode, intervalFvalue, statusFvalue])
 
     useEffect(()=>{
       
@@ -518,16 +533,15 @@ const UserRecurringTasks = () => {
           cellEditorParams: {
             values: ["Daily", "Weekly", "Monthly", "Quarterly"],
           },
-        },
-
-        { headerName: 'Notes', 
-          field: 'notes', 
-          flex:3,
-          valueGetter: p => {
-            
-            if(p.data.dates){
-                return p.data.dates[0].notes
-            }
+          onCellValueChanged: function(event) {
+          },
+          floatingFilterComponent: 'selectFloatingFilter', 
+          floatingFilterComponentParams: { 
+            options: ["Daily", "Weekly", "Monthly", "Quarterly"],
+            onValueChange:(value) => setIntervalFvalue(value),
+            value: intervalFvalue,
+            suppressFilterButton: true, 
+            suppressInput: true 
           }
         },
 
@@ -535,7 +549,6 @@ const UserRecurringTasks = () => {
           field: 'status', 
           flex:1.2,
           editable: false,
-          filter: false,
           cellRendererFramework: (p)=>
             <>
               {checkLoading ? <div style={{textAlign: 'center',}}> 
@@ -564,10 +577,29 @@ const UserRecurringTasks = () => {
                     </g>
                   </svg>
               </div> : 
-                <input disabled={historyMode} style={{width: '100%',}} checked={p.data.dates[0].isCompleted} onClick={(e)=>{e.preventDefault(); handleTaskCompletion(p.data._id, p.data.dates[0].isCompleted)}} type="checkbox" />
+                <input disabled={historyMode} style={{width: '100%', height: '80%', marginTop: '4.5px',}} checked={p.data.dates[0].isCompleted} onClick={(e)=>{e.preventDefault(); handleTaskCompletion(p.data._id, p.data.dates[0].isCompleted)}} type="checkbox" />
                }
-            </>
+            </>,
+             floatingFilterComponent: 'selectFloatingFilter', 
+             floatingFilterComponentParams: { 
+               options: ["Completed", "In-Complete"],
+               onValueChange:(value) => setStatusFvalue(value),
+               value: statusFvalue,
+               suppressFilterButton: true,
+               suppressInput: true 
+             }
         },
+
+        { headerName: 'Notes', 
+        field: 'notes', 
+        flex:3,
+        valueGetter: p => {
+          
+          if(p.data.dates){
+              return p.data.dates[0].notes
+          }
+        }
+      },
         
       ];
 
@@ -630,23 +662,13 @@ const UserRecurringTasks = () => {
 
 
       const onCellValueChanged = useCallback((event) => {
-        if(event.colDef.field === "Jobholder_id"){
-          const selectedOption = fPreData.find(option => option.label === event.data.Jobholder_id);
-          event.data.Jobholder_id = selectedOption ? selectedOption.value : '';
-          event.data.Jobholder_id_name = selectedOption ? selectedOption.label : '';
-          }
 
-        if(event.colDef.field === "lead"){
-          const selectedOption = fPreData.find(option => option.label === event.data.lead);
-          event.data.lead = selectedOption ? selectedOption.value : '';
-          event.data.lead_name = selectedOption ? selectedOption.label : '';
-          }
-        
         if(event.colDef.field === "projectname_id"){
           const selectedOption = projectFNames.find(option => option.label === event.data.projectname_id);
           event.data.projectname_id = selectedOption ? selectedOption.value : '';
           event.data.projectname_id_name = selectedOption ? selectedOption.label : '';
         }
+        
       }, [gridApi]);
 
       var i = 1
