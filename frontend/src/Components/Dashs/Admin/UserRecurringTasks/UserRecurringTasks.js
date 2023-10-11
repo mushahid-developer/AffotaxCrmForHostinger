@@ -213,11 +213,13 @@ const UserRecurringTasks = () => {
       }
       
       //Status Filter
-      if(filteredArray !== undefined && statusFvalue !== null && statusFvalue === "Completed"){
-        filteredArray = filteredArray.filter(obj => obj.dates && obj.dates[0].isChecked );
-      }
-      if(filteredArray !== undefined && statusFvalue !== null && statusFvalue === "In-Complete"){
-        filteredArray = filteredArray.filter(obj => obj.dates && !obj.dates[0].isChecked );
+      if( statusFvalue !== null){
+        if(filteredArray !== undefined && statusFvalue !== null && statusFvalue === "Completed"){
+          filteredArray = filteredArray.filter(obj => obj.dates[0].isCompleted );
+        }
+        if(filteredArray !== undefined && statusFvalue !== null && statusFvalue === "In-Complete"){
+          filteredArray = filteredArray.filter(obj => !obj.dates[0].isCompleted );
+        }
       }
 
       //startDate
@@ -496,7 +498,7 @@ const UserRecurringTasks = () => {
           headerName: 'Date', 
           field: 'date', 
           flex:1.5, 
-          editable: false,
+          editable: true,
           valueGetter: p => {
             if(p.data){
                 if(p.data.dates[0] && p.data.dates[0].date !== "Invalid Date")
@@ -686,6 +688,7 @@ const onRowValueChanged = useCallback(async (event) => {
         hrs: data.hrs,
         note: data.notes,
         interval: data.interval,
+        date: data.date
       },
       {
         headers:{ 

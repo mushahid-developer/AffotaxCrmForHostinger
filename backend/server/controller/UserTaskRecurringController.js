@@ -142,27 +142,34 @@ exports.editOneUserRecurringTasks = async (req, res) => {
       const oldData = await UserTaskRecurringDb.findById(id);
       const oldDates = oldData.dates;
 
-      var nextUpdate = oldData.nextUpdate;
+      var nextUpdate = " ";
 
-      if( oldData.interval !== req.body.interval ){
-        nextUpdate = new Date( oldData.dates[oldData.dates.length - 1].date );
+      const previousDate =new Date( oldDates[oldDates.length - 1].date );
+      var newDate = new Date( req.body.date );
+
+      if( oldData.interval !== req.body.interval || newDate.toString() !== "Invalid Date" ){
+        if( newDate.toString() !== "Invalid Date" ){
+          nextUpdate = new Date( newDate );
+        } else {
+          nextUpdate = new Date( previousDate );
+        }
         if (req.body.interval === "Daily") {
           nextUpdate.setDate(nextUpdate.getDate() + 1);
         } else if (req.body.interval === "Weekly") {
           nextUpdate.setDate(nextUpdate.getDate() + 7);
         } else if (req.body.interval === "Monthly") {
           nextUpdate.setMonth(nextUpdate.getMonth() + 1);
-          nextUpdate.setDate(1);
         } else if (req.body.interval === "Quarterly") {
           nextUpdate.setMonth(nextUpdate.getMonth() + 3);
-          nextUpdate.setDate(1);
         }
       }
 
-      const dates = oldDates.map(item => {
-        const checkDate = new Date(item.date) ;
+      const dates = oldDates.map((item, index) => {
 
-        if( checkDate.setHours(0, 0, 0) === today.setHours(0, 0, 0) ){
+        if(index === oldDates.length - 1 ){
+          if( newDate.toString() !== "Invalid Date" ){
+            item.date = newDate;
+          }
           item.notes = req.body.note;
         }
         return item;
@@ -197,17 +204,13 @@ exports.markCompleteOneUserRecurringTasks = async (req, res) => {
       const oldData = await UserTaskRecurringDb.findById(id);
       const oldDates = oldData.dates;
 
-      const dates = oldDates.map(item => {
-        const checkDate = new Date(item.date) ;
-
-        if(
-          checkDate.getDate() === today.getDate() &&
-          checkDate.getMonth() === today.getMonth() &&
-          checkDate.getFullYear() === today.getFullYear()
-        ){
+      const dates = oldDates.map((item, index) => {
+      
+        if (index === oldDates.length - 1) {
           item.isCompleted = req.body.isChecked;
-          console.log(item)
+          console.log(item);
         }
+      
         return item;
       });
   

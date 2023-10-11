@@ -915,7 +915,7 @@ useEffect(()=>{
       },
     },
     {
-      headerName: "Billing Period",
+      headerName: "Billing Start",
       field: 'job_deadline',
       // filter: 'agDateColumnFilter',
       // filterParams: filterParams,
@@ -956,7 +956,7 @@ useEffect(()=>{
       },
     },
     {
-      headerName: "Billing Period End",
+      headerName: "Billing End",
       field: 'year_end',
       floatingFilterComponent: 'selectFloatingFilterWthDate', 
       floatingFilterComponentParams: { 
@@ -1043,7 +1043,7 @@ useEffect(()=>{
       editable: false,
       valueGetter: p => {
         const deadline = new Date(p.data.job_deadline)
-        const yearEnd = new Date(p.data.work_deadline)
+        const yearEnd = new Date(p.data.year_end)
         var today = new Date();
 
         if( !p.data.job_deadline || !p.data.job_deadline )
