@@ -6,6 +6,8 @@ import DatePicker from "react-datepicker";
 import "react-datepicker/dist/react-datepicker.css";
 import Loader from '../../../../Common/Loader/Loader';
 
+
+
 const GetAllAttendance = axiosURL.GetAllAttendance;
 
 function Absents() {
@@ -28,7 +30,7 @@ function Absents() {
 
       if (response.status === 200 || response.status === 304) {
         setMainData(response.data);
-        setLoader(false);
+        
       }
     } catch (error) {
       console.error("Error fetching data:", error);
@@ -120,6 +122,7 @@ function Absents() {
 
       setTableData(finalAttendanceArray);
     }
+    setLoader(false);
   },  [usersList, month, selectedDate, mainData]);
 
   useEffect(() => {
