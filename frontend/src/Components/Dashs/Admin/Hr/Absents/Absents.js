@@ -110,6 +110,8 @@ function Absents() {
                     monthAbsentCount++;
                   }
                 }
+              } else {
+                monthAbsentCount = "-"
               }
   
   
