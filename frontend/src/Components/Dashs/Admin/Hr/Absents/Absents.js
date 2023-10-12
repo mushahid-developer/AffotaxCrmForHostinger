@@ -55,14 +55,6 @@ function Absents() {
         const yearr = new Date(obj.startTime).getFullYear();
         return (yearr === month.year);
       });
-      
-      //get Start Date and End Date of each user
-        const startEndDate = usersList.map(obj => {
-          const userAvaData = currentMonthData.filter(item => item.user_id && item.user_id !== null && item.user_id.name === obj)
-          const startDate = new Date( userAvaData.length > 0 && userAvaData[0].startTime)
-          const endDate = new Date( userAvaData.length > 0 && userAvaData[ userAvaData.length - 1 ].startTime)
-        });
-
 
       const dateeee = new Date(selectedDate);
       const yearrrr = dateeee.getFullYear();
@@ -82,7 +74,7 @@ function Absents() {
 
           const CheckMonthData = currentMonthData.find(item => {
             const checkDate = new Date(item.startTime).getMonth();
-            if( checkDate === currentMonthCheck ){
+            if( userName === item.user_id.userName && checkDate === currentMonthCheck ){
               return true
             }
           })
