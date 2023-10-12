@@ -74,7 +74,7 @@ function Absents() {
 
           const CheckMonthData = currentMonthData.find(item => {
             const checkDate = new Date(item.startTime).getMonth();
-            if( ( item.user_id.userName && userName === item.user_id.userName ) && checkDate === currentMonthCheck ){
+            if( ( item.user_id && userName === item.user_id.userName ) && checkDate === currentMonthCheck ){
               return true
             }
           })
