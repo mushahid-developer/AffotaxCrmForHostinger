@@ -68,37 +68,50 @@ function Absents() {
         const months = [];
 
         for (let q = 1; q <= 12; q++) {
-          const currentMonthDataFiltered = currentMonthData.filter(item => {
-            const itemDate = new Date(item.startTime);
-            const checkDate = itemDate.getMonth();
-            return item.user_id && item.user_id.name === userName && checkDate === q - 1;
-          });
-        
-          const numberOfAbsentDays = getNumberOfAbsentDays(currentMonthDataFiltered, startDate, endDate);
-          months.push(numberOfAbsentDays);
-        }
-        
-        function getNumberOfAbsentDays(data, startDate, endDate) {
-          return data.reduce((absentCount, item) => {
-            const itemDate = new Date(item.startTime);
-            if (isWeekday(itemDate) && isWithinDateRange(itemDate, startDate, endDate)) {
-              absentCount++;
+          const numberOfDaysInCurrentMonth = new Date(yearrrr, q, 0).getDate();
+          let monthAbsentCount = 0;
+
+          const currentMonthCheck = new Date(yearrrr, q, 0).getMonth();
+          console.log(currentMonthCheck)
+
+          const CheckMonthData = currentMonthData.find(item => {
+            const checkDate = new Date(item.startTime).getMonth();
+            if( ( item.user_id && userName === item.user_id.userName ) && checkDate === currentMonthCheck ){
+              return true
             }
-            return absentCount;
-          }, 0);
-        }
-        
-        function isWeekday(date) {
-          const day = date.getDay();
-          return day !== 0 && day !== 6;
-        }
-        
-        function isWithinDateRange(date, startDate, endDate) {
-          const dateToSearch = new Date(date);
-          dateToSearch.setHours(0, 0, 0, 0);
-          startDate.setHours(0, 0, 0, 0);
-          endDate.setHours(0, 0, 0, 0);
-          return dateToSearch >= startDate && dateToSearch <= endDate;
+          })
+
+          if(CheckMonthData || (startDate.getMonth() <= currentMonthCheck && endDate.getMonth() >= currentMonthCheck ) ){
+            for (let i = 1; i <= numberOfDaysInCurrentMonth; i++) {
+              const dateToSearch = new Date(yearrrr, q - 1, i);
+  
+              if( dateToSearch.setHours(0, 0, 0) >= startDate.setHours(0, 0, 0) &&  dateToSearch.setHours(0, 0, 0) <= endDate.setHours(0, 0, 0) ){
+                const isWeekend = dateToSearch.getDay() === 6 || dateToSearch.getDay() === 0;
+                if (!isWeekend) {
+                  const result = currentMonthData.find((item) => {
+                    const startTimee = new Date(item.startTime);
+    
+                    if (!item.user_id) {
+                      return false;
+                    }
+    
+                    return (
+                      startTimee.setHours(0, 0, 0, 0) === dateToSearch.setHours(0, 0, 0, 0) &&
+                      item.user_id.name === userName
+                    );
+                  });
+    
+                  if (!result) {
+                    monthAbsentCount++;
+                  }
+                }
+              }
+            }
+          } else {
+            monthAbsentCount = "-"
+          }
+
+          months.push(monthAbsentCount);
         }
 
         return {
