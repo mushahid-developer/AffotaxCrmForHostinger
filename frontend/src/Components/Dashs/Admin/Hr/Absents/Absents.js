@@ -70,7 +70,7 @@ function Absents() {
       const finalAttendanceArray = usersList.map(userName => {
         const userAvaData = currentMonthData.filter(item => item.user_id && item.user_id !== null && item.user_id.name === userName)
         const startDate = new Date( userAvaData.length > 0 && userAvaData[0].startTime)
-        const endDate = new Date( userAvaData.length > 0 && userAvaData[ userAvaData.length - 1 ].startTime)
+        const endDate = new Date()
         const months = [];
 
         for (let q = 1; q <= 12; q++) {
@@ -78,6 +78,7 @@ function Absents() {
           let monthAbsentCount = 0;
 
           const currentMonthCheck = new Date(yearrrr, q, 0).getMonth();
+          console.log(currentMonthCheck)
 
           const CheckMonthData = currentMonthData.find(item => {
             const checkDate = new Date(item.startTime).getMonth();
@@ -86,7 +87,7 @@ function Absents() {
             }
           })
 
-          if(CheckMonthData){
+          if(CheckMonthData || (startDate.getMonth() <= currentMonthCheck && endDate.getMonth() >= currentMonthCheck ) ){
             for (let i = 1; i <= numberOfDaysInCurrentMonth; i++) {
               const dateToSearch = new Date(yearrrr, q - 1, i);
   
@@ -110,11 +111,7 @@ function Absents() {
                     monthAbsentCount++;
                   }
                 }
-              } else {
-                monthAbsentCount = "-"
               }
-  
-  
             }
           } else {
             monthAbsentCount = "-"
