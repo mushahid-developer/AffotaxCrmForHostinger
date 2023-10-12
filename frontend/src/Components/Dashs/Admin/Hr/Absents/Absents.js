@@ -48,16 +48,30 @@ function Absents() {
   }, [mainData]);
 
   useEffect(() => {
+
     if (mainData.length > 0) {
+      
       const currentMonthData = mainData.filter(obj => {
         const yearr = new Date(obj.startTime).getFullYear();
         return (yearr === month.year);
       });
+      
+      //get Start Date and End Date of each user
+        const startEndDate = usersList.map(obj => {
+          const userAvaData = currentMonthData.filter(item => item.user_id && item.user_id !== null && item.user_id.name === obj)
+          const startDate = new Date( userAvaData.length > 0 && userAvaData[0].startTime)
+          const endDate = new Date( userAvaData.length > 0 && userAvaData[ userAvaData.length - 1 ].startTime)
+          console.log(startDate, endDate)
+        });
+
 
       const dateeee = new Date(selectedDate);
       const yearrrr = dateeee.getFullYear();
 
       const finalAttendanceArray = usersList.map(userName => {
+        const userAvaData = currentMonthData.filter(item => item.user_id && item.user_id !== null && item.user_id.name === userName)
+        const startDate = new Date( userAvaData.length > 0 && userAvaData[0].startTime)
+        const endDate = new Date( userAvaData.length > 0 && userAvaData[ userAvaData.length - 1 ].startTime)
         const months = [];
 
         for (let q = 1; q <= 12; q++) {
@@ -66,26 +80,30 @@ function Absents() {
 
           for (let i = 1; i <= numberOfDaysInCurrentMonth; i++) {
             const dateToSearch = new Date(yearrrr, q - 1, i);
-            const isWeekend = dateToSearch.getDay() === 6 || dateToSearch.getDay() === 0;
 
-            if (!isWeekend) {
-              const result = currentMonthData.find((item) => {
-                const startTimee = new Date(item.startTime);
-
-                if (!item.user_id) {
-                  return false;
+            if( dateToSearch.setHours(0, 0, 0) >= startDate.setHours(0, 0, 0) &&  dateToSearch.setHours(0, 0, 0) <= endDate.setHours(0, 0, 0) ){
+              const isWeekend = dateToSearch.getDay() === 6 || dateToSearch.getDay() === 0;
+              if (!isWeekend) {
+                const result = currentMonthData.find((item) => {
+                  const startTimee = new Date(item.startTime);
+  
+                  if (!item.user_id) {
+                    return false;
+                  }
+  
+                  return (
+                    startTimee.setHours(0, 0, 0, 0) === dateToSearch.setHours(0, 0, 0, 0) &&
+                    item.user_id.name === userName
+                  );
+                });
+  
+                if (!result) {
+                  monthAbsentCount++;
                 }
-
-                return (
-                  startTimee.setHours(0, 0, 0, 0) === dateToSearch.setHours(0, 0, 0, 0) &&
-                  item.user_id.name === userName
-                );
-              });
-
-              if (!result) {
-                monthAbsentCount++;
               }
             }
+            
+
           }
 
           months.push(monthAbsentCount);
@@ -99,7 +117,7 @@ function Absents() {
 
       setTableData(finalAttendanceArray);
     }
-  }, [usersList, month, selectedDate, mainData]);
+  },  [usersList, month, selectedDate, mainData]);
 
   useEffect(() => {
     if (tableData.length > 0) {
