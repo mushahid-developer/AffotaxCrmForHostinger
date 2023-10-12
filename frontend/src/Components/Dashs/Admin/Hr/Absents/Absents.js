@@ -121,8 +121,8 @@ function Absents() {
       });
 
       setTableData(finalAttendanceArray);
+      setLoader(false);
     }
-    setLoader(false);
   },  [usersList, month, selectedDate, mainData]);
 
   useEffect(() => {
