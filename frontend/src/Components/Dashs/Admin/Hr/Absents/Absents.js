@@ -74,7 +74,7 @@ function Absents() {
 
           const CheckMonthData = currentMonthData.find(item => {
             const checkDate = new Date(item.startTime).getMonth();
-            if( userName === item.user_id.userName && checkDate === currentMonthCheck ){
+            if( ( item.user_id.userName && userName === item.user_id.userName ) && checkDate === currentMonthCheck ){
               return true
             }
           })
@@ -125,9 +125,6 @@ function Absents() {
   useEffect(() => {
     if (tableData.length > 0) {
       const curDate = new Date();
-      const curYear = curDate.getFullYear();
-      const curMonth = curDate.getMonth();
-      const selYear = selectedDate.getFullYear();
       const months = ["Jan", "Feb", "March", "April", "May", "June", "July", "Aug", "Sept", "Oct", "Nov", "Dec"];
 
       let columnDefs = [
