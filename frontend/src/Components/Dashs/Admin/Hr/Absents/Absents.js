@@ -61,7 +61,6 @@ function Absents() {
           const userAvaData = currentMonthData.filter(item => item.user_id && item.user_id !== null && item.user_id.name === obj)
           const startDate = new Date( userAvaData.length > 0 && userAvaData[0].startTime)
           const endDate = new Date( userAvaData.length > 0 && userAvaData[ userAvaData.length - 1 ].startTime)
-          console.log(startDate, endDate)
         });
 
 
@@ -78,32 +77,45 @@ function Absents() {
           const numberOfDaysInCurrentMonth = new Date(yearrrr, q, 0).getDate();
           let monthAbsentCount = 0;
 
-          for (let i = 1; i <= numberOfDaysInCurrentMonth; i++) {
-            const dateToSearch = new Date(yearrrr, q - 1, i);
+          const currentMonthCheck = new Date(yearrrr, q, 0).getMonth();
 
-            if( dateToSearch.setHours(0, 0, 0) >= startDate.setHours(0, 0, 0) &&  dateToSearch.setHours(0, 0, 0) <= endDate.setHours(0, 0, 0) ){
-              const isWeekend = dateToSearch.getDay() === 6 || dateToSearch.getDay() === 0;
-              if (!isWeekend) {
-                const result = currentMonthData.find((item) => {
-                  const startTimee = new Date(item.startTime);
+          const CheckMonthData = currentMonthData.find(item => {
+            const checkDate = new Date(item.startTime).getMonth();
+            if( checkDate === currentMonthCheck ){
+              return true
+            }
+          })
+
+          if(CheckMonthData){
+            for (let i = 1; i <= numberOfDaysInCurrentMonth; i++) {
+              const dateToSearch = new Date(yearrrr, q - 1, i);
   
-                  if (!item.user_id) {
-                    return false;
+              if( dateToSearch.setHours(0, 0, 0) >= startDate.setHours(0, 0, 0) &&  dateToSearch.setHours(0, 0, 0) <= endDate.setHours(0, 0, 0) ){
+                const isWeekend = dateToSearch.getDay() === 6 || dateToSearch.getDay() === 0;
+                if (!isWeekend) {
+                  const result = currentMonthData.find((item) => {
+                    const startTimee = new Date(item.startTime);
+    
+                    if (!item.user_id) {
+                      return false;
+                    }
+    
+                    return (
+                      startTimee.setHours(0, 0, 0, 0) === dateToSearch.setHours(0, 0, 0, 0) &&
+                      item.user_id.name === userName
+                    );
+                  });
+    
+                  if (!result) {
+                    monthAbsentCount++;
                   }
-  
-                  return (
-                    startTimee.setHours(0, 0, 0, 0) === dateToSearch.setHours(0, 0, 0, 0) &&
-                    item.user_id.name === userName
-                  );
-                });
-  
-                if (!result) {
-                  monthAbsentCount++;
                 }
               }
+  
+  
             }
-            
-
+          } else {
+            monthAbsentCount = "-"
           }
 
           months.push(monthAbsentCount);
@@ -132,11 +144,7 @@ function Absents() {
       ];
 
       for (let w = 0; w <= 11; w++) {
-        if (selYear < curYear || (selYear === curYear && w <= curMonth)) {
           columnDefs.push({ headerName: months[w], field: `${w}`, flex: 2 });
-        } else {
-          columnDefs.push({ headerName: months[w], field: `${w}`, flex: 2, valueGetter: () => "-" });
-        }
       }
 
       columnDefs.push({
@@ -144,13 +152,14 @@ function Absents() {
         field: 'total',
         flex: 2,
         valueGetter: (params) => {
-          if (selYear < curYear) {
-            return [...Array(12).keys()].reduce((total, month) => total + +params.data[`${month}`], 0);
-          } else if (selYear === curYear) {
-            return [...Array(curMonth + 1).keys()].reduce((total, month) => total + +params.data[`${month}`], 0);
+          var total = 0;
+          for (let month = 0; month <= 11; month++) {
+            if (params.data[month] !== "-") {
+              total += +params.data[month];
+            }
           }
-          return "-";
-        },
+          return total;
+        }
       });
 
       setFinalColDef(columnDefs);
