@@ -40,6 +40,7 @@ import Companies from "../Dashs/Admin/Companies/Companies";
 import Proposals from "../Dashs/Admin/Proposals/Proposals";
 import UserRecurringTasks from "../Dashs/Admin/UserRecurringTasks/UserRecurringTasks";
 import Absents from "../Dashs/Admin/Hr/Absents/Absents";
+import MyListS from "../Dashs/Admin/Settings/MyList/MyListS";
 var getAllTickets = axiosURL.getAllTickets;
 
 export default function AdminRoutes(props) {
@@ -196,6 +197,7 @@ export default function AdminRoutes(props) {
                   <Route path="/tickets/mail" element = {<DetailedMail setReFetchTickets = {setReFetchTickets}/>}></Route>
                   <Route path="/companies" element = {<Companies />}></Route>
                   <Route path="/proposals" element = {<Proposals />}></Route>
+                  <Route path="/settings/my-list" element = {<MyListS />}></Route>
                 </Routes>
                 </div>
               </div>

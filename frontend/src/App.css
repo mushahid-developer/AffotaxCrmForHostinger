@@ -245,7 +245,7 @@ h6{
 }
 
 .sidebar_subtasks_settings.open {
-  height: 200px;;
+  height: fit-content;
 }
 
 .sidebar_subtasks_hr {
