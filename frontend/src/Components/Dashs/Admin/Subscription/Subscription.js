@@ -1,3 +1,5 @@
+/* eslint-disable react-hooks/exhaustive-deps */
+/* eslint-disable array-callback-return */
 import React, { useState, useRef, useEffect, useMemo, useCallback} from 'react';
 import { AgGridReact } from 'ag-grid-react'; // the AG Grid React Component
 
@@ -35,7 +37,6 @@ var JobPlaning_Update_Many_Url = axiosURL.JobPlaning_Update_Many_Url;
 export default function Subscription() {
 
   const [departmentSummaryToggle, setDepartmentSummaryToggle] = useState(false)
-  const [downloadOptionsToggle, setDownloadOptionsToggle] = useState(false)
   const [multipleRowEditToggle, setMultipleRowEditToggle] = useState(false)
   
   const [preData, setPreData] = useState([])
@@ -146,6 +147,9 @@ const {state} = useLocation();
 const location = useLocation();
 const navigate = useNavigate();
 
+  const queryParams = new URLSearchParams(location.search);
+  const companyNameFromUrl = queryParams.get('companyName');
+
 const [rowData, setRowData] = useState(); // Set rowData to Array of Objects, one Object per Row
 const [mainrowData, setMainRowData] = useState([]); // Set rowData to Array of Objects, one Object per Row
 const [mainReRender, setMainReRender] = useState(false);
@@ -207,12 +211,12 @@ const filter = async ()=>{
 
   var today = new Date();
 
-  if(filteredArray != undefined){
+  if(filteredArray !== undefined){
     filteredArray = await filteredArray.filter(obj => obj.client_id && obj.client_id.isActive);
   }
 
   if(filteredArray){
-    if(filteredArray != undefined){
+    if(filteredArray !== undefined){
         filteredArray = filteredArray.filter(obj => obj.job_name && obj.job_name === 'Billing');
       }
   }
@@ -283,52 +287,57 @@ const filter = async ()=>{
 }));
 
   // JobStatus Filter
-  if(filteredArray != undefined && jStatusFvalue != null && jStatusFvalue !== ""){
+  if(filteredArray !== undefined && jStatusFvalue !== null && jStatusFvalue !== ""){
     filteredArray = await filteredArray.filter(obj => obj.job_status && obj.job_status === jStatusFvalue);
   }
 
   // C Manger Filter
-  if(filteredArray != undefined && cManagerFvalue != null && cManagerFvalue !== ""){
+  if(filteredArray !== undefined && cManagerFvalue !== null && cManagerFvalue !== ""){
     filteredArray = await filteredArray.filter(obj => obj.manager_id && obj.manager_id.name === cManagerFvalue);
   }
 
   //status Filter
-  if(filteredArray != undefined && statusFvalue != null && statusFvalue !== ""){
+  if(filteredArray !== undefined && statusFvalue !== null && statusFvalue !== ""){
 
-    filteredArray = await filteredArray.filter(obj =>{ 
-      if(obj.job_deadline && obj.year_end){
+    filteredArray = filteredArray.filter(obj => {
+      if (obj.job_deadline && obj.year_end) {
 
-        const deadline = new Date(obj.job_deadline)
-        const yearEnd = new Date(obj.work_deadline)
+        const deadline = new Date(obj.job_deadline);
+        const yearEnd = new Date(obj.year_end);
         var today = new Date();
 
 
-        if ( ( (yearEnd.setHours(0, 0, 0, 0) <= today.setHours(0, 0, 0, 0)) ) ) {
-            if(statusFvalue === "Overdue")
+        if (((yearEnd.setHours(0, 0, 0, 0) <= today.setHours(0, 0, 0, 0)))) {
+          if (statusFvalue === "Overdue")
             return obj;
-          }
-        else if ((deadline.setHours(0, 0, 0, 0) < today.setHours(0, 0, 0, 0) || (deadline.setHours(0, 0, 0, 0) < today.setHours(0, 0, 0, 0) && (yearEnd.setHours(0, 0, 0, 0) < today.setHours(0, 0, 0, 0))) )) {
-          if(statusFvalue === "Due")
-          return obj;
-        } 
-        
+        }
+        else if ((deadline.setHours(0, 0, 0, 0) < today.setHours(0, 0, 0, 0) || (deadline.setHours(0, 0, 0, 0) < today.setHours(0, 0, 0, 0) && (yearEnd.setHours(0, 0, 0, 0) < today.setHours(0, 0, 0, 0))))) {
+          if (statusFvalue === "Due")
+            return obj;
+        }
+
       }
     });
     
   }
 
+ // Client Name
+ if (filteredArray !== undefined && companyNameFromUrl !== null && companyNameFromUrl !== "") {
+  filteredArray = await filteredArray.filter(obj => obj.client_id && obj.client_id.company_name === companyNameFromUrl);
+}
+
   // Department Filter
-  if(filteredArray != undefined && departmentFvalue != null && departmentFvalue !== ""){
+  if(filteredArray !== undefined && departmentFvalue !== null && departmentFvalue !== ""){
     filteredArray = await filteredArray.filter(obj => obj.job_name && obj.job_name === departmentFvalue);
   }
 
   // Job Holder Filter
-  if(filteredArray != undefined && jHolderFvalue != null && jHolderFvalue !== ""){
+  if(filteredArray !== undefined && jHolderFvalue !== null && jHolderFvalue !== ""){
     filteredArray = await filteredArray.filter(obj => obj.job_holder_id && obj.job_holder_id.name === jHolderFvalue);
   }
 
   // Subscription Filter
-  if(filteredArray != undefined && subscriptionFvalue != null && subscriptionFvalue !== ""){
+  if(filteredArray !== undefined && subscriptionFvalue !== null && subscriptionFvalue !== ""){
     filteredArray = await filteredArray.filter(obj => obj.subscription && obj.subscription === subscriptionFvalue);
   }
 
@@ -336,7 +345,7 @@ const filter = async ()=>{
   if(yearEndFvalue){
 
     // Year End Expired Filter
-    if(filteredArray != undefined && yearEndFvalue != null && yearEndFvalue !== "" && yearEndFvalue === "Expired"){
+    if(filteredArray !== undefined && yearEndFvalue !== null && yearEndFvalue !== "" && yearEndFvalue === "Expired"){
       filteredArray = await filteredArray.filter(obj => {
         // obj.manager_id && obj.manager_id.name === cManagerFvalue
         const today = new Date()
@@ -350,7 +359,7 @@ const filter = async ()=>{
     }
 
     // Year End Today Filter
-    if(filteredArray != undefined && yearEndFvalue != null && yearEndFvalue !== "" && yearEndFvalue === "Today"){
+    if(filteredArray !== undefined && yearEndFvalue !== null && yearEndFvalue !== "" && yearEndFvalue === "Today"){
       filteredArray = await filteredArray.filter(obj => {
         // obj.manager_id && obj.manager_id.name === cManagerFvalue
         const today = new Date()
@@ -364,7 +373,7 @@ const filter = async ()=>{
     }
 
     // Year End Tomorrow Filter
-    if(filteredArray != undefined && yearEndFvalue != null && yearEndFvalue !== "" && yearEndFvalue === "Tomorrow"){
+    if(filteredArray !== undefined && yearEndFvalue !== null && yearEndFvalue !== "" && yearEndFvalue === "Tomorrow"){
       filteredArray = await filteredArray.filter(obj => {
         // obj.manager_id && obj.manager_id.name === cManagerFvalue
         const today = new Date()
@@ -381,7 +390,7 @@ const filter = async ()=>{
 
 
     // Year End 7 days Filter
-    if(filteredArray != undefined && yearEndFvalue != null && yearEndFvalue !== "" && yearEndFvalue === "In 7 days"){
+    if(filteredArray !== undefined && yearEndFvalue !== null && yearEndFvalue !== "" && yearEndFvalue === "In 7 days"){
       filteredArray = await filteredArray.filter(obj => {
         // obj.manager_id && obj.manager_id.name === cManagerFvalue
         const today = new Date()
@@ -396,7 +405,7 @@ const filter = async ()=>{
     }
 
     // Year End 15 days Filter
-    if(filteredArray != undefined && yearEndFvalue != null && yearEndFvalue !== "" && yearEndFvalue === "In 15 days"){
+    if(filteredArray !== undefined && yearEndFvalue !== null && yearEndFvalue !== "" && yearEndFvalue === "In 15 days"){
       filteredArray = await filteredArray.filter(obj => {
         // obj.manager_id && obj.manager_id.name === cManagerFvalue
         const today = new Date()
@@ -411,7 +420,7 @@ const filter = async ()=>{
     }
     
     // Year End Month Wise Filter
-    if(filteredArray != undefined && yearEndFvalue != null && yearEndFvalue !== "" && yearEndFvalue === "Month Wise"){
+    if(filteredArray !== undefined && yearEndFvalue !== null && yearEndFvalue !== "" && yearEndFvalue === "Month Wise"){
       filteredArray = await filteredArray.filter(obj => {
         // obj.manager_id && obj.manager_id.name === cManagerFvalue
         // const today = new Date()
@@ -431,7 +440,7 @@ const filter = async ()=>{
     }
     
     //Year End Custom Filter
-    if(filteredArray != undefined && yearEndFvalue != null && yearEndFvalue !== "" && yearEndFvalue === "Custom"){
+    if(filteredArray !== undefined && yearEndFvalue !== null && yearEndFvalue !== "" && yearEndFvalue === "Custom"){
       filteredArray = await filteredArray.filter(obj => {
         var cellDate = obj.year_end !== "" && new Date(obj.year_end);
         var filterDate = new Date(yearEndFvalueDate)
@@ -453,7 +462,7 @@ const filter = async ()=>{
   if(deadlineFvalue){
 
     //Deadline Expired Filter
-    if(filteredArray != undefined && deadlineFvalue != null && deadlineFvalue !== "" && deadlineFvalue === "Expired"){
+    if(filteredArray !== undefined && deadlineFvalue !== null && deadlineFvalue !== "" && deadlineFvalue === "Expired"){
       filteredArray = await filteredArray.filter(obj => {
         // obj.manager_id && obj.manager_id.name === cManagerFvalue
         const today = new Date()
@@ -467,7 +476,7 @@ const filter = async ()=>{
     }
 
     //Deadline Today Filter
-    if(filteredArray != undefined && deadlineFvalue != null && deadlineFvalue !== "" && deadlineFvalue === "Today"){
+    if(filteredArray !== undefined && deadlineFvalue !== null && deadlineFvalue !== "" && deadlineFvalue === "Today"){
       filteredArray = await filteredArray.filter(obj => {
         // obj.manager_id && obj.manager_id.name === cManagerFvalue
         const today = new Date()
@@ -481,7 +490,7 @@ const filter = async ()=>{
     }
 
     //Deadline Tomorrow Filter
-    if(filteredArray != undefined && deadlineFvalue != null && deadlineFvalue !== "" && deadlineFvalue === "Tomorrow"){
+    if(filteredArray !== undefined && deadlineFvalue !== null && deadlineFvalue !== "" && deadlineFvalue === "Tomorrow"){
       filteredArray = await filteredArray.filter(obj => {
         // obj.manager_id && obj.manager_id.name === cManagerFvalue
         const today = new Date()
@@ -498,7 +507,7 @@ const filter = async ()=>{
 
 
     //Deadline 7 days Filter
-    if(filteredArray != undefined && deadlineFvalue != null && deadlineFvalue !== "" && deadlineFvalue === "In 7 days"){
+    if(filteredArray !== undefined && deadlineFvalue !== null && deadlineFvalue !== "" && deadlineFvalue === "In 7 days"){
       filteredArray = await filteredArray.filter(obj => {
         // obj.manager_id && obj.manager_id.name === cManagerFvalue
         const today = new Date()
@@ -513,7 +522,7 @@ const filter = async ()=>{
     }
 
     //Deadline 15 days Filter
-    if(filteredArray != undefined && deadlineFvalue != null && deadlineFvalue !== "" && deadlineFvalue === "In 15 days"){
+    if(filteredArray !== undefined && deadlineFvalue !== null && deadlineFvalue !== "" && deadlineFvalue === "In 15 days"){
       filteredArray = await filteredArray.filter(obj => {
         // obj.manager_id && obj.manager_id.name === cManagerFvalue
         const today = new Date()
@@ -528,7 +537,7 @@ const filter = async ()=>{
     }
 
     //Deadline Month Wise Filter
-    if(filteredArray != undefined && deadlineFvalue != null && deadlineFvalue !== "" && deadlineFvalue === "Month Wise"){
+    if(filteredArray !== undefined && deadlineFvalue !== null && deadlineFvalue !== "" && deadlineFvalue === "Month Wise"){
       filteredArray = await filteredArray.filter(obj => {
         // obj.manager_id && obj.manager_id.name === cManagerFvalue
         // const today = new Date()
@@ -548,7 +557,7 @@ const filter = async ()=>{
     }
     
     //Deadline Custom Filter
-    if(filteredArray != undefined && deadlineFvalue != null && deadlineFvalue !== "" && deadlineFvalue === "Custom"){
+    if(filteredArray !== undefined && deadlineFvalue !== null && deadlineFvalue !== "" && deadlineFvalue === "Custom"){
       filteredArray = await filteredArray.filter(obj => {
         var cellDate = obj.job_deadline !== "" && new Date(obj.job_deadline);
         var filterDate = new Date(deadlineFvalueDate)
@@ -570,7 +579,7 @@ const filter = async ()=>{
   if(jobDateFvalue){
 
     //Job Date Expired Filter
-    if(filteredArray != undefined && jobDateFvalue != null && jobDateFvalue !== "" && jobDateFvalue === "Expired"){
+    if(filteredArray !== undefined && jobDateFvalue !== null && jobDateFvalue !== "" && jobDateFvalue === "Expired"){
       filteredArray = await filteredArray.filter(obj => {
         // obj.manager_id && obj.manager_id.name === cManagerFvalue
         const today = new Date()
@@ -584,7 +593,7 @@ const filter = async ()=>{
     }
 
     //Job Date Today Filter
-    if(filteredArray != undefined && jobDateFvalue != null && jobDateFvalue !== "" && jobDateFvalue === "Today"){
+    if(filteredArray !== undefined && jobDateFvalue !== null && jobDateFvalue !== "" && jobDateFvalue === "Today"){
       filteredArray = await filteredArray.filter(obj => {
         // obj.manager_id && obj.manager_id.name === cManagerFvalue
         const today = new Date()
@@ -598,7 +607,7 @@ const filter = async ()=>{
     }
 
     //Job Date Tomorrow Filter
-    if(filteredArray != undefined && jobDateFvalue != null && jobDateFvalue !== "" && jobDateFvalue === "Tomorrow"){
+    if(filteredArray !== undefined && jobDateFvalue !== null && jobDateFvalue !== "" && jobDateFvalue === "Tomorrow"){
       filteredArray = await filteredArray.filter(obj => {
         // obj.manager_id && obj.manager_id.name === cManagerFvalue
         const today = new Date()
@@ -615,7 +624,7 @@ const filter = async ()=>{
 
 
     //Job Date 7 days Filter
-    if(filteredArray != undefined && jobDateFvalue != null && jobDateFvalue !== "" && jobDateFvalue === "In 7 days"){
+    if(filteredArray !== undefined && jobDateFvalue !== null && jobDateFvalue !== "" && jobDateFvalue === "In 7 days"){
       filteredArray = await filteredArray.filter(obj => {
         // obj.manager_id && obj.manager_id.name === cManagerFvalue
         const today = new Date()
@@ -630,7 +639,7 @@ const filter = async ()=>{
     }
 
     //Job Date 15 days Filter
-    if(filteredArray != undefined && jobDateFvalue != null && jobDateFvalue !== "" && jobDateFvalue === "In 15 days"){
+    if(filteredArray !== undefined && jobDateFvalue !== null && jobDateFvalue !== "" && jobDateFvalue === "In 15 days"){
       filteredArray = await filteredArray.filter(obj => {
         // obj.manager_id && obj.manager_id.name === cManagerFvalue
         const today = new Date()
@@ -645,7 +654,7 @@ const filter = async ()=>{
     }
 
     //Job Date Month Wise Filter
-    if(filteredArray != undefined && jobDateFvalue != null && jobDateFvalue !== "" && jobDateFvalue === "Month Wise"){
+    if(filteredArray !== undefined && jobDateFvalue !== null && jobDateFvalue !== "" && jobDateFvalue === "Month Wise"){
       filteredArray = await filteredArray.filter(obj => {
         // obj.manager_id && obj.manager_id.name === cManagerFvalue
         // const today = new Date()
@@ -665,7 +674,7 @@ const filter = async ()=>{
     }
     
     //Job Date Custom Filter
-    if(filteredArray != undefined && jobDateFvalue != null && jobDateFvalue !== "" && jobDateFvalue === "Custom"){
+    if(filteredArray !== undefined && jobDateFvalue !== null && jobDateFvalue !== "" && jobDateFvalue === "Custom"){
       filteredArray = await filteredArray.filter(obj => {
         var cellDate = obj.work_deadline !== "" && new Date(obj.work_deadline);
         var filterDate = new Date(jobDateFvalueDate)
@@ -792,23 +801,6 @@ setMultipleRowFormData(prevState => ({
   [name]: value
 }));
 }
-
-
-var filterParams = {
-  comparator: function(filterLocalDateAtMidnight, cellValue) {
-    // convert cell value to Date object
-    var cellDate = new Date(cellValue);
-
-    // compare dates
-    if (cellDate.setHours(0, 0, 0, 0) <= filterLocalDateAtMidnight.setHours(0, 0, 0, 0)) {
-      return 0; //include
-    } else if (cellDate.setHours(0, 0, 0, 0) > filterLocalDateAtMidnight.setHours(0, 0, 0, 0)) {
-      return 1; //exclude
-    } else {
-      return 1; //-1 include as exact match
-    }
-  }
-};
 
 useEffect(()=>{
   setColumnDefs([
@@ -1284,7 +1276,7 @@ const onRowValueChanged = useCallback(async (event) => {
   var data = event.data;
   
   const token = secureLocalStorage.getItem('token')
-  const resp = await axios.post(JobPlaning_Update_One_Url, 
+  await axios.post(JobPlaning_Update_One_Url, 
     {
       _id: data._id,
       job_holder_id: data.jHolder,
@@ -1469,7 +1461,6 @@ const exportToCsv = (e) => {
     `${params.fileName}.csv`
   );
   } catch (error) {
-  const a = error;
 }
 };
 
@@ -1857,7 +1848,7 @@ else{
         </div>
 
 
-        <div className={`downloadOptions ${downloadOptionsToggle ? 'open' : 'closed'} `}>
+        <div className={`downloadOptions `}>
 
         <hr style={{marginBottom: "0px", marginTop: "0px", color: 'rgb(131 131 131)'}}/>
 

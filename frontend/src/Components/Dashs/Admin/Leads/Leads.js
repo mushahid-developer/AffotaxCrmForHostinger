@@ -1,8 +1,10 @@
+/* eslint-disable react-hooks/exhaustive-deps */
+/* eslint-disable array-callback-return */
 import React, { useState, useEffect, useMemo, useRef, useCallback } from 'react';
 import { AgGridReact } from 'ag-grid-react'; // the AG Grid React Component
 import 'ag-grid-community/styles/ag-grid.css'; // Core grid CSS, always needed
 import 'ag-grid-community/styles/ag-theme-alpine.css'; // Optional theme CSS
-import { Link } from 'react-router-dom';
+import { Link, useLocation } from 'react-router-dom';
 import { Store } from 'react-notifications-component';
 
 import axios from '../../../../Api/Axios';
@@ -26,6 +28,11 @@ var CopyLeadUrl = axiosURL.CopyLeadUrl;
 
 const Leads = () => {
 
+  const location = useLocation();
+
+  const queryParams = new URLSearchParams(location.search);
+  const companyNameFromUrl = queryParams.get('companyName');
+
   const [leadsSummary, setLeadsSummary] = useState({
     invitation: 0,
     proposal: 0,
@@ -47,7 +54,6 @@ const Leads = () => {
 
     const [mainRowData, setMainRowData] = useState([]);
     const [rowData, setRowData] = useState([]);
-    const [users, setUsers] = useState([]);
 
     const [preData, setPreData] = useState([]);
     
@@ -124,6 +130,11 @@ const Leads = () => {
 
 
 
+      // companyName Filter
+      if(filteredArray !== undefined && companyNameFromUrl !== null && companyNameFromUrl !== ""){
+        filteredArray = filteredArray.filter(obj => obj.companyName && obj.companyName === companyNameFromUrl);
+      }
+
       // Status Filter
       if(filteredArray !== undefined && activeFilter !== null && activeFilter !== ""){
         filteredArray = filteredArray.filter(obj => obj.status && obj.status === activeFilter);
@@ -159,7 +170,7 @@ const Leads = () => {
     if(createdDateFValue){
 
       // Year End Expired Filter
-      if(filteredArray != undefined && createdDateFValue != null && createdDateFValue !== "" && createdDateFValue === "Expired"){
+      if(filteredArray !== undefined && createdDateFValue !== null && createdDateFValue !== "" && createdDateFValue === "Expired"){
         filteredArray = await filteredArray.filter(obj => {
           // obj.manager_id && obj.manager_id.name === cManagerFvalue
           const today = new Date()
@@ -173,7 +184,7 @@ const Leads = () => {
       }
 
       // Year End Today Filter
-      if(filteredArray != undefined && createdDateFValue != null && createdDateFValue !== "" && createdDateFValue === "Today"){
+      if(filteredArray !== undefined && createdDateFValue !== null && createdDateFValue !== "" && createdDateFValue === "Today"){
         filteredArray = await filteredArray.filter(obj => {
           // obj.manager_id && obj.manager_id.name === cManagerFvalue
           const today = new Date()
@@ -187,7 +198,7 @@ const Leads = () => {
       }
 
       // Year End Tomorrow Filter
-      if(filteredArray != undefined && createdDateFValue != null && createdDateFValue !== "" && createdDateFValue === "Tomorrow"){
+      if(filteredArray !== undefined && createdDateFValue !== null && createdDateFValue !== "" && createdDateFValue === "Tomorrow"){
         filteredArray = await filteredArray.filter(obj => {
           // obj.manager_id && obj.manager_id.name === cManagerFvalue
           const today = new Date()
@@ -204,7 +215,7 @@ const Leads = () => {
 
 
       // Year End 7 days Filter
-      if(filteredArray != undefined && createdDateFValue != null && createdDateFValue !== "" && createdDateFValue === "In 7 days"){
+      if(filteredArray !== undefined && createdDateFValue !== null && createdDateFValue !== "" && createdDateFValue === "In 7 days"){
         filteredArray = await filteredArray.filter(obj => {
           // obj.manager_id && obj.manager_id.name === cManagerFvalue
           const today = new Date()
@@ -219,7 +230,7 @@ const Leads = () => {
       }
 
       // Year End 15 days Filter
-      if(filteredArray != undefined && createdDateFValue != null && createdDateFValue !== "" && createdDateFValue === "In 15 days"){
+      if(filteredArray !== undefined && createdDateFValue !== null && createdDateFValue !== "" && createdDateFValue === "In 15 days"){
         filteredArray = await filteredArray.filter(obj => {
           // obj.manager_id && obj.manager_id.name === cManagerFvalue
           const today = new Date()
@@ -234,7 +245,7 @@ const Leads = () => {
       }
       
       // Year End Month Wise Filter
-      if(filteredArray != undefined && createdDateFValue != null && createdDateFValue !== "" && createdDateFValue === "Month Wise"){
+      if(filteredArray !== undefined && createdDateFValue !== null && createdDateFValue !== "" && createdDateFValue === "Month Wise"){
         filteredArray = await filteredArray.filter(obj => {
           // obj.manager_id && obj.manager_id.name === cManagerFvalue
           // const today = new Date()
@@ -254,7 +265,7 @@ const Leads = () => {
       }
       
       //Year End Custom Filter
-      if(filteredArray != undefined && createdDateFValue != null && createdDateFValue !== "" && createdDateFValue === "Custom"){
+      if(filteredArray !== undefined && createdDateFValue !== null && createdDateFValue !== "" && createdDateFValue === "Custom"){
         filteredArray = await filteredArray.filter(obj => {
           var cellDate = obj.createDate !== "" && new Date(obj.createDate);
           var filterDate = new Date(createdDateFValueDate)
@@ -276,7 +287,7 @@ const Leads = () => {
     if(followUpDateFValue){
 
       // Year End Expired Filter
-      if(filteredArray != undefined && followUpDateFValue != null && followUpDateFValue !== "" && followUpDateFValue === "Expired"){
+      if(filteredArray !== undefined && followUpDateFValue !== null && followUpDateFValue !== "" && followUpDateFValue === "Expired"){
         filteredArray = await filteredArray.filter(obj => {
           // obj.manager_id && obj.manager_id.name === cManagerFvalue
           const today = new Date()
@@ -290,7 +301,7 @@ const Leads = () => {
       }
 
       // Year End Today Filter
-      if(filteredArray != undefined && followUpDateFValue != null && followUpDateFValue !== "" && followUpDateFValue === "Today"){
+      if(filteredArray !== undefined && followUpDateFValue !== null && followUpDateFValue !== "" && followUpDateFValue === "Today"){
         filteredArray = await filteredArray.filter(obj => {
           // obj.manager_id && obj.manager_id.name === cManagerFvalue
           const today = new Date()
@@ -304,7 +315,7 @@ const Leads = () => {
       }
 
       // Year End Tomorrow Filter
-      if(filteredArray != undefined && followUpDateFValue != null && followUpDateFValue !== "" && followUpDateFValue === "Tomorrow"){
+      if(filteredArray !== undefined && followUpDateFValue !== null && followUpDateFValue !== "" && followUpDateFValue === "Tomorrow"){
         filteredArray = await filteredArray.filter(obj => {
           // obj.manager_id && obj.manager_id.name === cManagerFvalue
           const today = new Date()
@@ -321,7 +332,7 @@ const Leads = () => {
 
 
       // Year End 7 days Filter
-      if(filteredArray != undefined && followUpDateFValue != null && followUpDateFValue !== "" && followUpDateFValue === "In 7 days"){
+      if(filteredArray !== undefined && followUpDateFValue !== null && followUpDateFValue !== "" && followUpDateFValue === "In 7 days"){
         filteredArray = await filteredArray.filter(obj => {
           // obj.manager_id && obj.manager_id.name === cManagerFvalue
           const today = new Date()
@@ -336,7 +347,7 @@ const Leads = () => {
       }
 
       // Year End 15 days Filter
-      if(filteredArray != undefined && followUpDateFValue != null && followUpDateFValue !== "" && followUpDateFValue === "In 15 days"){
+      if(filteredArray !== undefined && followUpDateFValue !== null && followUpDateFValue !== "" && followUpDateFValue === "In 15 days"){
         filteredArray = await filteredArray.filter(obj => {
           // obj.manager_id && obj.manager_id.name === cManagerFvalue
           const today = new Date()
@@ -351,7 +362,7 @@ const Leads = () => {
       }
       
       // Year End Month Wise Filter
-      if(filteredArray != undefined && followUpDateFValue != null && followUpDateFValue !== "" && followUpDateFValue === "Month Wise"){
+      if(filteredArray !== undefined && followUpDateFValue !== null && followUpDateFValue !== "" && followUpDateFValue === "Month Wise"){
         filteredArray = await filteredArray.filter(obj => {
           // obj.manager_id && obj.manager_id.name === cManagerFvalue
           // const today = new Date()
@@ -371,7 +382,7 @@ const Leads = () => {
       }
       
       //Year End Custom Filter
-      if(filteredArray != undefined && followUpDateFValue != null && followUpDateFValue !== "" && followUpDateFValue === "Custom"){
+      if(filteredArray !== undefined && followUpDateFValue !== null && followUpDateFValue !== "" && followUpDateFValue === "Custom"){
         filteredArray = await filteredArray.filter(obj => {
           var cellDate = obj.followUpDate !== "" && new Date(obj.followUpDate);
           var filterDate = new Date(followUpDateFValueDate)
@@ -393,7 +404,7 @@ const Leads = () => {
     if(jobdateFValue){
 
       // Year End Expired Filter
-      if(filteredArray != undefined && jobdateFValue != null && jobdateFValue !== "" && jobdateFValue === "Expired"){
+      if(filteredArray !== undefined && jobdateFValue !== null && jobdateFValue !== "" && jobdateFValue === "Expired"){
         filteredArray = await filteredArray.filter(obj => {
           // obj.manager_id && obj.manager_id.name === cManagerFvalue
           const today = new Date()
@@ -407,7 +418,7 @@ const Leads = () => {
       }
 
       // Year End Today Filter
-      if(filteredArray != undefined && jobdateFValue != null && jobdateFValue !== "" && jobdateFValue === "Today"){
+      if(filteredArray !== undefined && jobdateFValue !== null && jobdateFValue !== "" && jobdateFValue === "Today"){
         filteredArray = await filteredArray.filter(obj => {
           // obj.manager_id && obj.manager_id.name === cManagerFvalue
           const today = new Date()
@@ -421,7 +432,7 @@ const Leads = () => {
       }
 
       // Year End Tomorrow Filter
-      if(filteredArray != undefined && jobdateFValue != null && jobdateFValue !== "" && jobdateFValue === "Tomorrow"){
+      if(filteredArray !== undefined && jobdateFValue !== null && jobdateFValue !== "" && jobdateFValue === "Tomorrow"){
         filteredArray = await filteredArray.filter(obj => {
           // obj.manager_id && obj.manager_id.name === cManagerFvalue
           const today = new Date()
@@ -438,7 +449,7 @@ const Leads = () => {
 
 
       // Year End 7 days Filter
-      if(filteredArray != undefined && jobdateFValue != null && jobdateFValue !== "" && jobdateFValue === "In 7 days"){
+      if(filteredArray !== undefined && jobdateFValue !== null && jobdateFValue !== "" && jobdateFValue === "In 7 days"){
         filteredArray = await filteredArray.filter(obj => {
           // obj.manager_id && obj.manager_id.name === cManagerFvalue
           const today = new Date()
@@ -453,7 +464,7 @@ const Leads = () => {
       }
 
       // Year End 15 days Filter
-      if(filteredArray != undefined && jobdateFValue != null && jobdateFValue !== "" && jobdateFValue === "In 15 days"){
+      if(filteredArray !== undefined && jobdateFValue !== null && jobdateFValue !== "" && jobdateFValue === "In 15 days"){
         filteredArray = await filteredArray.filter(obj => {
           // obj.manager_id && obj.manager_id.name === cManagerFvalue
           const today = new Date()
@@ -468,7 +479,7 @@ const Leads = () => {
       }
       
       // Year End Month Wise Filter
-      if(filteredArray != undefined && jobdateFValue != null && jobdateFValue !== "" && jobdateFValue === "Month Wise"){
+      if(filteredArray !== undefined && jobdateFValue !== null && jobdateFValue !== "" && jobdateFValue === "Month Wise"){
         filteredArray = await filteredArray.filter(obj => {
           // obj.manager_id && obj.manager_id.name === cManagerFvalue
           // const today = new Date()
@@ -488,7 +499,7 @@ const Leads = () => {
       }
       
       //Year End Custom Filter
-      if(filteredArray != undefined && jobdateFValue != null && jobdateFValue !== "" && jobdateFValue === "Custom"){
+      if(filteredArray !== undefined && jobdateFValue !== null && jobdateFValue !== "" && jobdateFValue === "Custom"){
         filteredArray = await filteredArray.filter(obj => {
           var cellDate = obj.jobDate !== "" && new Date(obj.jobDate);
           var filterDate = new Date(jobdateFValueDate)
@@ -579,7 +590,6 @@ const Leads = () => {
           );
           if(resp.status === 200){
               setMainRowData(resp.data.leads)
-              setUsers(resp.data.users)
             }
             
           setLoader(false)
@@ -931,11 +941,11 @@ const Leads = () => {
             cellRendererFramework: (params)=>
             <>
                 <div>
-                  {/* {params.data.status != "Won" && <Link onClick={()=>{handleActionButtons("Won", params.data._id)}} style={{height: '25px', padding: '0px 5px', width: 'fit-content', backgroundColor: '#04d90485',}} className='btn mx-1 '> Won</Link>  } */}
+                  {/* {params.data.status !== "Won" && <Link onClick={()=>{handleActionButtons("Won", params.data._id)}} style={{height: '25px', padding: '0px 5px', width: 'fit-content', backgroundColor: '#04d90485',}} className='btn mx-1 '> Won</Link>  } */}
 
-                  {/* {params.data.status != "Lost" && <Link onClick={()=>{handleActionButtons("Lost", params.data._id)}} style={{height: '25px', padding: '0px 5px', width: 'fit-content', backgroundColor: '#ff00007d', color: 'white',}} className='btn mx-1 '> Lost</Link> }
+                  {/* {params.data.status !== "Lost" && <Link onClick={()=>{handleActionButtons("Lost", params.data._id)}} style={{height: '25px', padding: '0px 5px', width: 'fit-content', backgroundColor: '#ff00007d', color: 'white',}} className='btn mx-1 '> Lost</Link> }
                        
-                  {params.data.status != "In-Progress" && <Link onClick={()=>{handleActionButtons("In-Progress", params.data._id)}} style={{height: '25px', padding: '0px 5px', width: 'fit-content', backgroundColor: '#04d90485', color: 'black',}} className='btn mx-1 '> InProgress</Link>}
+                  {params.data.status !== "In-Progress" && <Link onClick={()=>{handleActionButtons("In-Progress", params.data._id)}} style={{height: '25px', padding: '0px 5px', width: 'fit-content', backgroundColor: '#04d90485', color: 'black',}} className='btn mx-1 '> InProgress</Link>}
                               */}
 
                    <Link onClick={() => handleCopyLead(params.data._id)} style={{height: '25px', padding: '0px 5px', width: 'fit-content', backgroundColor: '#04d90485',}} className='btn mx-1 '> Copy </Link>
@@ -1034,7 +1044,6 @@ const Leads = () => {
       `${params.fileName}.csv`
     );
     } catch (error) {
-    const a = error;
   }
   };
       

@@ -25,10 +25,12 @@ var ActiveInactiveUrl = axiosURL.ActiveInactiveUrl;
 
 
 const Clients = (props) => {
+  const location = useLocation();
+  const queryParams = new URLSearchParams(location.search);
+  const companyNameFromUrl = queryParams.get('companyName');
 
   const roleName = props.roleName
   const {state} = useLocation();
-  const location = useLocation();
   const navigate = useNavigate();
 
     const [stateVal, setStateVal] = useState(state);
@@ -71,6 +73,11 @@ const Clients = (props) => {
             obj2.company_name_t === obj.company_name && obj2.departments.includes(departmentFvalue)
           )
         );
+      }
+
+      // company_name Filter
+      if(filteredArray != undefined && companyNameFromUrl != null && companyNameFromUrl !== ""){
+        filteredArray = filteredArray.filter(obj => obj.company_name === companyNameFromUrl);
       }
 
       // JobStatus Filter

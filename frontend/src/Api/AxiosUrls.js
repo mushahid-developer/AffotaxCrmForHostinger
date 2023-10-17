@@ -167,3 +167,6 @@ export const proposalsAddOneUrl = 'proposals/add/one';
 export const proposalsUpdateOneUrl = 'proposals/edit/one';
 export const proposalsDeleteUrl = 'proposals/delete/one';
 export const proposalsCopyOneUrl = 'proposals/copy/one';
+
+//Search
+export const searchAllUrl = 'user/search/all';

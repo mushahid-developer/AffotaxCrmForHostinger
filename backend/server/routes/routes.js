@@ -33,6 +33,7 @@ const { getAllCompanies, editCompany, addCompany, deleteCompany } = require('../
 const { addPageForRole } = require('../controller/RolesPermissionsController');
 const { getAllProposals, deleteProposals, editProposals, addProposals, copyProposals } = require('../controller/ProposalsController');
 const { getAllUserRecurringTasks, addOneUserRecurringTasks, editOneUserRecurringTasks, deleteOneUserRecurringTasks, copyOneUserRecurringTasks, markCompleteOneUserRecurringTasks } = require('../controller/UserTaskRecurringController');
+const { getAllValues } = require('../controller/SearchController');
 
 // Api Routes
 route.get('/', (req, res)=>{
@@ -197,6 +198,9 @@ route.post('/user/recurring/tasks/edit/one/:id', editOneUserRecurringTasks)
 route.get('/user/recurring/tasks/delete/one/:id', deleteOneUserRecurringTasks)
 route.get('/user/recurring/tasks/copy/one/:id', copyOneUserRecurringTasks)
 route.post('/user/recurring/tasks/mark_complete/one/:id', markCompleteOneUserRecurringTasks)
+
+//Search
+route.get('/user/search/all', getAllValues)
 
 
 //AddPagesForRole

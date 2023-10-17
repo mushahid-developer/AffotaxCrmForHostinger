@@ -6,7 +6,7 @@ import { Store } from 'react-notifications-component';
 import axios from '../../../../Api/Axios';
 import * as axiosURL from '../../../../Api/AxiosUrls';
 import Loader from '../../../Common/Loader/Loader';
-import { Link } from 'react-router-dom';
+import { Link, useLocation } from 'react-router-dom';
 import { Button, Form, Modal } from 'react-bootstrap';
 import DropdownFilter from '../../../Jobs/JobPlaning/DropdownFilter';
 import DropdownFilterWithDate from '../../../Jobs/JobPlaning/DropDownFilterWithDate';
@@ -20,6 +20,11 @@ var proposalsCopyOneUrl = axiosURL.proposalsCopyOneUrl;
 
 
 export default function Proposals() {
+
+  const location = useLocation();
+
+  const queryParams = new URLSearchParams(location.search);
+  const clientNameFromUrl = queryParams.get('clientName');
 
   const gridRef = useRef();
   const [gridApi, setGridApi] = useState();
@@ -223,6 +228,11 @@ export default function Proposals() {
   const filter = async () => {
 
     var filteredArray = mainRowData
+
+     // companyName Filter
+     if(filteredArray !== undefined && clientNameFromUrl !== null && clientNameFromUrl !== ""){
+      filteredArray = filteredArray.filter(obj => obj.clientName && obj.clientName === clientNameFromUrl);
+    }
 
     if(jobHolderFValue ){
       filteredArray = filteredArray.filter(obj => obj.jobHolder === jobHolderFValue);

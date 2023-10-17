@@ -1,3 +1,5 @@
+/* eslint-disable react-hooks/exhaustive-deps */
+/* eslint-disable array-callback-return */
 import React, { useState, useRef, useEffect, useMemo, useCallback } from 'react';
 import { AgGridReact } from 'ag-grid-react'; // the AG Grid React Component
 
@@ -20,6 +22,7 @@ import * as XLSX from 'xlsx';
 import { jsPDF } from 'jspdf';
 import 'jspdf-autotable';
 import secureLocalStorage from 'react-secure-storage';
+import Search from '../../Common/Search/Search';
 
 var preDataUrl = axiosURL.addJobPreData;
 var jobPlanningUrl = axiosURL.jobPlanning;
@@ -29,13 +32,11 @@ var JobPlaning_Update_Many_Url = axiosURL.JobPlaning_Update_Many_Url;
 export default function JobPlanning(props) {
 
   const formPage = props.fromPage;
-  const userNameFilter = props.userNameFilter;
 
   const roleName = props.roleName;
   const pagesAccess = props.pagesAccess;
 
   const [departmentSummaryToggle, setDepartmentSummaryToggle] = useState(false)
-  const [downloadOptionsToggle, setDownloadOptionsToggle] = useState(false)
   const [multipleRowEditToggle, setMultipleRowEditToggle] = useState(false)
 
   const [preData, setPreData] = useState([])
@@ -147,6 +148,7 @@ export default function JobPlanning(props) {
   const navigate = useNavigate();
   const queryParams = new URLSearchParams(location.search);
   const jobIdFromUrl = queryParams.get('job_id');
+  const companyNameFromUrl = queryParams.get('companyName');
 
   const [rowData, setRowData] = useState(); // Set rowData to Array of Objects, one Object per Row
   const [mainrowData, setMainRowData] = useState(); // Set rowData to Array of Objects, one Object per Row
@@ -224,7 +226,7 @@ export default function JobPlanning(props) {
 
     var today = new Date();
 
-    if (filteredArray != undefined) {
+    if (filteredArray !== undefined) {
       filteredArray = await filteredArray.filter(obj => obj.client_id && obj.client_id.isActive === true);
     }
 
@@ -316,7 +318,7 @@ export default function JobPlanning(props) {
 
 
     if (filteredArray) {
-      if (filteredArray != undefined) {
+      if (filteredArray !== undefined) {
         filteredArray = await filteredArray.filter(obj => obj.job_name && obj.job_name !== 'Billing');
       }
     }
@@ -345,27 +347,27 @@ export default function JobPlanning(props) {
     
 
     // Source Filter
-    if (filteredArray != undefined && sourceFValue != null && sourceFValue !== "") {
+    if (filteredArray !== undefined && sourceFValue !== null && sourceFValue !== "") {
       filteredArray = await filteredArray.filter(obj => obj.client_id && obj.client_id.source === sourceFValue);
     }
 
     // Partner Filter
-    if (filteredArray != undefined && partnerFValue != null && partnerFValue !== "") {
+    if (filteredArray !== undefined && partnerFValue !== null && partnerFValue !== "") {
       filteredArray = await filteredArray.filter(obj => obj.client_id && obj.client_id.partner === partnerFValue);
     }
 
     // JobStatus Filter
-    if (filteredArray != undefined && jStatusFvalue != null && jStatusFvalue !== "") {
+    if (filteredArray !== undefined && jStatusFvalue !== null && jStatusFvalue !== "") {
       filteredArray = await filteredArray.filter(obj => obj.job_status && obj.job_status === jStatusFvalue);
     }
 
     // C Manger Filter
-    if (filteredArray != undefined && cManagerFvalue != null && cManagerFvalue !== "") {
+    if (filteredArray !== undefined && cManagerFvalue !== null && cManagerFvalue !== "") {
       filteredArray = await filteredArray.filter(obj => obj.manager_id && obj.manager_id.name === cManagerFvalue);
     }
 
     //status Filter
-    if (filteredArray != undefined && statusFvalue != null && statusFvalue !== "") {
+    if (filteredArray !== undefined && statusFvalue !== null && statusFvalue !== "") {
 
       filteredArray = await filteredArray.filter(obj => {
         if (obj.job_deadline && obj.year_end) {
@@ -394,28 +396,33 @@ export default function JobPlanning(props) {
       });
 
     }
+    // Client Name
+    if (filteredArray !== undefined && companyNameFromUrl !== null && companyNameFromUrl !== "") {
+      filteredArray = await filteredArray.filter(obj => obj.client_id && obj.client_id.company_name === companyNameFromUrl);
+    }
+
     // Job Id Filter
-    if (filteredArray != undefined && jobIdFromUrl != null && jobIdFromUrl !== "") {
+    if (filteredArray !== undefined && jobIdFromUrl !== null && jobIdFromUrl !== "") {
       filteredArray = await filteredArray.filter(obj => obj._id && obj._id === jobIdFromUrl);
     }
 
     // Department Filter
-    if (filteredArray != undefined && departmentFvalue != null && departmentFvalue !== "") {
+    if (filteredArray !== undefined && departmentFvalue !== null && departmentFvalue !== "") {
       filteredArray = await filteredArray.filter(obj => obj.job_name && obj.job_name === departmentFvalue);
     }
 
     // // Job Holder Filter For MyList Page
-    // if (filteredArray != undefined && formPage != undefined && userNameFilter !== "") {
+    // if (filteredArray !== undefined && formPage !== undefined && userNameFilter !== "") {
     //   filteredArray = await filteredArray.filter(obj => obj.job_holder_id && obj.job_holder_id.name === userNameFilter);
     // }
     
     // Job Holder Filter
-    if (filteredArray != undefined && jHolderFvalue != null && jHolderFvalue !== "") {
+    if (filteredArray !== undefined && jHolderFvalue !== null && jHolderFvalue !== "") {
       filteredArray = await filteredArray.filter(obj => obj.job_holder_id && obj.job_holder_id.name === jHolderFvalue);
     }
 
     // Subscription Filter
-    if (filteredArray != undefined && subscriptionFvalue != null && subscriptionFvalue !== "") {
+    if (filteredArray !== undefined && subscriptionFvalue !== null && subscriptionFvalue !== "") {
       filteredArray = await filteredArray.filter(obj => obj.subscription && obj.subscription === subscriptionFvalue);
     }
 
@@ -423,7 +430,7 @@ export default function JobPlanning(props) {
     if (yearEndFvalue) {
 
       // Year End Expired Filter
-      if (filteredArray != undefined && yearEndFvalue != null && yearEndFvalue !== "" && yearEndFvalue === "Expired") {
+      if (filteredArray !== undefined && yearEndFvalue !== null && yearEndFvalue !== "" && yearEndFvalue === "Expired") {
         filteredArray = await filteredArray.filter(obj => {
           // obj.manager_id && obj.manager_id.name === cManagerFvalue
           const today = new Date()
@@ -437,7 +444,7 @@ export default function JobPlanning(props) {
       }
 
       // Year End Today Filter
-      if (filteredArray != undefined && yearEndFvalue != null && yearEndFvalue !== "" && yearEndFvalue === "Today") {
+      if (filteredArray !== undefined && yearEndFvalue !== null && yearEndFvalue !== "" && yearEndFvalue === "Today") {
         filteredArray = await filteredArray.filter(obj => {
           // obj.manager_id && obj.manager_id.name === cManagerFvalue
           const today = new Date()
@@ -451,7 +458,7 @@ export default function JobPlanning(props) {
       }
 
       // Year End Tomorrow Filter
-      if (filteredArray != undefined && yearEndFvalue != null && yearEndFvalue !== "" && yearEndFvalue === "Tomorrow") {
+      if (filteredArray !== undefined && yearEndFvalue !== null && yearEndFvalue !== "" && yearEndFvalue === "Tomorrow") {
         filteredArray = await filteredArray.filter(obj => {
           // obj.manager_id && obj.manager_id.name === cManagerFvalue
           const today = new Date()
@@ -468,7 +475,7 @@ export default function JobPlanning(props) {
 
 
       // Year End 7 days Filter
-      if (filteredArray != undefined && yearEndFvalue != null && yearEndFvalue !== "" && yearEndFvalue === "In 7 days") {
+      if (filteredArray !== undefined && yearEndFvalue !== null && yearEndFvalue !== "" && yearEndFvalue === "In 7 days") {
         filteredArray = await filteredArray.filter(obj => {
           // obj.manager_id && obj.manager_id.name === cManagerFvalue
           const today = new Date()
@@ -483,7 +490,7 @@ export default function JobPlanning(props) {
       }
 
       // Year End 15 days Filter
-      if (filteredArray != undefined && yearEndFvalue != null && yearEndFvalue !== "" && yearEndFvalue === "In 15 days") {
+      if (filteredArray !== undefined && yearEndFvalue !== null && yearEndFvalue !== "" && yearEndFvalue === "In 15 days") {
         filteredArray = await filteredArray.filter(obj => {
           // obj.manager_id && obj.manager_id.name === cManagerFvalue
           const today = new Date()
@@ -498,7 +505,7 @@ export default function JobPlanning(props) {
       }
 
       // Year End Month Wise Filter
-      if (filteredArray != undefined && yearEndFvalue != null && yearEndFvalue !== "" && yearEndFvalue === "Month Wise") {
+      if (filteredArray !== undefined && yearEndFvalue !== null && yearEndFvalue !== "" && yearEndFvalue === "Month Wise") {
         filteredArray = await filteredArray.filter(obj => {
           // obj.manager_id && obj.manager_id.name === cManagerFvalue
           // const today = new Date()
@@ -518,7 +525,7 @@ export default function JobPlanning(props) {
       }
 
       //Year End Custom Filter
-      if (filteredArray != undefined && yearEndFvalue != null && yearEndFvalue !== "" && yearEndFvalue === "Custom") {
+      if (filteredArray !== undefined && yearEndFvalue !== null && yearEndFvalue !== "" && yearEndFvalue === "Custom") {
         filteredArray = await filteredArray.filter(obj => {
           var cellDate = obj.year_end !== "" && new Date(obj.year_end);
           var filterDate = new Date(yearEndFvalueDate)
@@ -540,7 +547,7 @@ export default function JobPlanning(props) {
     if (deadlineFvalue) {
 
       //Deadline Expired Filter
-      if (filteredArray != undefined && deadlineFvalue != null && deadlineFvalue !== "" && deadlineFvalue === "Expired") {
+      if (filteredArray !== undefined && deadlineFvalue !== null && deadlineFvalue !== "" && deadlineFvalue === "Expired") {
         filteredArray = await filteredArray.filter(obj => {
           // obj.manager_id && obj.manager_id.name === cManagerFvalue
           const today = new Date()
@@ -554,7 +561,7 @@ export default function JobPlanning(props) {
       }
 
       //Deadline Today Filter
-      if (filteredArray != undefined && deadlineFvalue != null && deadlineFvalue !== "" && deadlineFvalue === "Today") {
+      if (filteredArray !== undefined && deadlineFvalue !== null && deadlineFvalue !== "" && deadlineFvalue === "Today") {
         filteredArray = await filteredArray.filter(obj => {
           // obj.manager_id && obj.manager_id.name === cManagerFvalue
           const today = new Date()
@@ -568,7 +575,7 @@ export default function JobPlanning(props) {
       }
 
       //Deadline Tomorrow Filter
-      if (filteredArray != undefined && deadlineFvalue != null && deadlineFvalue !== "" && deadlineFvalue === "Tomorrow") {
+      if (filteredArray !== undefined && deadlineFvalue !== null && deadlineFvalue !== "" && deadlineFvalue === "Tomorrow") {
         filteredArray = await filteredArray.filter(obj => {
           // obj.manager_id && obj.manager_id.name === cManagerFvalue
           const today = new Date()
@@ -585,7 +592,7 @@ export default function JobPlanning(props) {
 
 
       //Deadline 7 days Filter
-      if (filteredArray != undefined && deadlineFvalue != null && deadlineFvalue !== "" && deadlineFvalue === "In 7 days") {
+      if (filteredArray !== undefined && deadlineFvalue !== null && deadlineFvalue !== "" && deadlineFvalue === "In 7 days") {
         filteredArray = await filteredArray.filter(obj => {
           // obj.manager_id && obj.manager_id.name === cManagerFvalue
           const today = new Date()
@@ -600,7 +607,7 @@ export default function JobPlanning(props) {
       }
 
       //Deadline 15 days Filter
-      if (filteredArray != undefined && deadlineFvalue != null && deadlineFvalue !== "" && deadlineFvalue === "In 15 days") {
+      if (filteredArray !== undefined && deadlineFvalue !== null && deadlineFvalue !== "" && deadlineFvalue === "In 15 days") {
         filteredArray = await filteredArray.filter(obj => {
           // obj.manager_id && obj.manager_id.name === cManagerFvalue
           const today = new Date()
@@ -615,7 +622,7 @@ export default function JobPlanning(props) {
       }
 
       //Deadline Month Wise Filter
-      if (filteredArray != undefined && deadlineFvalue != null && deadlineFvalue !== "" && deadlineFvalue === "Month Wise") {
+      if (filteredArray !== undefined && deadlineFvalue !== null && deadlineFvalue !== "" && deadlineFvalue === "Month Wise") {
         filteredArray = await filteredArray.filter(obj => {
           // obj.manager_id && obj.manager_id.name === cManagerFvalue
           // const today = new Date()
@@ -635,7 +642,7 @@ export default function JobPlanning(props) {
       }
 
       //Deadline Custom Filter
-      if (filteredArray != undefined && deadlineFvalue != null && deadlineFvalue !== "" && deadlineFvalue === "Custom") {
+      if (filteredArray !== undefined && deadlineFvalue !== null && deadlineFvalue !== "" && deadlineFvalue === "Custom") {
         filteredArray = await filteredArray.filter(obj => {
           var cellDate = obj.job_deadline !== "" && new Date(obj.job_deadline);
           var filterDate = new Date(deadlineFvalueDate)
@@ -657,7 +664,7 @@ export default function JobPlanning(props) {
     if (jobDateFvalue) {
 
       //Job Date Expired Filter
-      if (filteredArray != undefined && jobDateFvalue != null && jobDateFvalue !== "" && jobDateFvalue === "Expired") {
+      if (filteredArray !== undefined && jobDateFvalue !== null && jobDateFvalue !== "" && jobDateFvalue === "Expired") {
         filteredArray = await filteredArray.filter(obj => {
           // obj.manager_id && obj.manager_id.name === cManagerFvalue
           const today = new Date()
@@ -671,7 +678,7 @@ export default function JobPlanning(props) {
       }
 
       //Job Date Today Filter
-      if (filteredArray != undefined && jobDateFvalue != null && jobDateFvalue !== "" && jobDateFvalue === "Today") {
+      if (filteredArray !== undefined && jobDateFvalue !== null && jobDateFvalue !== "" && jobDateFvalue === "Today") {
         filteredArray = await filteredArray.filter(obj => {
           // obj.manager_id && obj.manager_id.name === cManagerFvalue
           const today = new Date()
@@ -685,7 +692,7 @@ export default function JobPlanning(props) {
       }
 
       //Job Date Tomorrow Filter
-      if (filteredArray != undefined && jobDateFvalue != null && jobDateFvalue !== "" && jobDateFvalue === "Tomorrow") {
+      if (filteredArray !== undefined && jobDateFvalue !== null && jobDateFvalue !== "" && jobDateFvalue === "Tomorrow") {
         filteredArray = await filteredArray.filter(obj => {
           // obj.manager_id && obj.manager_id.name === cManagerFvalue
           const today = new Date()
@@ -702,7 +709,7 @@ export default function JobPlanning(props) {
 
 
       //Job Date 7 days Filter
-      if (filteredArray != undefined && jobDateFvalue != null && jobDateFvalue !== "" && jobDateFvalue === "In 7 days") {
+      if (filteredArray !== undefined && jobDateFvalue !== null && jobDateFvalue !== "" && jobDateFvalue === "In 7 days") {
         filteredArray = await filteredArray.filter(obj => {
           // obj.manager_id && obj.manager_id.name === cManagerFvalue
           const today = new Date()
@@ -717,7 +724,7 @@ export default function JobPlanning(props) {
       }
 
       //Job Date 15 days Filter
-      if (filteredArray != undefined && jobDateFvalue != null && jobDateFvalue !== "" && jobDateFvalue === "In 15 days") {
+      if (filteredArray !== undefined && jobDateFvalue !== null && jobDateFvalue !== "" && jobDateFvalue === "In 15 days") {
         filteredArray = await filteredArray.filter(obj => {
           // obj.manager_id && obj.manager_id.name === cManagerFvalue
           const today = new Date()
@@ -732,7 +739,7 @@ export default function JobPlanning(props) {
       }
 
       //Job Date Month Wise Filter
-      if (filteredArray != undefined && jobDateFvalue != null && jobDateFvalue !== "" && jobDateFvalue === "Month Wise") {
+      if (filteredArray !== undefined && jobDateFvalue !== null && jobDateFvalue !== "" && jobDateFvalue === "Month Wise") {
         filteredArray = await filteredArray.filter(obj => {
           // obj.manager_id && obj.manager_id.name === cManagerFvalue
           // const today = new Date()
@@ -752,7 +759,7 @@ export default function JobPlanning(props) {
       }
 
       //Job Date Custom Filter
-      if (filteredArray != undefined && jobDateFvalue != null && jobDateFvalue !== "" && jobDateFvalue === "Custom") {
+      if (filteredArray !== undefined && jobDateFvalue !== null && jobDateFvalue !== "" && jobDateFvalue === "Custom") {
         filteredArray = await filteredArray.filter(obj => {
           var cellDate = obj.work_deadline !== "" && new Date(obj.work_deadline);
           var filterDate = new Date(jobDateFvalueDate)
@@ -789,7 +796,7 @@ export default function JobPlanning(props) {
     filter()
 
 
-  }, [jobIdFromUrl, statusFvalue, sourceFValue, partnerFValue, subscriptionFvalue, jStatusFvalue, cManagerFvalue, departmentFvalue, jHolderFvalue, yearEndFvalue, yearEndFvalueDate, deadlineFvalue, deadlineFvalueDate, jobDateFvalue, jobDateFvalueDate, mainrowData])
+  }, [jobIdFromUrl, companyNameFromUrl, statusFvalue, sourceFValue, partnerFValue, subscriptionFvalue, jStatusFvalue, cManagerFvalue, departmentFvalue, jHolderFvalue, yearEndFvalue, yearEndFvalueDate, deadlineFvalue, deadlineFvalueDate, jobDateFvalue, jobDateFvalueDate, mainrowData])
 
 
 
@@ -900,22 +907,6 @@ export default function JobPlanning(props) {
     }));
   }
 
-
-  var filterParams = {
-    comparator: function (filterLocalDateAtMidnight, cellValue) {
-      // convert cell value to Date object
-      var cellDate = new Date(cellValue);
-
-      // compare dates
-      if (cellDate.setHours(0, 0, 0, 0) <= filterLocalDateAtMidnight.setHours(0, 0, 0, 0)) {
-        return 0; //include
-      } else if (cellDate.setHours(0, 0, 0, 0) > filterLocalDateAtMidnight.setHours(0, 0, 0, 0)) {
-        return 1; //exclude
-      } else {
-        return 1; //-1 include as exact match
-      }
-    }
-  };
 
 
   useEffect(() => {
@@ -1317,7 +1308,7 @@ export default function JobPlanning(props) {
         editable: false,
         filter: false,
         cellRendererFramework: (p)=><div>
-          <a target="_blank" href={`/tickets?company_name=${p.data.client_id.company_name}&client_name=${p.data.client_id.client_name}`} className=''> Tickets</a>
+          <a target="_blank" href={`/tickets?company_name=${p.data.client_id.company_name}&client_name=${p.data.client_id.client_name}`} className='' rel="noreferrer"> Tickets</a>
         </div>
       }
   ];
@@ -1397,7 +1388,7 @@ export default function JobPlanning(props) {
     var data = event.data;
 
     const token = secureLocalStorage.getItem('token')
-    const resp = await axios.post(JobPlaning_Update_One_Url,
+    await axios.post(JobPlaning_Update_One_Url,
       {
         _id: data._id,
         job_holder_id: data.jHolder,
@@ -1585,15 +1576,9 @@ export default function JobPlanning(props) {
         `${params.fileName}.csv`
       );
     } catch (error) {
-      const a = error;
     }
   };
 
-  // const gridOptions = {
-  //   // Use the autoHeight option to adjust the table height to fit the content
-  //   domLayout: 'autoHeight',
-  //   // Other grid options if needed
-  // };
 
 
 
@@ -1711,10 +1696,6 @@ export default function JobPlanning(props) {
                   </div>
                 </div>
               </div>
-
-
-
-
 
               <div className='table-show-hide mx-2'>
                 <button type="button" onClick={handleFunClear}
@@ -1898,7 +1879,12 @@ export default function JobPlanning(props) {
                   </div>
                 </div>
               </div>
+              }
 
+              { roleName === "Admin" && 
+                <div>
+                  <Search />
+                </div>
               }
 
 
@@ -2224,7 +2210,7 @@ export default function JobPlanning(props) {
           </div>
 
 
-          <div className={`downloadOptions ${downloadOptionsToggle ? 'open' : 'closed'} `}>
+          <div className={`downloadOptions } `}>
 
             <hr style={{ marginBottom: "0px", marginTop: "0px", color: 'rgb(131 131 131)' }} />
 
