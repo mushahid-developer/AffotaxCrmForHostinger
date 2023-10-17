@@ -141,19 +141,19 @@ export default function Search() {
 
         if(searchValue && searchValue !== ""){
             // Clients
-            Clients = Clients.filter( item => item.client_name.toLowerCase().includes(searchValue.toLowerCase()) || item.company_name.toLowerCase().includes(searchValue.toLowerCase()) );
+            Clients = Clients.filter( item => (item.client_name && item.client_name.toLowerCase().includes(searchValue.toLowerCase())) || (item.company_name && item.company_name.toLowerCase().includes(searchValue.toLowerCase())) );
             // jobs
-            Jobs = Jobs.filter(item => item.client_id.client_name.toLowerCase().includes(searchValue.toLowerCase()) || item.client_id.company_name.toLowerCase().includes(searchValue.toLowerCase()))
+            Jobs = Jobs.filter(item => (item.client_id && item.client_id.client_name.toLowerCase().includes(searchValue.toLowerCase())) || (item.client_id && item.client_id.company_name.toLowerCase().includes(searchValue.toLowerCase())))
             // Subscription
-            Subscription = Subscription.filter(item => item.client_id.client_name.toLowerCase().includes(searchValue.toLowerCase()) || item.client_id.company_name.toLowerCase().includes(searchValue.toLowerCase()))
+            Subscription = Subscription.filter(item => (item.client_id && item.client_id.client_name.toLowerCase().includes(searchValue.toLowerCase())) || (item.client_id && item.client_id.company_name.toLowerCase().includes(searchValue.toLowerCase())))
             // Tickets
-            Tickets = Tickets.filter(item => item.client_id.client_name.toLowerCase().includes(searchValue.toLowerCase()) || item.client_id.company_name.toLowerCase().includes(searchValue.toLowerCase()))
+            Tickets = Tickets.filter(item => (item.client_id && item.client_id.client_name.toLowerCase().includes(searchValue.toLowerCase())) || (item.client_id && item.client_id.company_name.toLowerCase().includes(searchValue.toLowerCase())))
             // Leads
-            Leads = Leads.filter(item => item.clientName.toLowerCase().includes(searchValue.toLowerCase()) || item.companyName.toLowerCase().includes(searchValue.toLowerCase()))
+            Leads = Leads.filter(item =>  (item.clientName && item.clientName.toLowerCase().includes(searchValue.toLowerCase())) ||  (item.companyName && item.companyName.toLowerCase().includes(searchValue.toLowerCase())) )
             // Proposals
-            Proposals = Proposals.filter(item => item.clientName.toLowerCase().includes(searchValue.toLowerCase()) )
+            Proposals = Proposals.filter(item => item.clientName && item.clientName.toLowerCase().includes(searchValue.toLowerCase()) )
             // Sales
-            Sales = Sales.filter(item => item.client_id.client_name.toLowerCase().includes(searchValue.toLowerCase()) || item.client_id.company_name.toLowerCase().includes(searchValue.toLowerCase()))
+            Sales = Sales.filter(item => (item.client_id && item.client_id.client_name.toLowerCase().includes(searchValue.toLowerCase())) || (item.client_id && item.client_id.company_name.toLowerCase().includes(searchValue.toLowerCase())) )
         }
 
         setClientsF(Clients);
