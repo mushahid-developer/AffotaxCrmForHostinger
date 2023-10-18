@@ -1,3 +1,4 @@
+/* eslint-disable react-hooks/exhaustive-deps */
 import React, { useState, useEffect, useMemo, useRef, useCallback } from 'react';
 import { AgGridReact } from 'ag-grid-react'; // the AG Grid React Component
 import 'ag-grid-community/styles/ag-grid.css'; // Core grid CSS, always needed
@@ -65,6 +66,7 @@ const Tasks = (props) => {
     const [fPreData, setFPreData] = useState(null);
 
     const [statusFvalue, setStatusFvalue] = useState(null);
+    const [statusFDuevalue, setStatusFDuevalue] = useState(null);
     const [projectFvalue, setProjectFvalue] = useState(null);
     const [jHolderFvalue, setJHolderFvalue] = useState(null);
     const [leadFvalue, setLeadFvalue] = useState(null);
@@ -375,6 +377,40 @@ const Tasks = (props) => {
       if(filteredArray !== undefined && projectFvalue !== null && projectFvalue !== ""){
         filteredArray = filteredArray.filter(obj => obj.projectname_id && obj.projectname_id.name === projectFvalue);
       }
+
+       //status Filter
+       if (filteredArray !== undefined && statusFDuevalue !== null && statusFDuevalue !== "") {
+
+
+        filteredArray = filteredArray.filter(obj => {
+          if (obj.deadline && obj.startDate) {
+  
+            const deadline = new Date(obj.deadline)
+            const yearEnd = new Date(obj.startDate)
+            var today = new Date();
+  
+            console.log(deadline)
+  
+            if ((deadline.setHours(0, 0, 0, 0) < today.setHours(0, 0, 0, 0) && (yearEnd.setHours(0, 0, 0, 0) < today.setHours(0, 0, 0, 0)))) {
+              if (statusFDuevalue === "Overdue")
+                return obj;
+            }
+            else if (deadline.setHours(0, 0, 0, 0) < today.setHours(0, 0, 0, 0))  {
+              if (statusFDuevalue === "Overdue")
+                return obj;
+            }
+            else if(((yearEnd.setHours(0, 0, 0, 0) <= today.setHours(0, 0, 0, 0)) && !(deadline.setHours(0, 0, 0, 0) <= today.setHours(0, 0, 0, 0)))){
+              if (statusFDuevalue === "Due")
+                return obj;
+            }
+            else if(( (deadline.setHours(0, 0, 0, 0) === today.setHours(0, 0, 0, 0)))) {
+              if (statusFDuevalue === "Due")
+                return obj;
+            }
+          }
+        });
+  
+        }
 
       //Status Filter
       if(filteredArray !== undefined && statusFvalue !== null && statusFvalue !== ""){
@@ -758,7 +794,7 @@ const Tasks = (props) => {
     useEffect(()=>{
       // setRowData(mainRowData)
       filter()
-    }, [mainRowData, statusFvalue, projectFvalue, jHolderFvalue, jHolderPreFvalue, leadFvalue, startDateFvalueDate, startDateFvalue, deadlineFvalueDate, deadlineFvalue, jobDateFvalueDate, jobDateFvalue, taskIdFromUrl])
+    }, [mainRowData, statusFDuevalue, statusFvalue, projectFvalue, jHolderFvalue, jHolderPreFvalue, leadFvalue, startDateFvalueDate, startDateFvalue, deadlineFvalueDate, deadlineFvalue, jobDateFvalueDate, jobDateFvalue, taskIdFromUrl])
     
     useEffect(()=>{
       setLoad(2);
@@ -1088,8 +1124,8 @@ const Tasks = (props) => {
           floatingFilterComponent: 'selectFloatingFilter', 
           floatingFilterComponentParams: { 
             options: ['Overdue', 'Due'],
-            onValueChange:(value) => setStatusFvalue(value),
-            value: statusFvalue,
+            onValueChange:(value) => setStatusFDuevalue(value),
+            value: statusFDuevalue,
             suppressFilterButton: true, 
             suppressInput: true 
           }

@@ -57,6 +57,7 @@ const Construction = (props) => {
     const [fPreData, setFPreData] = useState(null);
 
     const [statusFvalue, setStatusFvalue] = useState(null);
+    const [statusFDuevalue, setStatusFDuevalue] = useState(null);
     const [projectFvalue, setProjectFvalue] = useState('CRM-Affotax');
     const [jHolderFvalue, setJHolderFvalue] = useState(null);
     const [ManagerFvalue, setManagerFvalue] = useState(null);
@@ -264,15 +265,40 @@ const Construction = (props) => {
         filteredArray = filteredArray.filter(obj => obj.houseNoList_id && obj.houseNoList_id.name === projectFvalue);
       }
 
+      //status Filter
+      if (filteredArray !== undefined && statusFDuevalue !== null && statusFDuevalue !== "") {
+
+      filteredArray = filteredArray.filter(obj => {
+        if (obj.completationDate && obj.startDate) {
+
+          const deadline = new Date(obj.completationDate)
+          const startDate = new Date(obj.startDate)
+          var today = new Date();
+
+          console.log(deadline)
+
+        if ((deadline.setHours(0, 0, 0, 0) < today.setHours(0, 0, 0, 0) )) {
+            if (statusFDuevalue === "Overdue")
+              return obj;
+          }
+          else if(( (startDate.setHours(0, 0, 0, 0) <= today.setHours(0, 0, 0, 0)))){
+            if (statusFDuevalue === "Due")
+              return obj;
+          }
+          else if(( (startDate.setHours(0, 0, 0, 0) === today.setHours(0, 0, 0, 0)))) {
+            if (statusFDuevalue === "Due")
+              return obj;
+          }
+        }
+      });
+
+      }
+
       //Status Filter
       if(filteredArray !== undefined && statusFvalue !== null && statusFvalue !== ""){
         filteredArray = filteredArray.filter(obj => obj.status && obj.status === statusFvalue);
       }
 
-      //  // Job Holder Filter For MyList Page
-      //  if (filteredArray != undefined && formPage != undefined && userNameFilter !== "") {
-      //   filteredArray = await filteredArray.filter(obj => obj.Jobholder_id && obj.Jobholder_id.name === userNameFilter);
-      // }
 
       
       // Job Holder Filter
@@ -654,9 +680,8 @@ const Construction = (props) => {
     useEffect(()=>{
       // setRowData(mainRowData)
       filter()
-    }, [mainRowData, statusFvalue, projectFvalue, jHolderFvalue, ManagerFvalue, filterFvalue, jobDateFvalue, jobDateFvalueDate, deadlineFvalue, deadlineFvalueDate, startDateFvalue, startDateFvalueDate])
+    }, [mainRowData, statusFDuevalue, statusFvalue, projectFvalue, jHolderFvalue, ManagerFvalue, filterFvalue, jobDateFvalue, jobDateFvalueDate, deadlineFvalue, deadlineFvalueDate, startDateFvalue, startDateFvalueDate])
 
-    var ii = 1;
 
     useEffect(()=>{
       
@@ -1038,8 +1063,8 @@ const Construction = (props) => {
           floatingFilterComponent: 'selectFloatingFilter', 
           floatingFilterComponentParams: { 
             options: ['Overdue', 'Due'],
-            onValueChange:(value) => setStatusFvalue(value),
-            value: statusFvalue,
+            onValueChange:(value) => setStatusFDuevalue(value),
+            value: statusFDuevalue,
             suppressFilterButton: true, 
             suppressInput: true 
           }
