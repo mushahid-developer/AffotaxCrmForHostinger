@@ -56,17 +56,6 @@ export default function SideBar(props) {
                     }
                   })}
                   
-                  {/* User Recurring Tasks */}
-                  {pagesAccess && pagesAccess.map(page => {
-                    if(page.name === "Recurring Tasks Page" && page.isChecked){
-                      return(
-                        <Link to='/userrecurringtasks' className={location.pathname === '/userrecurringtasks' ? 'sidebar_link_active' : 'sidebar_link'}>
-                          <svg width="20px" height="20px" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg"><g id="SVGRepo_bgCarrier" stroke-width="0"></g><g id="SVGRepo_tracerCarrier" stroke-linecap="round" stroke-linejoin="round"></g><g id="SVGRepo_iconCarrier"> <path d="M4 21C4 17.134 7.13401 14 11 14M18.5 20.2361C17.9692 20.7111 17.2684 21 16.5 21C14.8431 21 13.5 19.6569 13.5 18C13.5 16.3431 14.8431 15 16.5 15C17.8062 15 18.9175 15.8348 19.3293 17M20 14.5V17.5H17M15 7C15 9.20914 13.2091 11 11 11C8.79086 11 7 9.20914 7 7C7 4.79086 8.79086 3 11 3C13.2091 3 15 4.79086 15 7Z" stroke="#000000" stroke-width="1.296" stroke-linecap="round" stroke-linejoin="round"></path> </g></svg>
-                        <span style={{marginLeft: '10px'}}>Recurring Tasks</span>
-                        </Link>
-                      )
-                    }
-                  })}
 
                    {/* Jobs */}
                    {pagesAccess && pagesAccess.map(page => {
@@ -182,6 +171,18 @@ export default function SideBar(props) {
                         <Link to='/subscription' className={location.pathname === '/subscription' ? 'sidebar_link_active' : 'sidebar_link'}>
                         <svg xmlns="http://www.w3.org/2000/svg" width="20px" height="20px" viewBox="0 0 24 24" fill="none"><path fill-rule="evenodd" clip-rule="evenodd" d="M3.691 8.507c0 2.847 1.582 5.29 3.806 5.29 2.223 0 3.803-2.443 3.803-5.29 0-2.846-1.348-4.51-3.803-4.51-2.456 0-3.806 1.664-3.806 4.51zM1.326 19.192c.82.537 2.879.805 6.174.805 3.295 0 5.353-.268 6.174-.804a.5.5 0 0 0 .225-.453c-.152-2.228-2.287-3.343-6.403-3.343-4.117 0-6.249 1.115-6.395 3.344a.5.5 0 0 0 .225.451zm21.381-8.485a1 1 0 1 0-1.414-1.414L17 13.586l-2.293-2.293a1 1 0 0 0-1.414 1.414l3 3a1 1 0 0 0 1.414 0l5-5z" fill="#000000"/></svg>
                         <span style={{marginLeft: '10px'}}>Subscription</span>
+                        </Link>
+                      )
+                    }
+                  })}
+
+                   {/* User Recurring Tasks */}
+                   {pagesAccess && pagesAccess.map(page => {
+                    if(page.name === "Recurring Tasks Page" && page.isChecked){
+                      return(
+                        <Link to='/userrecurringtasks' className={location.pathname === '/userrecurringtasks' ? 'sidebar_link_active' : 'sidebar_link'}>
+                          <svg width="20px" height="20px" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg"><g id="SVGRepo_bgCarrier" stroke-width="0"></g><g id="SVGRepo_tracerCarrier" stroke-linecap="round" stroke-linejoin="round"></g><g id="SVGRepo_iconCarrier"> <path d="M4 21C4 17.134 7.13401 14 11 14M18.5 20.2361C17.9692 20.7111 17.2684 21 16.5 21C14.8431 21 13.5 19.6569 13.5 18C13.5 16.3431 14.8431 15 16.5 15C17.8062 15 18.9175 15.8348 19.3293 17M20 14.5V17.5H17M15 7C15 9.20914 13.2091 11 11 11C8.79086 11 7 9.20914 7 7C7 4.79086 8.79086 3 11 3C13.2091 3 15 4.79086 15 7Z" stroke="#000000" stroke-width="1.296" stroke-linecap="round" stroke-linejoin="round"></path> </g></svg>
+                        <span style={{marginLeft: '10px'}}>Recurring Tasks</span>
                         </Link>
                       )
                     }
