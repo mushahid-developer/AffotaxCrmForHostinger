@@ -43,7 +43,6 @@ export default function JobPlanning(props) {
   const [fPreData, setFPreData] = useState([])
   const [loader, setLoader] = useState(false)
   const [gridApi, setGridApi] = useState(null);
-  const [rerender, setRerender] = useState(false);
 
   const [multipleRowFormData, setMultipleRowFormData] = useState({
     job_date: null,
@@ -85,7 +84,6 @@ export default function JobPlanning(props) {
         }));
 
 
-        setRerender(prev => !prev);
         setLoader(false)
       }
 
@@ -450,7 +448,7 @@ export default function JobPlanning(props) {
           const today = new Date()
           const deadline = new Date(obj.year_end)
           if (obj.year_end && obj.year_end !== 'Invalid Date') {
-            if ((deadline.setHours(0, 0, 0, 0) === today.setHours(0, 0, 0, 0))) {
+            if (( deadline.setHours(0, 0, 0, 0) === today.setHours(0, 0, 0, 0) )) {
               return obj;
             }
           }
@@ -1414,8 +1412,6 @@ export default function JobPlanning(props) {
       }
     );
 
-    setRerender(prev => !prev)
-
 
   }, []);
 
@@ -1575,8 +1571,9 @@ export default function JobPlanning(props) {
   };
 
   const handlePageRefresh =()=>{
-    setLoader(true)
-    setMainReRender(prev => !prev)
+    if(mainrowData){
+      getData('second')
+    }
   }
 
 

@@ -10,7 +10,13 @@ exports.getAllLeads = async (req, res) => {
             })
         }
 
-    const users = await Userdb.find();
+    const users_all = await Userdb.find({ isActive: true }).populate('role_id');
+
+        const users = users_all.filter((user) => {
+            return user.role_id && user.role_id.pages.some((page) => {
+              return page.name === 'Leads Page' && page.isChecked;
+            });
+          });
 
         var response = {
             leads: leads,
@@ -26,8 +32,7 @@ exports.addUpdateLead = async (req, res) => {
     const time_now = new Date();
     const followUpDate = req.body.data.followUpDate ? new Date(req.body.data.followUpDate) : null
     const jobDate = req.body.data.jobDate ? new Date(req.body.data.jobDate) : null
-
-    console.log(req.body.data)
+    const createDate = req.body.data.createDate ? new Date(req.body.data.createDate) : null
 
     if(req.body.data._id === "New"){
         //Add New Lead
@@ -62,6 +67,7 @@ exports.addUpdateLead = async (req, res) => {
             brand: req.body.data.brand && req.body.data.brand,
             partner: req.body.data.partner && req.body.data.partner,
             followUpDate: followUpDate && followUpDate != 'Invalid Date' && followUpDate,
+            createDate: createDate && createDate != 'Invalid Date' && createDate,
             // manager_id: req.body.data.manager_id && req.body.data.manager_id,
             Jobholder_id: req.body.data.Jobholder_id ? req.body.data.Jobholder_id : null,
             jobDate: jobDate ? jobDate != 'Invalid Date' && jobDate : time_now,

@@ -823,7 +823,7 @@ const Leads = () => {
           cellEditor: 'agSelectCellEditor',
           cellEditorParams: { values: ["Select", 'Upwork', 'Fiver', 'PPH', 'Referral', 'Partner', 'Google', 'Facebook', 'Linkedin', 'Others'] },
         },
-        { headerName: 'Created Date', field: 'createDate', flex:1.3, editable:false,
+        { headerName: 'Created Date', field: 'createDate', flex:1.3, editable: true,
         valueGetter: p => {
           if(p.data.createDate  && p.data.createDate !== "Invalid Date")
           {
@@ -873,17 +873,6 @@ const Leads = () => {
             suppressInput: true 
           },
         },
-        // { headerName: 'Manager', field: 'manager_id', flex:1.3,
-        // valueGetter: p => {
-        //   return p.data.manager_id !== null ? p.data.manager_id.name : "" //to get value from obj inside obj
-        // },
-        // cellEditor: 'agSelectCellEditor',
-        // cellEditorParams: {
-        //   values: preData.map(option => option.label),
-        // },
-        // onCellValueChanged: function(event) {
-        // }
-        // },
         { 
           headerName: 'Job Date', 
           field: 'jobDate', 
