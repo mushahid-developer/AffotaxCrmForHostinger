@@ -568,20 +568,6 @@ const Leads = () => {
     const getPreData = async () => {
       setLoader(true)
       try {
-          const response = await axios.get(preDataUrl,
-              {
-                  headers:{ 'Content-Type': 'application/json' }
-              }
-              );
-        if(response.status === 200)
-        {  
-          setPreData(response.data.users.map(names => {
-            return { value: names._id, label: names.name };
-          }));
-  
-          
-        }
-
         
           const resp = await axios.get(LeadsGetAllUrl,
               {
@@ -590,6 +576,9 @@ const Leads = () => {
           );
           if(resp.status === 200){
               setMainRowData(resp.data.leads)
+              setPreData(resp.data.users.map(names => {
+                return { value: names._id, label: names.name };
+              }));
             }
             
           setLoader(false)
