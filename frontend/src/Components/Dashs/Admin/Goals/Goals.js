@@ -135,7 +135,7 @@ const Goals = (props) => {
       setRowData(mainRowData)
 
 
-      if(filterFromMyList.jobHolder && filterFromMyList.jobHolder !== ""){
+      if(filterFromMyList && filterFromMyList.jobHolder && filterFromMyList.jobHolder !== ""){
         setJobHolderFValue(filterFromMyList && filterFromMyList.jobHolder)
       }
       handleFilters()

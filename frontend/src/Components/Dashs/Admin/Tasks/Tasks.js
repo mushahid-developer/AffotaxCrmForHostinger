@@ -801,9 +801,9 @@ const Tasks = (props) => {
 
     useEffect(()=>{
       // setRowData(mainRowData)
-      if(filterFromMyList.jobHolder && filterFromMyList.jobHolder !== ""){
+      if(filterFromMyList && filterFromMyList.jobHolder && filterFromMyList.jobHolder !== ""){
         setJHolderFvalue(filterFromMyList && filterFromMyList.jobHolder)
-      } else if(filterFromMyList.deadline && filterFromMyList.deadline !== ""){
+      } else if(filterFromMyList && filterFromMyList.deadline && filterFromMyList.deadline !== ""){
         setDeadlineFvalue(filterFromMyList && filterFromMyList.deadline)
       }
       filter()

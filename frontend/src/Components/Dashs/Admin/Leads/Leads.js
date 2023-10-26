@@ -548,8 +548,8 @@ const Leads = (props) => {
     useEffect(()=>{
       setRowData(mainRowData)
 
-      if(filterFromMyList.jobHolder && filterFromMyList.jobHolder !== ""){
-        setJobHoderFvalue(filterFromMyList && filterFromMyList.jobHolder)
+      if(filterFromMyList && filterFromMyList.jobHolder && filterFromMyList.jobHolder !== ""){
+        setJobHoderFvalue(filterFromMyList && filterFromMyList && filterFromMyList.jobHolder)
       } else if(filterFromMyList.deadline && filterFromMyList.deadline !== ""){
         setJobdateFValue(filterFromMyList && filterFromMyList.deadline)
       }
