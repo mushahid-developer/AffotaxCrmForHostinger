@@ -31,6 +31,8 @@ var JobPlaning_Update_Many_Url = axiosURL.JobPlaning_Update_Many_Url;
 
 export default function JobPlanning(props) {
 
+  const filterFromMyList = props.myListPageFData
+
   const formPage = props.fromPage;
 
   const roleName = props.roleName;
@@ -791,10 +793,13 @@ export default function JobPlanning(props) {
 
   useEffect(() => {
     setRowData(mainrowData)
+    if( filterFromMyList.jobHolder && filterFromMyList.jobHolder !== "" ){
+      setJHolderFvalue(filterFromMyList && filterFromMyList.jobHolder )
+    }else if( filterFromMyList.deadline && filterFromMyList.deadline !== ""){
+      setDeadlineFvalue(filterFromMyList && filterFromMyList.deadline)
+    }
     filter()
-
-
-  }, [jobIdFromUrl, companyNameFromUrl, statusFvalue, sourceFValue, partnerFValue, subscriptionFvalue, jStatusFvalue, cManagerFvalue, departmentFvalue, jHolderFvalue, yearEndFvalue, yearEndFvalueDate, deadlineFvalue, deadlineFvalueDate, jobDateFvalue, jobDateFvalueDate, mainrowData])
+  }, [filterFromMyList, jobIdFromUrl, companyNameFromUrl, statusFvalue, sourceFValue, partnerFValue, subscriptionFvalue, jStatusFvalue, cManagerFvalue, departmentFvalue, jHolderFvalue, yearEndFvalue, yearEndFvalueDate, deadlineFvalue, deadlineFvalueDate, jobDateFvalue, jobDateFvalueDate, mainrowData])
 
 
 

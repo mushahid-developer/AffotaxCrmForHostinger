@@ -114,7 +114,6 @@ function Absents() {
 
   useEffect(() => {
     if (tableData.length > 0) {
-      const curDate = new Date();
       const months = ["Jan", "Feb", "March", "April", "May", "June", "July", "Aug", "Sept", "Oct", "Nov", "Dec"];
 
       let columnDefs = [

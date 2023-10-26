@@ -21,6 +21,7 @@ import ReactQuill from 'react-quill';
 import HTMLRenderer from '../Tickets/HtmlRenderer';
 
 export default function Templates() {
+  
 
   const [selectedUserListValue, setSelectedUserListValue] = useState([]);
   const [selectedTemplateId, setSelectedTemplateId] = useState(null);

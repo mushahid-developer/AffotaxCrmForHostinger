@@ -17,8 +17,6 @@ import DropdownFilterWithDate from '../../../Jobs/JobPlaning/DropDownFilterWithD
 import { saveAs } from 'file-saver';
 import * as XLSX from 'xlsx';
 
-
-var preDataUrl = axiosURL.addJobPreData;
 var LeadsGetAllUrl = axiosURL.LeadsGetAllUrl;
 var leadEditUrl = axiosURL.leadEditUrl;
 var leadDeleteUrl = axiosURL.leadDeleteUrl;
@@ -26,7 +24,9 @@ var wonLostUrl = axiosURL.wonLostUrl;
 var CopyLeadUrl = axiosURL.CopyLeadUrl;
 
 
-const Leads = () => {
+const Leads = (props) => {
+
+  const filterFromMyList = props.myListPageFData
 
   const location = useLocation();
 
@@ -57,6 +57,7 @@ const Leads = () => {
 
     const [preData, setPreData] = useState([]);
     
+    const [jobHolderFvalue, setJobHoderFvalue] = useState(null);
     const [stageFvalue, setStageFvalue] = useState(null);
     const [sourceFvalue, setSourceFvalue] = useState(null);
     const [brandFvalue, setBrandFvalue] = useState(null);
@@ -129,6 +130,11 @@ const Leads = () => {
       }
 
 
+
+      // job Holder Filter
+      if(filteredArray !== undefined && jobHolderFvalue !== null && jobHolderFvalue !== ""){
+        filteredArray = filteredArray.filter(obj => obj.Jobholder_id && obj.Jobholder_id.name === jobHolderFvalue);
+      }
 
       // companyName Filter
       if(filteredArray !== undefined && companyNameFromUrl !== null && companyNameFromUrl !== ""){
@@ -541,8 +547,14 @@ const Leads = () => {
 
     useEffect(()=>{
       setRowData(mainRowData)
+
+      if(filterFromMyList.jobHolder && filterFromMyList.jobHolder !== ""){
+        setJobHoderFvalue(filterFromMyList && filterFromMyList.jobHolder)
+      } else if(filterFromMyList.deadline && filterFromMyList.deadline !== ""){
+        setJobdateFValue(filterFromMyList && filterFromMyList.deadline)
+      }
       handleFilters()
-    },[mainRowData, activeFilter, stageFvalue, sourceFvalue, brandFvalue, departmentFvalue, leadSourceFvalue, gridApi, jobdateFValue, jobdateFValueDate, followUpDateFValue, followUpDateFValueDate, jobdateFValue, jobdateFValueDate])
+    },[jobHolderFvalue, filterFromMyList, mainRowData, activeFilter, stageFvalue, sourceFvalue, brandFvalue, departmentFvalue, leadSourceFvalue, gridApi, jobdateFValue, jobdateFValueDate, followUpDateFValue, followUpDateFValueDate, jobdateFValue, jobdateFValueDate])
 
 
     const handleFunClear = () => {
@@ -751,6 +763,14 @@ const Leads = () => {
           cellEditorParams: {
             values: preData && preData.map(option => option.label),
           },
+          floatingFilterComponent: 'selectFloatingFilter', 
+          floatingFilterComponentParams: { 
+            options: preData && preData.map(option => option.label),
+            onValueChange:(value) => setJobHoderFvalue(value),
+            value: jobHolderFvalue,
+            suppressFilterButton: true, 
+            suppressInput: true 
+          }
         },
         { 
           headerName: 'Department', 

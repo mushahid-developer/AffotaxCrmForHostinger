@@ -19,7 +19,9 @@ var proposalsDeleteUrl = axiosURL.proposalsDeleteUrl;
 var proposalsCopyOneUrl = axiosURL.proposalsCopyOneUrl;
 
 
-export default function Proposals() {
+export default function Proposals(props) {
+
+  const filterFromMyList = props.myListPageFData
 
   const location = useLocation();
 
@@ -607,8 +609,16 @@ export default function Proposals() {
   }
 
   useEffect(()=>{
-    filter();
-  },[mainRowData, jobHolderFValue, clientFValue, sourceFValue, dateFvalue, dateFvalueDate, deadlineFvalue, deadlineFvalueDate, jobDateFvalue, jobDateFvalueDate, statusFValue])
+
+
+    if(filterFromMyList.jobHolder && filterFromMyList.jobHolder !== ""){
+      setJobHolderFValue(filterFromMyList && filterFromMyList.jobHolder)
+    } else if(filterFromMyList.deadline && filterFromMyList.deadline !== ""){
+      setDeadlineFvalue(filterFromMyList && filterFromMyList.deadline)
+    }
+
+      filter();
+  },[filterFromMyList, mainRowData, jobHolderFValue, clientFValue, sourceFValue, dateFvalue, dateFvalueDate, deadlineFvalue, deadlineFvalueDate, jobDateFvalue, jobDateFvalueDate, statusFValue])
 
   const handleFunClear = () => {
     if (gridApi) {

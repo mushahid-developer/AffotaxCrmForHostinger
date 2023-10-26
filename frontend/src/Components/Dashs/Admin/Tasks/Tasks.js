@@ -1,3 +1,5 @@
+/* eslint-disable array-callback-return */
+/* eslint-disable react-hooks/exhaustive-deps */
 import React, { useState, useEffect, useMemo, useRef, useCallback } from 'react';
 import { AgGridReact } from 'ag-grid-react'; // the AG Grid React Component
 import 'ag-grid-community/styles/ag-grid.css'; // Core grid CSS, always needed
@@ -33,6 +35,8 @@ var ProjCopyUrl = axiosURL.ProjCopyUrl;
 
 
 const Tasks = (props) => {
+
+  const filterFromMyList = props.myListPageFData
 
   const location = useLocation();
   const queryParams = new URLSearchParams(location.search);
@@ -356,7 +360,7 @@ const Tasks = (props) => {
       }else {
 
         // // Job Holder Filter For MyList Page
-        // if (filteredArray != undefined && formPage != undefined && userNameFilter !== "") {
+        // if (filteredArray !== undefined && formPage !== undefined && userNameFilter !== "") {
         //   filteredArray = await filteredArray.filter(obj => obj.Jobholder_id && obj.Jobholder_id.name === userNameFilter);
         // }
 
@@ -367,7 +371,7 @@ const Tasks = (props) => {
       }
 
       // Job Id Filter
-      if (filteredArray != undefined && taskIdFromUrl != null && taskIdFromUrl !== "") {
+      if (filteredArray !== undefined && taskIdFromUrl !== null && taskIdFromUrl !== "") {
         filteredArray = await filteredArray.filter(obj => obj._id && obj._id === taskIdFromUrl);
       }
       
@@ -426,7 +430,7 @@ const Tasks = (props) => {
     if(jobDateFvalue){
 
       //Job Date Expired Filter
-      if(filteredArray != undefined && jobDateFvalue != null && jobDateFvalue !== "" && jobDateFvalue === "Expired"){
+      if(filteredArray !== undefined && jobDateFvalue !== null && jobDateFvalue !== "" && jobDateFvalue === "Expired"){
         filteredArray = await filteredArray.filter(obj => {
           // obj.manager_id && obj.manager_id.name === cManagerFvalue
           const today = new Date()
@@ -440,7 +444,7 @@ const Tasks = (props) => {
       }
 
       //Job Date Today Filter
-      if(filteredArray != undefined && jobDateFvalue != null && jobDateFvalue !== "" && jobDateFvalue === "Today"){
+      if(filteredArray !== undefined && jobDateFvalue !== null && jobDateFvalue !== "" && jobDateFvalue === "Today"){
         filteredArray = await filteredArray.filter(obj => {
           // obj.manager_id && obj.manager_id.name === cManagerFvalue
           const today = new Date()
@@ -454,7 +458,7 @@ const Tasks = (props) => {
       }
 
       //Job Date Tomorrow Filter
-      if(filteredArray != undefined && jobDateFvalue != null && jobDateFvalue !== "" && jobDateFvalue === "Tomorrow"){
+      if(filteredArray !== undefined && jobDateFvalue !== null && jobDateFvalue !== "" && jobDateFvalue === "Tomorrow"){
         filteredArray = await filteredArray.filter(obj => {
           // obj.manager_id && obj.manager_id.name === cManagerFvalue
           const today = new Date()
@@ -471,7 +475,7 @@ const Tasks = (props) => {
 
 
       //Job Date 7 days Filter
-      if(filteredArray != undefined && jobDateFvalue != null && jobDateFvalue !== "" && jobDateFvalue === "In 7 days"){
+      if(filteredArray !== undefined && jobDateFvalue !== null && jobDateFvalue !== "" && jobDateFvalue === "In 7 days"){
         filteredArray = await filteredArray.filter(obj => {
           // obj.manager_id && obj.manager_id.name === cManagerFvalue
           const today = new Date()
@@ -486,7 +490,7 @@ const Tasks = (props) => {
       }
 
       //Job Date 15 days Filter
-      if(filteredArray != undefined && jobDateFvalue != null && jobDateFvalue !== "" && jobDateFvalue === "In 15 days"){
+      if(filteredArray !== undefined && jobDateFvalue !== null && jobDateFvalue !== "" && jobDateFvalue === "In 15 days"){
         filteredArray = await filteredArray.filter(obj => {
           // obj.manager_id && obj.manager_id.name === cManagerFvalue
           const today = new Date()
@@ -501,7 +505,7 @@ const Tasks = (props) => {
       }
 
       //Job Date Month Wise Filter
-      if(filteredArray != undefined && jobDateFvalue != null && jobDateFvalue !== "" && jobDateFvalue === "Month Wise"){
+      if(filteredArray !== undefined && jobDateFvalue !== null && jobDateFvalue !== "" && jobDateFvalue === "Month Wise"){
         filteredArray = await filteredArray.filter(obj => {
           // obj.manager_id && obj.manager_id.name === cManagerFvalue
           // const today = new Date()
@@ -521,7 +525,7 @@ const Tasks = (props) => {
       }
       
       //Job Date Custom Filter
-      if(filteredArray != undefined && jobDateFvalue != null && jobDateFvalue !== "" && jobDateFvalue === "Custom"){
+      if(filteredArray !== undefined && jobDateFvalue !== null && jobDateFvalue !== "" && jobDateFvalue === "Custom"){
         filteredArray = await filteredArray.filter(obj => {
           var cellDate = obj.job_date !== "" && new Date(obj.job_date);
           var filterDate = new Date(jobDateFvalueDate)
@@ -544,7 +548,7 @@ const Tasks = (props) => {
     if(deadlineFvalue){
 
       //Job Date Expired Filter
-      if(filteredArray != undefined && deadlineFvalue != null && deadlineFvalue !== "" && deadlineFvalue === "Expired"){
+      if(filteredArray !== undefined && deadlineFvalue !== null && deadlineFvalue !== "" && deadlineFvalue === "Expired"){
         filteredArray = await filteredArray.filter(obj => {
           // obj.manager_id && obj.manager_id.name === cManagerFvalue
           const today = new Date()
@@ -558,7 +562,7 @@ const Tasks = (props) => {
       }
 
       //Job Date Today Filter
-      if(filteredArray != undefined && deadlineFvalue != null && deadlineFvalue !== "" && deadlineFvalue === "Today"){
+      if(filteredArray !== undefined && deadlineFvalue !== null && deadlineFvalue !== "" && deadlineFvalue === "Today"){
         filteredArray = await filteredArray.filter(obj => {
           // obj.manager_id && obj.manager_id.name === cManagerFvalue
           const today = new Date()
@@ -572,7 +576,7 @@ const Tasks = (props) => {
       }
 
       //Job Date Tomorrow Filter
-      if(filteredArray != undefined && deadlineFvalue != null && deadlineFvalue !== "" && deadlineFvalue === "Tomorrow"){
+      if(filteredArray !== undefined && deadlineFvalue !== null && deadlineFvalue !== "" && deadlineFvalue === "Tomorrow"){
         filteredArray = await filteredArray.filter(obj => {
           // obj.manager_id && obj.manager_id.name === cManagerFvalue
           const today = new Date()
@@ -589,7 +593,7 @@ const Tasks = (props) => {
 
 
       //Job Date 7 days Filter
-      if(filteredArray != undefined && deadlineFvalue != null && deadlineFvalue !== "" && deadlineFvalue === "In 7 days"){
+      if(filteredArray !== undefined && deadlineFvalue !== null && deadlineFvalue !== "" && deadlineFvalue === "In 7 days"){
         filteredArray = await filteredArray.filter(obj => {
           // obj.manager_id && obj.manager_id.name === cManagerFvalue
           const today = new Date()
@@ -604,7 +608,7 @@ const Tasks = (props) => {
       }
 
       //Job Date 15 days Filter
-      if(filteredArray != undefined && deadlineFvalue != null && deadlineFvalue !== "" && deadlineFvalue === "In 15 days"){
+      if(filteredArray !== undefined && deadlineFvalue !== null && deadlineFvalue !== "" && deadlineFvalue === "In 15 days"){
         filteredArray = await filteredArray.filter(obj => {
           // obj.manager_id && obj.manager_id.name === cManagerFvalue
           const today = new Date()
@@ -619,7 +623,7 @@ const Tasks = (props) => {
       }
 
       //Job Date Month Wise Filter
-      if(filteredArray != undefined && deadlineFvalue != null && deadlineFvalue !== "" && deadlineFvalue === "Month Wise"){
+      if(filteredArray !== undefined && deadlineFvalue !== null && deadlineFvalue !== "" && deadlineFvalue === "Month Wise"){
         filteredArray = await filteredArray.filter(obj => {
           // obj.manager_id && obj.manager_id.name === cManagerFvalue
           // const today = new Date()
@@ -639,7 +643,7 @@ const Tasks = (props) => {
       }
       
       //Job Date Custom Filter
-      if(filteredArray != undefined && deadlineFvalue != null && deadlineFvalue !== "" && deadlineFvalue === "Custom"){
+      if(filteredArray !== undefined && deadlineFvalue !== null && deadlineFvalue !== "" && deadlineFvalue === "Custom"){
         filteredArray = await filteredArray.filter(obj => {
           var cellDate = obj.deadline !== "" && new Date(obj.deadline);
           var filterDate = new Date(deadlineFvalueDate)
@@ -662,7 +666,7 @@ const Tasks = (props) => {
     if(startDateFvalue){
 
       //Job Date Expired Filter
-      if(filteredArray != undefined && startDateFvalue != null && startDateFvalue !== "" && startDateFvalue === "Expired"){
+      if(filteredArray !== undefined && startDateFvalue !== null && startDateFvalue !== "" && startDateFvalue === "Expired"){
         filteredArray = await filteredArray.filter(obj => {
           // obj.manager_id && obj.manager_id.name === cManagerFvalue
           const today = new Date()
@@ -676,7 +680,7 @@ const Tasks = (props) => {
       }
 
       //Job Date Today Filter
-      if(filteredArray != undefined && startDateFvalue != null && startDateFvalue !== "" && startDateFvalue === "Today"){
+      if(filteredArray !== undefined && startDateFvalue !== null && startDateFvalue !== "" && startDateFvalue === "Today"){
         filteredArray = await filteredArray.filter(obj => {
           // obj.manager_id && obj.manager_id.name === cManagerFvalue
           const today = new Date()
@@ -690,7 +694,7 @@ const Tasks = (props) => {
       }
 
       //Job Date Tomorrow Filter
-      if(filteredArray != undefined && startDateFvalue != null && startDateFvalue !== "" && startDateFvalue === "Tomorrow"){
+      if(filteredArray !== undefined && startDateFvalue !== null && startDateFvalue !== "" && startDateFvalue === "Tomorrow"){
         filteredArray = await filteredArray.filter(obj => {
           // obj.manager_id && obj.manager_id.name === cManagerFvalue
           const today = new Date()
@@ -707,7 +711,7 @@ const Tasks = (props) => {
 
 
       //Job Date 7 days Filter
-      if(filteredArray != undefined && startDateFvalue != null && startDateFvalue !== "" && startDateFvalue === "In 7 days"){
+      if(filteredArray !== undefined && startDateFvalue !== null && startDateFvalue !== "" && startDateFvalue === "In 7 days"){
         filteredArray = await filteredArray.filter(obj => {
           // obj.manager_id && obj.manager_id.name === cManagerFvalue
           const today = new Date()
@@ -722,7 +726,7 @@ const Tasks = (props) => {
       }
 
       //Job Date 15 days Filter
-      if(filteredArray != undefined && startDateFvalue != null && startDateFvalue !== "" && startDateFvalue === "In 15 days"){
+      if(filteredArray !== undefined && startDateFvalue !== null && startDateFvalue !== "" && startDateFvalue === "In 15 days"){
         filteredArray = await filteredArray.filter(obj => {
           // obj.manager_id && obj.manager_id.name === cManagerFvalue
           const today = new Date()
@@ -737,7 +741,7 @@ const Tasks = (props) => {
       }
 
       //Job Date Month Wise Filter
-      if(filteredArray != undefined && startDateFvalue != null && startDateFvalue !== "" && startDateFvalue === "Month Wise"){
+      if(filteredArray !== undefined && startDateFvalue !== null && startDateFvalue !== "" && startDateFvalue === "Month Wise"){
         filteredArray = await filteredArray.filter(obj => {
           // obj.manager_id && obj.manager_id.name === cManagerFvalue
           // const today = new Date()
@@ -757,7 +761,7 @@ const Tasks = (props) => {
       }
       
       //Job Date Custom Filter
-      if(filteredArray != undefined && startDateFvalue != null && startDateFvalue !== "" && startDateFvalue === "Custom"){
+      if(filteredArray !== undefined && startDateFvalue !== null && startDateFvalue !== "" && startDateFvalue === "Custom"){
         filteredArray = await filteredArray.filter(obj => {
           var cellDate = obj.startDate !== "" && new Date(obj.startDate);
           var filterDate = new Date(startDateFvalueDate)
@@ -797,8 +801,13 @@ const Tasks = (props) => {
 
     useEffect(()=>{
       // setRowData(mainRowData)
+      if(filterFromMyList.jobHolder && filterFromMyList.jobHolder !== ""){
+        setJHolderFvalue(filterFromMyList && filterFromMyList.jobHolder)
+      } else if(filterFromMyList.deadline && filterFromMyList.deadline !== ""){
+        setDeadlineFvalue(filterFromMyList && filterFromMyList.deadline)
+      }
       filter()
-    }, [mainRowData, statusFDuevalue, statusFvalue, projectFvalue, jHolderFvalue, jHolderPreFvalue, leadFvalue, startDateFvalueDate, startDateFvalue, deadlineFvalueDate, deadlineFvalue, jobDateFvalueDate, jobDateFvalue, taskIdFromUrl])
+    }, [filterFromMyList, mainRowData, statusFDuevalue, statusFvalue, projectFvalue, jHolderFvalue, jHolderPreFvalue, leadFvalue, startDateFvalueDate, startDateFvalue, deadlineFvalueDate, deadlineFvalue, jobDateFvalueDate, jobDateFvalue, taskIdFromUrl])
     
     useEffect(()=>{
       setLoad(2);

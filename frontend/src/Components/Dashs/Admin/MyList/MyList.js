@@ -1,4 +1,5 @@
-import React from 'react';
+/* eslint-disable array-callback-return */
+import React, { useEffect, useState } from 'react';
 import JobPlanning from '../../../Jobs/JobPlaning/JobPlanning';
 import Tasks from '../Tasks/Tasks';
 import Construction from '../Construction/Construction';
@@ -12,12 +13,28 @@ import secureLocalStorage from 'react-secure-storage';
 
 const MyTable = () => {
 
+  const [data, setData] = useState({
+    jobHolder: '',
+    deadline: ''
+  });
+
   const items = secureLocalStorage.getItem("MyList");
   var showItems = false;
 
   if(items && items.length > 0){
     showItems = items.find(item => item.visible)
   }
+
+  const handleFilterChange = (e)=>{
+    const { name, value } = e.target;
+    setData(prev => ({
+      ...prev,
+      [name]: value
+    }))
+  }
+  useEffect(()=>{
+    console.log('rend')
+  }, [data])
   
 
 
@@ -42,17 +59,54 @@ const MyTable = () => {
     return (
       <>
         <div className='myListDiv'>
+
+
+        <div style={{border: 'none',}} className='card my-3'>
+          <div style={{alignItems: 'center', justifyContent: 'space-between',}} className='d-flex'>
+
+            <div style={{alignItems: 'center',}} className='d-flex'>
+
+              <div style={{alignItems: 'center',}} className='d-flex' >
+                <h4 style={{padding: '20px 16px',}}>
+                    My List
+                </h4>
+
+                <div className='mx-2'>
+                  <input placeholder='Job Holder' name='jobHolder' value={data.jobHolder} onChange={handleFilterChange} className='form-control' />
+                </div>
+
+                <div className='mx-2'>
+                  <input placeholder='Deadline' name='deadline' value={data.deadline} onChange={handleFilterChange} className='form-control' />
+                </div>
+
+
+              </div>
+
+
+            </div>
+
+            <div className='d-flex'>
+
+
+            </div>
+
+
+          </div>
+        </div>
+
+
+
           <Accordion className=''>
   
             {items && items.map(item => {
               if(item.page === "Job Planning" && item.visible){
                 return(
                   <Accordion.Item key={item.id}>
-                    <Accordion.Header>Job Planning</Accordion.Header>
+                    <Accordion.Header>Jobs</Accordion.Header>
                     <Accordion.Body>
                       
                       <div>
-                        <JobPlanning fromPage="MyList" userNameFilter="Rashid"/>
+                        <JobPlanning myListPageFData={data} fromPage="MyList" userNameFilter="Rashid"/>
                       </div>
   
                     </Accordion.Body>
@@ -69,7 +123,7 @@ const MyTable = () => {
                     <Accordion.Body>
                     
                       <div>
-                        <Tasks fromPage="MyList" userNameFilter="Rashid"/>
+                        <Tasks myListPageFData={data} fromPage="MyList" userNameFilter="Rashid"/>
                       </div>
   
                     </Accordion.Body>
@@ -86,7 +140,7 @@ const MyTable = () => {
                     <Accordion.Body>
                     
                       <div>
-                        <Leads fromPage="MyList" userNameFilter="Rashid"/>
+                        <Leads myListPageFData={data} fromPage="MyList" userNameFilter="Rashid"/>
                       </div>
   
                     </Accordion.Body>
@@ -103,7 +157,7 @@ const MyTable = () => {
                     <Accordion.Body>
                     
                       <div>
-                        <Proposals fromPage="MyList" userNameFilter="Rashid"/>
+                        <Proposals myListPageFData={data} fromPage="MyList" userNameFilter="Rashid"/>
                       </div>
   
                     </Accordion.Body>
@@ -120,7 +174,7 @@ const MyTable = () => {
                     <Accordion.Body>
                     
                       <div>
-                        <Construction fromPage="MyList" userNameFilter="Rashid"/>
+                        <Construction myListPageFData={data} fromPage="MyList" userNameFilter="Rashid"/>
                       </div>
   
                     </Accordion.Body>
@@ -137,7 +191,7 @@ const MyTable = () => {
                     <Accordion.Body>
                     
                       <div>
-                        <UserRecurringTasks fromPage="MyList" userNameFilter="Rashid"/>
+                        <UserRecurringTasks myListPageFData={data} fromPage="MyList" userNameFilter="Rashid"/>
                       </div>
   
                     </Accordion.Body>
@@ -154,7 +208,7 @@ const MyTable = () => {
                     <Accordion.Body>
                     
                       <div>
-                        <Templates fromPage="MyList" userNameFilter="Rashid"/>
+                        <Templates myListPageFData={data} fromPage="MyList" userNameFilter="Rashid"/>
                       </div>
   
                     </Accordion.Body>
@@ -171,7 +225,7 @@ const MyTable = () => {
                     <Accordion.Body>
                     
                       <div>
-                        <Goals fromPage="MyList" userNameFilter="Rashid"/>
+                        <Goals myListPageFData={data} fromPage="MyList" userNameFilter="Rashid"/>
                       </div>
             
                     </Accordion.Body>

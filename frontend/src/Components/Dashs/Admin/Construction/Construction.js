@@ -31,6 +31,8 @@ var ProjCompletedUrl = axiosURL.ConstructionTaskSetCompletedUrl;
 
 const Construction = (props) => {
 
+  const filterFromMyList = props.myListPageFData
+
   const formPage = props.fromPage;
   const userNameFilter = props.userNameFilter;
 
@@ -679,8 +681,17 @@ const Construction = (props) => {
 
     useEffect(()=>{
       // setRowData(mainRowData)
-      filter()
-    }, [mainRowData, statusFDuevalue, statusFvalue, projectFvalue, jHolderFvalue, ManagerFvalue, filterFvalue, jobDateFvalue, jobDateFvalueDate, deadlineFvalue, deadlineFvalueDate, startDateFvalue, startDateFvalueDate])
+      if(filterFromMyList){
+
+        if(filterFromMyList.jobHolder && filterFromMyList.jobHolder !== ""){
+          setJHolderFvalue(filterFromMyList && filterFromMyList.jobHolder)
+        } else if(filterFromMyList.deadline && filterFromMyList.deadline !== ""){
+          setDeadlineFvalue(filterFromMyList && filterFromMyList.deadline)
+        }
+
+      }
+        filter()
+    }, [filterFromMyList, mainRowData, statusFDuevalue, statusFvalue, projectFvalue, jHolderFvalue, ManagerFvalue, filterFvalue, jobDateFvalue, jobDateFvalueDate, deadlineFvalue, deadlineFvalueDate, startDateFvalue, startDateFvalueDate])
 
 
     useEffect(()=>{

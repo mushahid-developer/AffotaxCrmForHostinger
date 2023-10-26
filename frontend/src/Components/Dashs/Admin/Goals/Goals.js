@@ -1,3 +1,4 @@
+/* eslint-disable react-hooks/exhaustive-deps */
 import React, { useState, useEffect, useMemo, useRef, useCallback } from 'react';
 import { AgGridReact } from 'ag-grid-react'; // the AG Grid React Component
 import 'ag-grid-community/styles/ag-grid.css'; // Core grid CSS, always needed
@@ -26,7 +27,9 @@ var GoalsDeleteOneUrl = axiosURL.GoalsDeleteOneUrl;
 
 
 
-const Goals = () => {
+const Goals = (props) => {
+
+  const filterFromMyList = props.myListPageFData
 
     const [gridApi, setGridApi] = useState(null);
 
@@ -130,8 +133,13 @@ const Goals = () => {
     
     useEffect(()=>{
       setRowData(mainRowData)
+
+
+      if(filterFromMyList.jobHolder && filterFromMyList.jobHolder !== ""){
+        setJobHolderFValue(filterFromMyList && filterFromMyList.jobHolder)
+      }
       handleFilters()
-    },[mainRowData, progressFValue, startDateFValue, endDateFValue, jobHolderFValue])
+    },[filterFromMyList, mainRowData, progressFValue, startDateFValue, endDateFValue, jobHolderFValue])
 
 
     const getData = async ()=>{

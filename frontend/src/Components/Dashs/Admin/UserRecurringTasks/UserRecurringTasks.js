@@ -26,7 +26,9 @@ var UserRecurringTasksMarkCompleteOneUrl = axiosURL.UserRecurringTasksMarkComple
 
 
 
-const UserRecurringTasks = () => {
+const UserRecurringTasks = (props) => {
+
+  const filterFromMyList = props.myListPageFData
 
     const [historyMode, setHistoryMode] = useState(false)
     const [checkLoading, setCheckLoading] = useState(false)
@@ -291,6 +293,13 @@ const UserRecurringTasks = () => {
 
     useEffect(()=>{
       // setRowData(mainRowData)
+
+      if(filterFromMyList.jobHolder && filterFromMyList.jobHolder !== ""){
+        setJHolderFvalue(filterFromMyList && filterFromMyList.jobHolder)
+      } else if(filterFromMyList.deadline && filterFromMyList.deadline !== ""){
+        setStartDateFvalue(filterFromMyList && filterFromMyList.deadline)
+      }
+      
       filter(mainRowData)
     }, [mainRowData, projectFvalue, jHolderFvalue, jHolderPreFvalue, startDateFvalueDate, startDateFvalue, historyMode, intervalFvalue, statusFvalue])
 
