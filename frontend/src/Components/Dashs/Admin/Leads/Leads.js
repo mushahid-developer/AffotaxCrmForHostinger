@@ -550,7 +550,7 @@ const Leads = (props) => {
 
       if(filterFromMyList && filterFromMyList.jobHolder && filterFromMyList.jobHolder !== ""){
         setJobHoderFvalue(filterFromMyList && filterFromMyList && filterFromMyList.jobHolder)
-      } else if(filterFromMyList.deadline && filterFromMyList.deadline !== ""){
+      } else if(filterFromMyList && filterFromMyList.deadline && filterFromMyList.deadline !== ""){
         setJobdateFValue(filterFromMyList && filterFromMyList.deadline)
       }
       handleFilters()
