@@ -34,6 +34,7 @@ const { addPageForRole } = require('../controller/RolesPermissionsController');
 const { getAllProposals, deleteProposals, editProposals, addProposals, copyProposals } = require('../controller/ProposalsController');
 const { getAllUserRecurringTasks, addOneUserRecurringTasks, editOneUserRecurringTasks, deleteOneUserRecurringTasks, copyOneUserRecurringTasks, markCompleteOneUserRecurringTasks } = require('../controller/UserTaskRecurringController');
 const { getAllValues } = require('../controller/SearchController');
+const { GetMyListPreData } = require('../controller/MyListController');
 
 // Api Routes
 route.get('/', (req, res)=>{
@@ -201,6 +202,9 @@ route.post('/user/recurring/tasks/mark_complete/one/:id', markCompleteOneUserRec
 
 //Search
 route.get('/user/search/all', getAllValues)
+
+//My List
+route.get('/mylist/get/predata', GetMyListPreData)
 
 
 //AddPagesForRole
