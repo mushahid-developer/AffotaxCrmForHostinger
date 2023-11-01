@@ -19,11 +19,14 @@ exports.getAllUserRecurringTasks = async (req, res) => {
         projects = await Promise.all( projects.map(async (item) => {
 
           const today = new Date();
-          const nextDate = new Date(item.nextUpdate);
+          var nextDate = new Date(item.nextUpdate);
+          if(!nextDate || nextDate === ""){
+            nextDate = new Date();
+          }
           const checkDate = new Date(item.dates[0].date);
           var check = false;
 
-          if ( today.setHours(0, 0, 0) > nextDate.setHours(0, 0, 0) ) {
+          if ( today.setHours(0, 0, 0) >= nextDate.setHours(0, 0, 0) ) {
             check = true;
           }
         
